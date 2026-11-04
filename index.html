@@ -90,7 +90,7 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
 <body>
 <header>
   <h1>🌱 MINDFUL SCREEN — Quản lý xem video ngắn</h1>
-  <p>Dừng 10 giây · Đổi 15 phút · Cây Hạnh Phúc — Tự chủ là sức mạnh
+  <p>Dừng 10 giây · Đổi 15 phút · Cây Hạnh Phúc — Tự chủ là sức mạnh </b></p>
 </header>
 <div class="wrap">
 
@@ -103,7 +103,7 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
     <div class="featgrid">
       <div class="feat"><div class="feat-t">⏱️ Dừng 10 giây</div><p>Hít thở chậm trước khi mở video để ngắt quán tính tự động.</p></div>
       <div class="feat"><div class="feat-t">📖 Đổi 15 phút</div><p>Thay video ngắn bằng đọc sách, dạo bộ, vẽ tranh lành mạnh.</p></div>
-      <div class="feat"><div class="feat-t">💚 Cây Hạnh Phúc</div><p>Tích lũy điểm tự chủ và theo dõi cây lớn lên từng ngày.</p></div>
+      <div class="feat"><div class="feat-t">💚 Cây Hạnh Phúc</div><p>Tích lũy điểm tự chủ và theo dõi cây lớn lên từng tuần.</p></div>
     </div>
   </div>
   <div class="card">
@@ -148,7 +148,7 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
     <button data-t="swap" onclick="sTab('swap')">🔄 Đổi 15 phút</button>
     <button data-t="challenge" onclick="sTab('challenge')">🎯 Thử thách 7 ngày</button>
     <button data-t="quiz" onclick="sTab('quiz')">🧠 Trắc nghiệm</button>
-   
+ 
     <button data-t="report" onclick="sTab('report')">📤 Báo cáo tuần</button>
   </div>
 
@@ -261,6 +261,13 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
       <div id="sasBox" style="margin-top:12px"></div>
       <div id="sasHistory"></div>
     </div>
+    <div class="card" id="scenarioCard"><h2>🎬 Tình huống tương tác</h2>
+      <p class="mut">3 tình huống ngắn — chọn cách xử lý em thấy hợp lý nhất và đọc phản hồi. Không tính điểm, không xếp hạng.</p>
+      <div id="scenarioBox"></div>
+      <h3>🎬 Tình huống NÂNG CAO — Sau can thiệp (4 tình huống)</h3>
+      <p class="mut">Các tình huống khó hơn, gần với đời thật sau khi chương trình kết thúc: bạn bè rủ rê, "tự thưởng" sau kỳ thi, và cả khi em <b>lỡ quay lại thói quen cũ</b>. Lỡ một lần không phải là thất bại — cách em đứng dậy mới cho thấy tiến bộ.</p>
+      <div id="scenarioPostBox"></div>
+    </div>
 
     <div class="card"><h2>📈 Hành trình tiến bộ của em — Trước → Sau can thiệp</h2>
       <p class="mut">Bảng này tự tổng hợp từ các bài em đã làm: Trắc nghiệm nhận thức (điểm càng cao càng tốt), Bảng tự đánh giá thói quen SAS (điểm càng <b>thấp</b> càng tốt), Trắc nghiệm vận dụng Sau và Tự đánh giá tiến bộ Sau. Tiến bộ được so với <b>chính em trước đây</b> — không so với bạn khác, không xếp hạng.</p>
@@ -278,14 +285,8 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
       <div id="progressSelfBox" style="margin-top:12px"></div>
       <div id="progressSelfHistory"></div>
     </div>
-        <div class="card"><h2>🎬 Tình huống tương tác</h2>
-      <p class="mut">3 tình huống ngắn — chọn cách xử lý em thấy hợp lý nhất và đọc phản hồi. Không tính điểm, không xếp hạng.</p>
-      <div id="scenarioBox"></div>
-      <h3>🎬 Tình huống NÂNG CAO — Sau can thiệp (4 tình huống)</h3>
-      <p class="mut">Các tình huống khó hơn, gần với đời thật sau khi chương trình kết thúc: bạn bè rủ rê, "tự thưởng" sau kỳ thi, và cả khi em <b>lỡ quay lại thói quen cũ</b>. Lỡ một lần không phải là thất bại — cách em đứng dậy mới cho thấy tiến bộ.</p>
-      <div id="scenarioPostBox"></div>
-    </div>
   </div>
+
   <div id="s-reflect" class="hidden">
     <div class="card"><h2>🌙 Phản hồi cuối ngày</h2>
       <label>Cảm xúc nổi bật hôm nay</label><input id="rEmo" placeholder="Ví dụ: nhẹ nhõm, hơi tiếc thời gian...">
@@ -297,6 +298,7 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
       <div id="reflectList" style="margin-top:10px"></div>
     </div>
   </div>
+
   <div id="s-report" class="hidden">
     <div class="card"><h2>📤 Gửi báo cáo tuần cho giáo viên</h2>
       <p class="mut">Báo cáo chỉ gồm MÃ ẨN DANH và lớp của em — không kèm họ tên, không kèm ghi chú nhật ký cá nhân. Sau khi gửi, số liệu được đóng băng; gửi lại cùng tuần sẽ tạo phiên bản mới và giữ nguyên bản cũ.</p>
