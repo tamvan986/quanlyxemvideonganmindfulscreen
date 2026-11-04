@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mindful Screen — Quản lý xem video ngắn</title>
+<style>
+:root{--teal:#0d7a69;--teal-d:#065f46;--teal2:#14b8a6;--emerald:#059669;--amber:#f59e0b;--amber2:#fbbf24;--orange:#ea580c;--coral:#dc2626;--violet:#7c3aed;--blue:#2563eb;--pink:#db2777;--bg:#f2fbf8;--card:#fff;--ink:#0b3d34;--mut:#64748b;--rose:#dc2626;--line:#bfe8dd}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(180deg,#d9f7ec 0%,#f2fbf8 260px,#f2fbf8 100%);color:#1e293b}
+header{background:linear-gradient(135deg,#065f46 0%,#0d7a69 58%,#059669 100%);color:#fff;padding:15px 16px;position:sticky;top:0;z-index:20;border-bottom:4px solid var(--amber);box-shadow:0 4px 18px rgba(6,95,70,.35)}
+header h1{margin:0;font-size:19px;letter-spacing:.3px}header p{margin:2px 0 0;font-size:12px;opacity:.92}
+.wrap{max-width:1060px;margin:0 auto;padding:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 4px 14px rgba(6,95,70,.10)}
+h2{color:var(--ink);font-size:17px;margin:0 0 10px}h3{color:var(--ink);font-size:15px;margin:14px 0 8px}
+button{background:linear-gradient(135deg,#0d7a69,#059669);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 3px 8px rgba(13,122,105,.28)}
+button:hover{filter:brightness(1.08)}button.ghost{background:#fff;color:var(--teal);border:1.5px solid var(--teal);box-shadow:none}
+button.ghost:hover{background:#f0fdfa;filter:none}
+button.small{padding:6px 10px;font-size:12.5px}button.danger{background:linear-gradient(135deg,#dc2626,#b91c1c)}
+button:disabled{opacity:.45;cursor:not-allowed}
+input,select,textarea{width:100%;padding:9px 10px;border:1.5px solid #cbd5e1;border-radius:10px;font-size:14px;margin:4px 0 10px;background:#fff}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal2);box-shadow:0 0 0 3px rgba(20,184,166,.18)}
+label{font-size:13px;font-weight:600;color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:linear-gradient(180deg,#f0fdfa,#dcfce7);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.stat b{display:block;font-size:22px;color:var(--teal-d)}.stat span{font-size:12px;color:var(--mut)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{background:#e2e8f0;color:#334155;box-shadow:none}
+.tabs button.on{background:linear-gradient(135deg,#065f46,#0d7a69);color:#fff;box-shadow:0 3px 8px rgba(6,95,70,.35)}
+#sTabs button{color:#fff;opacity:.94;box-shadow:0 3px 8px rgba(15,23,42,.18)}
+#sTabs button[data-t="home"]{background:linear-gradient(135deg,#059669,#047857)}
+#sTabs button[data-t="log"]{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
+#sTabs button[data-t="pause"]{background:linear-gradient(135deg,#0d9488,#0f766e)}
+#sTabs button[data-t="swap"]{background:linear-gradient(135deg,#ea580c,#c2410c)}
+#sTabs button[data-t="challenge"]{background:linear-gradient(135deg,#7c3aed,#6d28d9)}
+#sTabs button[data-t="quiz"]{background:linear-gradient(135deg,#4f46e5,#4338ca)}
+#sTabs button[data-t="reflect"]{background:linear-gradient(135deg,#db2777,#be185d)}
+#sTabs button[data-t="report"]{background:linear-gradient(135deg,#d97706,#b45309)}
+#sTabs button.on{opacity:1;outline:3px solid rgba(245,158,11,.9);outline-offset:1px;transform:translateY(-1px)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{border:1px solid #e2e8f0;padding:6px 8px;text-align:left}
+th{background:var(--teal-d);color:#fff}tbody tr:nth-child(even){background:#f2fbf8}.tblwrap{overflow-x:auto}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11.5px;font-weight:700}
+.b-safe{background:#bbf7d0;color:#14532d}.b-warn{background:#fde68a;color:#92400e}.b-risk{background:#fecaca;color:#991b1b}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#065f46,#0d7a69);color:#fff;padding:11px 18px;border-radius:99px;font-size:14px;display:none;z-index:99;max-width:92vw;text-align:center;box-shadow:0 6px 18px rgba(6,95,70,.4)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:120px;padding-top:8px}
+.bar{flex:1;background:linear-gradient(180deg,#2dd4bf,#0d7a69);border-radius:6px 6px 0 0;min-height:3px;position:relative}
+.bar.over{background:linear-gradient(180deg,#f87171,#dc2626)}.bar span{position:absolute;top:-17px;left:0;right:0;text-align:center;font-size:10px;color:var(--mut)}
+.bar em{position:absolute;bottom:-17px;left:0;right:0;text-align:center;font-size:10px;font-style:normal;color:var(--mut)}
+.progress{height:14px;background:#e2e8f0;border-radius:99px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,#14b8a6,#059669)}
+.tree{font-size:64px;text-align:center;line-height:1.1}
+.timer{font-size:52px;font-weight:800;color:var(--teal-d);text-align:center;font-variant-numeric:tabular-nums}
+.mut{color:var(--mut);font-size:12.5px}.err{color:var(--rose);font-size:13px;font-weight:600}
+.ok{color:var(--emerald);font-size:13px;font-weight:600}
+.q{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+.q label{display:block;font-weight:400;color:#1e293b;margin:5px 0;cursor:pointer}
+.q input{width:auto;margin-right:7px}
+.expl{background:#f0fdfa;border-left:4px solid var(--teal2);padding:8px 10px;font-size:13px;margin-top:8px;display:none}
+.hidden{display:none!important}
+.rowflex{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+@media(max-width:640px){.timer{font-size:42px}header h1{font-size:16px}}
+.tickcell{width:34px;height:34px;border:2px solid #cbd5e1;border-radius:9px;background:#fff;color:#0d7a69;font-size:15px;font-weight:800;padding:0;line-height:1;cursor:pointer}
+.tickcell:hover{border-color:var(--teal)}
+.tickcell.f{border-color:rgba(0,0,0,.18)}
+.stagebadge{display:inline-block;padding:5px 10px;border-radius:12px;font-size:12px;font-weight:700;line-height:1.3;text-align:center;white-space:nowrap;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.pbar{height:10px;background:#e2e8f0;border-radius:99px;overflow:hidden;min-width:64px}
+.pbar div{height:100%;background:linear-gradient(90deg,#14b8a6,#059669)}
+.hero{background:linear-gradient(135deg,#065f46 0%,#0d7a69 55%,#059669 100%);color:#fff;border:none;box-shadow:0 10px 26px rgba(6,95,70,.38)}
+.hero h2{color:#fff}
+.hero .mut{color:rgba(255,255,255,.88)}
+.hero .tree{font-size:86px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.30))}
+.hero .progress{height:18px;background:rgba(255,255,255,.28)}
+.hero .progress div{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+.congrats{background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 8px 22px rgba(234,88,12,.38);font-size:15px;line-height:1.5}
+.starcard{background:linear-gradient(180deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.cover{text-align:center;padding:28px 18px 22px}
+.cover-badge{display:inline-block;background:rgba(0,0,0,.25);color:#fde68a;font-weight:700;font-size:12.5px;padding:6px 14px;border-radius:99px;letter-spacing:.3px}
+.cover .cover-title{font-size:28px;margin:13px 0 7px;color:#fff}
+.cover-sub{color:rgba(255,255,255,.93);font-size:14.5px;line-height:1.55;max-width:580px;margin:0 auto 18px}
+.featgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;text-align:left}
+.feat{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:13px 14px}
+.feat-t{font-weight:800;color:#fde68a;margin-bottom:5px;font-size:14.5px}
+.feat p{margin:0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.93)}
+.rolewrap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rolebtn{padding:13px 10px;font-size:15px;border-radius:12px;opacity:.78}
+.rolebtn.ghostrole{background:#fff;color:var(--teal);border:1.5px solid var(--teal);box-shadow:none}
+.rolebtn.on{opacity:1;outline:3px solid rgba(245,158,11,.9);outline-offset:1px}
+button.bigbtn{width:100%;padding:13px;font-size:15.5px}
+@media(max-width:560px){.rolewrap{grid-template-columns:1fr}.cover .cover-title{font-size:22px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌱 MINDFUL SCREEN — Quản lý xem video ngắn</h1>
+  <p>Dừng 10 giây · Đổi 15 phút · Cây Hạnh Phúc — Tự chủ là sức mạnh · 
+</header>
+<div class="wrap">
+
+<!-- ============ CỔNG VÀO ============ -->
+<div id="gate">
+  <div class="card hero cover">
+    <div class="cover-badge">✨ Rèn luyện Tự Chủ &amp; Tỉnh Tâm Học Đường</div>
+    <h2 class="cover-title">Chào mừng bạn đến với Mindful Screen</h2>
+    <p class="cover-sub">Ứng dụng giúp học sinh làm chủ thời gian, ngắt cơn lướt vô thức và vun trồng Cây Hạnh Phúc mỗi ngày.</p>
+    <div class="featgrid">
+      <div class="feat"><div class="feat-t">⏱️ Dừng 10 giây</div><p>Hít thở chậm trước khi mở video để ngắt quán tính tự động.</p></div>
+      <div class="feat"><div class="feat-t">📖 Đổi 15 phút</div><p>Thay video ngắn bằng đọc sách, dạo bộ, vẽ tranh lành mạnh.</p></div>
+      <div class="feat"><div class="feat-t">💚 Cây Hạnh Phúc</div><p>Tích lũy điểm tự chủ và theo dõi cây lớn lên từng ngày.</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="rolewrap">
+      <button class="rolebtn on" data-role="student" onclick="gateRole('student')">🎒 Tôi là Học Sinh</button>
+      <button class="rolebtn ghostrole" data-role="teacher" onclick="gateRole('teacher')">🔬 Tôi là Nhóm Nghiên Cứu</button>
+    </div>
+  </div>
+  <div class="card" id="gateStudent">
+    <h2>🎒 Đăng nhập dành cho Học sinh</h2>
+    <p class="mut" style="margin-top:-4px">Chọn lớp, tên của em và nhập mã PIN 4 số do Nhóm nghiên cứu cung cấp.</p>
+    <label>1. Chọn lớp học của em:</label>
+    <select id="gClass" onchange="fillStudentSelect()"><option value="">— Nhấn để chọn lớp —</option></select>
+    <label>2. Chọn họ và tên của em:</label>
+    <select id="gStudent"><option value="">— Nhấn để chọn tên —</option></select>
+    <label>3. Mã PIN bảo mật (4 chữ số):</label>
+    <input id="gPin" type="password" inputmode="numeric" maxlength="4" placeholder="••••" style="text-align:center;letter-spacing:6px">
+    <p class="err" id="gErr"></p>
+    <button class="bigbtn" onclick="studentLogin()">Vào ứng dụng →</button>
+  </div>
+  <div class="card hidden" id="gateTeacher">
+    <h2>🔬 Đăng nhập dành cho Nhóm Nghiên Cứu</h2>
+    <p class="mut" style="margin-top:-4px">Khu vực quản lý dữ liệu, chấm điểm Cây Hạnh Phúc và theo dõi hiệu quả can thiệp của Nhóm nghiên cứu.</p>
+    <label>Mật khẩu Nhóm nghiên cứu:</label>
+    <input id="gPass" type="password" placeholder="Nhập mật khẩu Nhóm nghiên cứu">
+    <p class="err" id="gPassErr"></p>
+    <button class="bigbtn" onclick="teacherLogin()">Vào trang Nhóm nghiên cứu →</button>
+    <p class="mut">Mật khẩu mặc định lần đầu: 123456 — Nhóm nghiên cứu hãy đổi ngay trong mục Cài đặt sau khi vào.</p>
+  </div>
+</div>
+
+<!-- ============ KHUNG HỌC SINH ============ -->
+<div id="studentApp" class="hidden">
+  <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <div><b id="sTitle"></b><div class="mut" id="sSub"></div></div>
+    <button class="ghost small" onclick="logout()">Thoát</button>
+  </div>
+  <div class="tabs" id="sTabs">
+    <button data-t="home" class="on" onclick="sTab('home')">🏠 Trang chủ</button>
+    <button data-t="log" onclick="sTab('log')">📝 Nhật ký xem</button>
+    <button data-t="pause" onclick="sTab('pause')">⏸️ Dừng 10 giây</button>
+    <button data-t="swap" onclick="sTab('swap')">🔄 Đổi 15 phút</button>
+    <button data-t="challenge" onclick="sTab('challenge')">🎯 Thử thách 7 ngày</button>
+    <button data-t="quiz" onclick="sTab('quiz')">🧠 Trắc nghiệm</button>
+   
+    <button data-t="report" onclick="sTab('report')">📤 Báo cáo tuần</button>
+  </div>
+
+  <div id="s-home">
+    <div id="stageBanner" class="congrats hidden"></div>
+    <div class="card hero"><h2>🌳 Cây Hạnh Phúc của em</h2>
+      <div class="tree" id="treeEmoji">🌱</div>
+      <p style="text-align:center;margin:4px 0"><b id="treeStage"></b> · <span id="treePts"></span> điểm</p>
+      <div class="progress"><div id="treeBar" style="width:0%"></div></div>
+      <p class="mut" id="treeNext" style="text-align:center"></p>
+      <p class="mut">Cách kiếm điểm: Dừng 10 giây +10 · Đổi 15 phút +15 · Mỗi ngày xem không vượt giới hạn +5.</p>
+    </div>
+    <div class="card"><h2>🏅 Điểm Cây Hạnh Phúc — giáo viên chấm theo tiêu chí</h2>
+      <div id="myTreeScore"></div>
+    </div>
+    <div class="card"><h2>📊 7 ngày gần nhất của em</h2>
+      <div class="grid">
+        <div class="stat"><b id="stToday">0</b><span>phút hôm nay</span></div>
+        <div class="stat"><b id="stSum7">0</b><span>tổng phút 7 ngày</span></div>
+        <div class="stat"><b id="stAvg7">0</b><span>TB phút/ngày</span></div>
+        <div class="stat"><b id="stOver">0</b><span>ngày vượt giới hạn</span></div>
+        <div class="stat"><b id="stLate">0</b><span>phiên sau giờ ngủ</span></div>
+        <div class="stat"><b id="stStreak">0</b><span>ngày tốt liên tiếp 🔥</span></div>
+        <div class="stat"><b id="stLogStreak">0</b><span>ngày ghi nhật ký liên tiếp 🔥</span></div>
+      </div>
+      <h3>Biểu đồ phút xem mỗi ngày</h3>
+      <div class="bars" id="chart7"></div>
+      <p class="mut" style="margin-top:22px">Cột đỏ = ngày vượt giới hạn của em. Giới hạn hiện tại: <b id="stLimit"></b> phút/ngày · Giờ đi ngủ: <b id="stBed"></b></p>
+    </div>
+  </div>
+
+  <div id="s-log" class="hidden">
+    <div class="card"><h2>📝 Ghi một lần xem</h2>
+      <label>Ngày</label><input type="date" id="lDate">
+      <div class="grid">
+        <div><label>Số phút đã xem</label><input type="number" id="lMin" min="1" max="1440" placeholder="Ví dụ: 30"></div>
+        <div><label>Nền tảng</label><select id="lPlat"><option>TikTok</option><option>YouTube Shorts</option><option>Facebook Reels</option><option>Instagram Reels</option><option>Khác</option></select></div>
+        <div><label>Khung giờ</label><select id="lSlot"><option>Sáng</option><option>Trưa</option><option>Chiều</option><option selected>Tối</option><option>Sau giờ đi ngủ</option></select></div>
+        <div><label>Vì sao em mở xem?</label><select id="lTrig"><option>Buồn chán</option><option>Căng thẳng / mệt</option><option>Thói quen, tay tự mở</option><option>Bạn bè gửi link</option><option>Chờ đợi / rảnh tay</option><option>Khó ngủ</option></select></div>
+        <div><label>Cảm xúc lúc đó</label><select id="lMood"><option>Vui</option><option selected>Bình thường</option><option>Mệt</option><option>Buồn</option><option>Lo lắng</option><option>Hào hứng</option></select></div>
+      </div>
+      <label><input type="checkbox" id="lStop" style="width:auto"> Em đã dừng đúng lúc mình định</label>
+      <label>Ghi chú (không bắt buộc)</label><input id="lNote" placeholder="Ví dụ: xem trong lúc chờ xe buýt">
+      <p class="err" id="lErr"></p>
+      <button onclick="addLog()">Lưu nhật ký</button>
+    </div>
+    <div class="card"><h2>Nhật ký gần đây</h2><div id="logList"></div></div>
+  </div>
+
+  <div id="s-pause" class="hidden">
+    <div class="card"><h2>⏸️ Dừng 10 giây trước khi xem</h2>
+      <p class="mut">Trước khi mở ứng dụng video, hãy dừng lại 10 giây: thở chậm và tự hỏi mình thật sự muốn xem, hay chỉ là thói quen?</p>
+      <label>Điều gì đang khiến em muốn xem?</label>
+      <select id="pTrig"><option>Buồn chán</option><option>Căng thẳng / mệt</option><option>Thói quen, tay tự mở</option><option>Bạn bè gửi link</option><option>Chờ đợi / rảnh tay</option><option>Khó ngủ</option></select>
+      <label>Em dự định xem bao nhiêu phút?</label>
+      <input type="number" id="pIntend" value="15" min="1" max="180">
+      <div class="timer" id="pTimer">10</div>
+      <p style="text-align:center" id="pBreath">Nhấn "Bắt đầu dừng 10 giây" khi em sẵn sàng.</p>
+      <div class="rowflex" style="justify-content:center">
+        <button id="pStart" onclick="startPause()">▶️ Bắt đầu dừng 10 giây</button>
+        <button id="pDone" class="hidden" onclick="donePause()">✅ Em đã tĩnh tâm — ghi nhận (+10 điểm)</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="s-swap" class="hidden">
+    <div class="card"><h2>🔄 Đổi 15 phút</h2>
+      <p class="mut">Thay 15 phút lướt video bằng một việc lành mạnh. Bấm giờ đủ 15 phút rồi ghi nhận để nhận +15 điểm Cây Hạnh Phúc.</p>
+      <label>Chọn hoạt động thay thế</label>
+      <select id="wAct"><option>Đọc sách 15 phút</option><option>Đi bộ / vận động</option><option>Nghe 3 bài nhạc yêu thích</option><option>Vẽ / viết nhật ký</option><option>Dọn bàn học</option><option>Gọi điện / trò chuyện với người thân, bạn bè</option></select>
+      <div class="timer" id="wTimer">15:00</div>
+      <div class="rowflex" style="justify-content:center">
+        <button id="wStart" onclick="startSwap()">▶️ Bắt đầu bấm giờ</button>
+        <button id="wDone" class="hidden" onclick="doneSwap()">✅ Đã xong 15 phút (+15 điểm)</button>
+      </div>
+      <div id="swapList"></div>
+    </div>
+  </div>
+
+  <div id="s-challenge" class="hidden">
+    <div class="card"><h2>🎯 Thử thách 7 ngày</h2>
+      <label>Chọn thử thách</label>
+      <select id="cKind">
+        <option value="less10">Giảm 10 phút xem mỗi ngày</option>
+        <option value="nolatenight">Không xem sau giờ đi ngủ</option>
+        <option value="oneswap">Mỗi ngày 1 lần Đổi 15 phút</option>
+        <option value="pause">Dừng 10 giây trước mỗi lần xem</option>
+      </select>
+      <button onclick="startChallenge()">Bắt đầu thử thách mới</button>
+      <div id="challengeBox" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div id="s-quiz" class="hidden">
+    <div class="card"><h2>🧠 Trắc nghiệm — Trước (Bộ A: nhận thức) / Sau (Bộ B: HIỆU QUẢ ĐẠT ĐƯỢC)</h2>
+      <p class="mut"><b>Hai mốc là HAI BỘ KHÁC NHAU, đo hai thứ khác nhau:</b> mốc Trước làm <b>Bộ A — trắc nghiệm nhận thức</b> (15 câu có đáp án đúng, chấm /15) để biết em hiểu về tác hại và cơ chế của video ngắn đến đâu. Mốc Sau làm <b>Bộ B — đánh giá HIỆU QUẢ ĐẠT ĐƯỢC</b> (15 câu tự đánh giá kết quả thật của em sau can thiệp: giảm thời gian xem, dừng đúng giới hạn, ngủ ngon hơn, tập trung hơn, hiệu quả của Dừng 10 giây và Đổi 15 phút, tự chủ, lan toả và duy trì). Mỗi câu Bộ B chọn một mức đạt (Đạt rõ rệt / Đạt khá / Đạt một phần / Chưa đạt), tổng <b>/45</b> và quy đổi thành 4 mức hiệu quả: 34–45 Hiệu quả rõ rệt · 25–33 Có hiệu quả · 15–24 Hiệu quả bước đầu · 0–14 Chưa đạt. Vì hai bộ đo hai thứ khác nhau nên <b>không trừ điểm hai bộ cho nhau</b>; sự tiến bộ được đọc qua Bộ B kết hợp với điểm SAS giảm và phút xem trong nhật ký giảm. Điểm KHÔNG cộng vào Cây Hạnh Phúc và không xếp hạng.</p>
+      <label>Mốc làm bài</label>
+      <select id="qPhase"></select>
+      <button onclick="startQuiz()">Bắt đầu làm trắc nghiệm (15 câu)</button>
+      <button onclick="moNgayBoB()" style="background:linear-gradient(135deg,#d97706,#ea580c);margin-left:6px">▶️ Làm ngay BỘ B — Đánh giá HIỆU QUẢ sau can thiệp (15 câu)</button>
+      <p class="ok" style="margin-top:8px">✅ Bản này mốc Sau đã MỞ SẴN: bấm nút cam ở trên là vào thẳng Bộ B — bộ đánh giá HIỆU QUẢ ĐẠT ĐƯỢC sau can thiệp (tự đánh giá kết quả của em, không có đáp án sai).</p>
+      <div id="quizBox" style="margin-top:12px"></div>
+      <div id="quizHistory"></div>
+    </div>
+    <div class="card"><h2>📏 Bảng tự đánh giá thói quen (10 câu)</h2>
+      <p class="mut">Phỏng theo thang nghiện điện thoại thông minh rút gọn SAS-SV (Kwon và cộng sự, 2013) — bản phỏng dịch phục vụ nghiên cứu học đường. Chọn từ 1 (Hoàn toàn không đồng ý) đến 6 (Hoàn toàn đồng ý). Điểm càng cao cho thấy em càng cần được hỗ trợ về thói quen — đây không phải nhãn "nghiện".</p>
+      <label>Mốc làm bài</label>
+      <select id="sasPhase"></select>
+      <button onclick="startSas()">Bắt đầu bảng tự đánh giá</button>
+      <div id="sasBox" style="margin-top:12px"></div>
+      <div id="sasHistory"></div>
+    </div>
+
+    <div class="card"><h2>📈 Hành trình tiến bộ của em — Trước → Sau can thiệp</h2>
+      <p class="mut">Bảng này tự tổng hợp từ các bài em đã làm: Trắc nghiệm nhận thức (điểm càng cao càng tốt), Bảng tự đánh giá thói quen SAS (điểm càng <b>thấp</b> càng tốt), Trắc nghiệm vận dụng Sau và Tự đánh giá tiến bộ Sau. Tiến bộ được so với <b>chính em trước đây</b> — không so với bạn khác, không xếp hạng.</p>
+      <div id="progressBox"><p class="mut">Em chưa có đủ dữ liệu. Hãy làm mốc Trước và mốc Sau để thấy hành trình của mình nhé.</p></div>
+    </div>
+    <div class="card"><h2>🚀 Trắc nghiệm VẬN DỤNG — Phần bổ sung Sau can thiệp, không bắt buộc (10 câu)</h2>
+      <p class="mut">Đây là phần <b>mới, chỉ dành cho mốc Sau</b> — không lặp lại 15 câu nhận thức ở trên. Bộ A (Trước) và Bộ B (Sau) là hai bộ 15 câu riêng, song song cùng chủ đề; 10 câu vận dụng này kiểm tra điều quan trọng hơn: em có <b>dùng được</b> những gì đã học (Dừng 10 giây, Đổi 15 phút, đặt giới hạn, thiết kế môi trường, xử lý khi lỡ vượt giới hạn...) vào tình huống thật hay không. Điểm phần này <b>không</b> cộng vào Cây Hạnh Phúc và không xếp hạng.</p>
+      <button onclick="startQuizPost()">Bắt đầu trắc nghiệm vận dụng (10 câu)</button>
+      <div id="quizPostBox" style="margin-top:12px"></div>
+      <div id="quizPostHistory"></div>
+    </div>
+    <div class="card"><h2>🌟 Tự đánh giá TIẾN BỘ của em — Sau can thiệp (8 câu)</h2>
+      <p class="mut">Không có đáp án đúng/sai. Em tự chấm mức mình làm được <b>hiện nay so với trước can thiệp</b>, từ 1 (Chưa làm được) đến 5 (Làm rất tốt, đã thành thói quen). Tổng điểm tối đa 40 — điểm càng cao cho thấy năng lực tự chủ của em càng vững. Hãy chấm thật lòng: đây là tấm gương cho chính em, không phải bài kiểm tra.</p>
+      <button onclick="startProgressSelf()">Bắt đầu tự đánh giá tiến bộ</button>
+      <div id="progressSelfBox" style="margin-top:12px"></div>
+      <div id="progressSelfHistory"></div>
+    </div>
+    <div class="card"><h2>🎬 Tình huống tương tác</h2>
+      <p class="mut">3 tình huống ngắn — chọn cách xử lý em thấy hợp lý nhất và đọc phản hồi. Không tính điểm, không xếp hạng.</p>
+      <div id="scenarioBox"></div>
+      <h3>🎬 Tình huống NÂNG CAO — Sau can thiệp (4 tình huống)</h3>
+      <p class="mut">Các tình huống khó hơn, gần với đời thật sau khi chương trình kết thúc: bạn bè rủ rê, "tự thưởng" sau kỳ thi, và cả khi em <b>lỡ quay lại thói quen cũ</b>. Lỡ một lần không phải là thất bại — cách em đứng dậy mới cho thấy tiến bộ.</p>
+      <div id="scenarioPostBox"></div>
+    </div>
+  </div>
+
+  
+  <div id="s-report" class="hidden">
+    <div class="card"><h2>📤 Gửi báo cáo tuần cho giáo viên</h2>
+      <p class="mut">Báo cáo chỉ gồm MÃ ẨN DANH và lớp của em — không kèm họ tên, không kèm ghi chú nhật ký cá nhân. Sau khi gửi, số liệu được đóng băng; gửi lại cùng tuần sẽ tạo phiên bản mới và giữ nguyên bản cũ.</p>
+      <label>Chọn một ngày trong tuần muốn gửi</label>
+      <input type="date" id="repDate" onchange="previewReport()">
+      <div id="repPreview"></div>
+      <button onclick="submitReport()">✉️ Xác nhận gửi báo cáo</button>
+      <h3>Báo cáo em đã gửi</h3>
+      <div id="myReports"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ KHUNG GIÁO VIÊN ============ -->
+<div id="teacherApp" class="hidden">
+  <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <div><b>🔬 Nhóm nghiên cứu</b><div class="mut" id="tSub"></div></div>
+    <button class="ghost small" onclick="logout()">Thoát</button>
+  </div>
+  <div class="tabs" id="tTabs">
+    <button data-t="students" class="on" onclick="tTab('students')">👥 Học sinh & PIN</button>
+    <button data-t="summary" onclick="tTab('summary')">📊 Tổng hợp lớp</button>
+    <button data-t="inbox" onclick="tTab('inbox')">📥 Hộp báo cáo</button>
+    <button data-t="research" onclick="tTab('research')">🔬 Nghiên cứu Trước/Sau</button>
+    <button data-t="stats" onclick="tTab('stats')">📈 Thống kê &amp; Biểu đồ</button>
+    <button data-t="tree" onclick="tTab('tree')">🌳 Chấm điểm Cây Hạnh Phúc</button>
+    <button data-t="export" onclick="tTab('export')">💾 Xuất / Nhập dữ liệu</button>
+    <button data-t="settings" onclick="tTab('settings')">⚙️ Cài đặt</button>
+  </div>
+
+  <div id="t-students">
+    <div class="card"><h2>👥 Danh sách học sinh (có mã PIN để phát cho học sinh)</h2>
+      <div class="rowflex">
+        <select id="tsClass" onchange="renderTeacherStudents()" style="max-width:180px"></select>
+        <input id="tsSearch" placeholder="Tìm theo tên / mã..." oninput="renderTeacherStudents()" style="max-width:260px">
+      </div>
+      <div class="tblwrap"><table id="studentTable"><thead><tr><th>Mã ẩn danh</th><th>Họ và tên</th><th>Lớp</th><th>Mã PIN</th><th>Giới hạn (phút)</th><th>Giờ ngủ</th><th>Đồng thuận</th><th></th></tr></thead><tbody></tbody></table></div>
+    </div>
+    <div class="card hidden" id="editCard"><h2>✏️ Sửa hồ sơ học sinh</h2>
+      <input type="hidden" id="eAnon">
+      <div class="grid">
+        <div><label>Họ và tên</label><input id="eName"></div>
+        <div><label>Lớp</label><input id="eClass"></div>
+        <div><label>Mã PIN (4 số)</label><input id="ePin" maxlength="4"></div>
+        <div><label>Giới hạn phút/ngày</label><input id="eLimit" type="number" min="1"></div>
+        <div><label>Giờ đi ngủ</label><input id="eBed" type="time"></div>
+        <div><label>Đồng thuận tham gia</label><select id="eConsent"><option value="0">Chưa có</option><option value="1">Đã có đồng thuận</option></select></div>
+        <div><label>Ngày ghi nhận đồng thuận</label><input id="eConsentDate" type="date"></div>
+      </div>
+      <p class="err" id="eErr"></p>
+      <div class="rowflex"><button onclick="saveStudentEdit()">Lưu thay đổi</button><button class="ghost" onclick="document.getElementById('editCard').classList.add('hidden')">Đóng</button></div>
+    </div>
+    <div class="card"><h2>➕ Thêm học sinh</h2>
+      <div class="grid">
+        <div><label>Họ và tên</label><input id="nName"></div>
+        <div><label>Lớp</label><input id="nClass"></div>
+        <div><label>Mã PIN (4 số)</label><input id="nPin" maxlength="4"></div>
+        <div><label>Giới hạn phút/ngày</label><input id="nLimit" type="number" value="45"></div>
+      </div>
+      <p class="err" id="nErr"></p>
+      <button onclick="addStudent()">Thêm học sinh</button>
+    </div>
+  </div>
+
+  <div id="t-summary" class="hidden">
+    <div class="card"><h2>📊 Tổng hợp lớp — 7 ngày gần nhất</h2>
+      <label>Lớp</label><select id="sumClass" onchange="renderSummary()" style="max-width:200px"></select>
+      <div id="summaryBox"></div>
+    </div>
+  </div>
+
+  <div id="t-inbox" class="hidden">
+    <div class="card"><h2>📥 Hộp báo cáo tuần</h2>
+      <div class="rowflex">
+        <select id="inClass" onchange="renderInbox()" style="max-width:180px"><option value="">Tất cả lớp</option></select>
+        <input id="inWeek" placeholder="Lọc tuần, ví dụ 2026-11-09" oninput="renderInbox()" style="max-width:220px">
+      </div>
+      <div id="inboxBox"></div>
+    </div>
+  </div>
+
+  <div id="t-research" class="hidden">
+    <div class="card"><h2>🔬 So sánh Trước / Sau theo lớp</h2>
+      <label>Lớp</label><select id="resClass" onchange="renderResearch()" style="max-width:200px"></select>
+      <div id="researchBox"></div>
+      <p class="mut">Chú thích: n là số học sinh có đủ cả hai mốc. Khi n &lt; 5, kết quả chỉ mang tính mô tả, không kết luận. Phút xem Trước/Sau được tính từ tuần nhật ký đầu tiên và tuần nhật ký gần nhất của từng học sinh.</p>
+    </div>
+  </div>
+
+  <div id="t-stats" class="hidden">
+    <div class="card"><h2>📈 Thống kê & Biểu đồ</h2>
+      <div class="rowflex">
+        <div><label>Lớp</label><select id="statsClass" onchange="renderStats()" style="max-width:200px"><option value="">Tất cả các lớp</option></select></div>
+        <div><label>Khoảng dữ liệu</label><select id="statsRange" onchange="renderStats()" style="max-width:220px">
+          <option value="7">7 ngày gần nhất</option>
+          <option value="14">14 ngày gần nhất</option>
+          <option value="all" selected>Toàn bộ thời gian</option>
+        </select></div>
+      </div>
+      <p class="mut">Tab này chỉ ĐỌC dữ liệu nhật ký, điểm Cây Hạnh Phúc đã có — không thay đổi bất kỳ dữ liệu nào. Biểu đồ chỉ vẽ những ngày thật sự có học sinh ghi nhật ký, không vẽ cột 0 giả cho ngày trống.</p>
+      <div id="statsBox"></div>
+    </div>
+    <div class="card"><h3>🧮 Thuật toán đánh giá mức rủi ro — công khai để minh bạch</h3>
+      <p>Điểm rủi ro của mỗi học sinh trong khoảng đang xét, thang <b>0–100</b>, gồm 4 thành phần:</p>
+      <ul>
+        <li><b>A — Vượt giới hạn (tối đa 40 điểm):</b> (số ngày xem vượt giới hạn ÷ số ngày có ghi nhật ký) × 40.</li>
+        <li><b>B — Mức xem trung bình (tối đa 30 điểm):</b> min(30, phần phút trung bình/ngày vượt trên giới hạn ÷ giới hạn × 30); nếu trung bình không vượt giới hạn thì B = 0.</li>
+        <li><b>C — Xem sau giờ đi ngủ (tối đa 20 điểm):</b> (số ngày có xem khuya ÷ số ngày có ghi nhật ký) × 20. "Xem khuya" được suy ra từ chính dữ liệu nhật ký: nhật ký không lưu giờ–phút cụ thể, chỉ lưu <b>khung giờ</b> học sinh tự khai; một ngày được tính là có xem khuya khi có ít nhất 1 dòng nhật ký trong ngày chọn khung giờ <b>“Sau giờ đi ngủ”</b> (giờ đi ngủ là mốc từng em đã đặt trong hồ sơ). Đây cũng là cách tính mục “Khuya” trong Báo cáo tuần nên số liệu giữa các mục luôn khớp nhau.</li>
+        <li><b>D — Ghi chép chưa đều (tối đa 10 điểm):</b> (1 − số ngày ghi nhật ký ÷ số ngày của khoảng xét) × 10 — chỉ áp dụng khi khoảng xét dài từ 7 ngày trở lên, khoảng ngắn hơn thì D = 0.</li>
+      </ul>
+      <p>Phân loại: <b>dưới 30 — An toàn</b> · <b>30–59 — Cần chú ý</b> · <b>từ 60 — Nguy cơ cao</b>. Học sinh có ít hơn 3 ngày ghi nhật ký trong khoảng xét sẽ ghi <b>“Chưa đủ dữ liệu”</b> và không xếp loại. Cột “Lý do chính” trong bảng là thành phần đóng góp nhiều điểm rủi ro nhất của em đó.</p>
+      <p class="mut">Hệ số xu hướng là hệ số góc của đường hồi quy tuyến tính (bình phương tối thiểu) khớp với trung bình phút/ngày của lớp qua các ngày có dữ liệu; đơn vị phút/ngày — âm nghĩa là thời gian xem đang giảm dần. “Tuần đầu / tuần cuối” khi so sánh thay đổi là 7 ngày đầu và 7 ngày cuối của khoảng đang xét, lấy trung bình của các ngày có dữ liệu trong mỗi đoạn.</p>
+    </div>
+  </div>
+
+  <div id="t-tree" class="hidden">
+    <div class="card"><h2>🌳 Chấm điểm Cây Hạnh Phúc — bảng lớp</h2>
+      <div class="rowflex">
+        <div><label>Lớp</label><select id="treeClass" onchange="onTreeClassWeek()" style="max-width:180px"></select></div>
+        <div><label>Tuần chấm</label><select id="treeWeek" onchange="onTreeClassWeek()" style="max-width:280px"></select></div>
+      </div>
+      <p class="mut"><b>Chấm nhanh:</b> bấm vào một ô tick để đặt tổng điểm của học sinh về đúng mốc tick đó (Ô k = k × 5 điểm); bấm ô thấp hơn mức hiện tại sẽ hỏi xác nhận trước khi giảm điểm. <b>Chấm chi tiết:</b> bấm <b>+ Chấm Điểm</b> để mở panel tiêu chí — panel hiển thị bằng chứng từ báo cáo tuần của chính học sinh kèm <b>điểm gợi ý</b> tính tự động từ dữ liệu tuần; điểm cuối cùng lưu vào là do giáo viên quyết định.</p>
+      <div id="treeTableBox"></div>
+      <div id="treeHistoryBox"></div>
+    </div>
+    <div class="card"><h2>🏆 Góc khích lệ &amp; phần thưởng</h2>
+      <p class="mut"><b>Nguyên tắc khích lệ của Mindful Screen:</b> phần thưởng là sự <b>GHI NHẬN tiến bộ của mỗi em so với chính mình</b> (huy hiệu giai đoạn cây, chuỗi ngày ghi nhật ký đều đặn, Sao Tiến Bộ của tuần, mục tiêu Tick chung của cả lớp). Các ghi nhận này <b>không xếp hạng công khai</b> giữa học sinh với nhau, <b>không quy đổi</b> điểm Cây Hạnh Phúc thành điểm học tập, và mục Sao Tiến Bộ chỉ hiển thị trong khu vực giáo viên.</p>
+      <div id="classGoalBox"></div>
+      <h3>⭐ Sao Tiến Bộ của tuần — so với chính mình tuần trước</h3>
+      <div class="rowflex">
+        <div><label>Lớp</label><select id="starClass" onchange="renderProgressStars()" style="max-width:180px"></select></div>
+        <div><label>Tuần xét</label><select id="starWeek" onchange="renderProgressStars()" style="max-width:280px"></select></div>
+      </div>
+      <div id="starBox"></div>
+    </div>
+    <div class="card"><h2>📋 Panel chấm điểm theo tiêu chí</h2>
+      <div id="treeFormBox"><p class="mut">Chọn một học sinh ở bảng lớp phía trên rồi bấm <b>+ Chấm Điểm</b> để chấm theo 16 tiêu chí cộng / 9 tiêu chí trừ cho tuần đang chọn.</p></div>
+    </div>
+    <p class="mut">Điểm Cây Hạnh Phúc do giáo viên chấm, cộng dồn qua các đợt chấm và không âm dưới 0. Tick = tối thiểu(6, tổng điểm ÷ 5 làm tròn xuống); giai đoạn theo tổng điểm: dưới 10 Hạt mầm — Tự chủ · 10–14 Mầm xanh — Tĩnh tâm · 15–19 Chồi non — Cân bằng · 20–24 Lá xanh — Vững vàng · 25–29 Hoa thơm — Bản lĩnh · từ 30 Trái ngọt — Sứ giả Hạnh phúc. Điểm này chỉ dùng nội bộ trong app — không đưa vào báo cáo tuần, không đưa vào 4 file CSV nghiên cứu.</p>
+  </div>
+
+  <div id="t-export" class="hidden">
+    <div class="card"><h2>💾 Xuất dữ liệu nghiên cứu (CSV cho Google Sheet)</h2>
+      <p class="mut">4 file CSV đúng cột của 4 tab trong Sheet giáo viên: NhatKy, BaoCaoTuan, TracNghiem_TruocSau, TongHopLop. Chỉ gồm học sinh ĐÃ CÓ ĐỒNG THUẬN và chỉ dùng mã ẩn danh. Cách đưa vào Sheet: mở Sheet → đúng tab → Tệp → Nhập → Tải lên → chọn "Thêm vào cuối" (Append).</p>
+      <p class="mut">📌 <b>Vì sao file tải về có thể chỉ có 1 hàng tiêu đề?</b> Các file nghiên cứu chỉ gồm học sinh <b>ĐÃ CÓ ĐỒNG THUẬN</b> và <b>đã có dữ liệu tương ứng</b> (đã ghi nhật ký / đã gửi báo cáo / đã làm trắc nghiệm). Đầu năm — khi chưa em nào gửi báo cáo và chưa tick đồng thuận — file chỉ có hàng tiêu đề là <b>ĐÚNG, không phải lỗi</b>. Hiện tại có 0 báo cáo đã gửi và 0 học sinh được tick đồng thuận, nên cả 4 file đều chỉ có hàng tiêu đề cho đến khi có dữ liệu thật. Các file CSV dùng dấu chấm phẩy ( ; ) làm dấu phân cách để Excel tiếng Việt tự chia cột khi mở, và vẫn Nhập (Import) tốt vào Google Sheets; số thập phân giữ dấu chấm.</p>
+      <div class="rowflex">
+        <button onclick="exportCSV('logs')">⬇️ NhatKy.csv</button>
+        <button onclick="exportCSV('reports')">⬇️ BaoCaoTuan.csv</button>
+        <button onclick="exportCSV('assess')">⬇️ TracNghiem_TruocSau.csv</button>
+        <button onclick="exportCSV('class')">⬇️ TongHopLop.csv</button>
+      </div>
+      <h3>Sao lưu toàn bộ</h3>
+      <div class="rowflex">
+        <button class="ghost" onclick="exportJSON()">⬇️ Xuất JSON (toàn bộ dữ liệu máy này)</button>
+        <label style="display:inline-block;background:#fff;color:var(--teal);border:1.5px solid var(--teal);border-radius:10px;padding:9px 14px;cursor:pointer;font-size:14px">⬆️ Nhập JSON khôi phục<input type="file" accept=".json" style="display:none" onchange="importJSON(event)"></label>
+      </div>
+      <p class="mut">Lưu ý: bản file độc lập này lưu dữ liệu trên trình duyệt của TỪNG máy (localStorage). Học sinh dùng máy nào thì dữ liệu ở máy đó; giáo viên tổng hợp bằng báo cáo tuần/CSV học sinh gửi, hoặc dùng bản app trên Muse để dữ liệu tập trung.</p>
+    </div>
+  </div>
+
+  <div id="t-settings" class="hidden">
+    <div class="card"><h2>⚙️ Cài đặt Nhóm nghiên cứu</h2>
+      <label>Link / ID Google Sheet của giáo viên</label><input id="setSheet">
+      <label>Apps Script Web App URL (đồng bộ tự động báo cáo lên Sheet)</label><input id="setScriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+      <p class="mut" style="margin:4px 0 0">Đã gắn sẵn địa chỉ kết nối Sheet đang hoạt động — chỉ thay khi triển khai lại Apps Script.</p>
+      <label>Token kết nối Sheet</label><input id="setScriptToken">
+      <div class="rowflex"><button type="button" class="ghost" onclick="testSheetConnection()">🔌 Kiểm tra kết nối Sheet</button></div>
+      <p id="sheetTestResult" class="mut"></p>
+      <label>Giai đoạn nghiên cứu</label>
+      <select id="setPhase"><option>Tuần nền — chỉ ghi nhật ký</option><option>Can thiệp — Dừng 10 giây + Đổi 15 phút</option><option>Đo sau</option></select>
+      <label><input type="checkbox" id="setPre" style="width:auto"> Mở mốc trắc nghiệm TRƯỚC</label><br>
+      <label><input type="checkbox" id="setPost" style="width:auto"> Mở mốc trắc nghiệm SAU</label><br>
+      <p class="mut">Lưu ý: ở bản này, mốc <b>Sau can thiệp — Bộ B riêng</b> luôn chọn được ngay trong tab Trắc nghiệm của học sinh (không cần tick ô này học sinh mới làm được); hai ô tick trên chỉ còn dùng để ghi nhận giai đoạn nghiên cứu.</p>
+      <button onclick="saveSettings()">Lưu cài đặt</button>
+      <h3>Đổi mật khẩu Nhóm nghiên cứu</h3>
+      <label>Mật khẩu mới (ít nhất 6 ký tự)</label><input id="setPass" type="password">
+      <p class="err" id="setPassErr"></p>
+      <button class="ghost" onclick="changePass()">Đổi mật khẩu</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<p class="mut" style="text-align:center;padding:10px 0 26px">Mindful Screen — Xem ít hơn không phải vì bị cấm, mà vì mình chủ động chọn. 🌱</p>
+</div>
+<script>
+/* ================= DỮ LIỆU ================= */
+const SEED_STUDENTS = [{"anon": "HS04", "name": "Nguyễn Ngọc Ánh", "class": "10A3", "pin": "4425", "limit": 45, "bedtime": "22:00"}, {"anon": "HS05", "name": "Bùi Thái Ân", "class": "10A3", "pin": "6291", "limit": 45, "bedtime": "22:00"}, {"anon": "HS06", "name": "Đào Thiện Bảo", "class": "10A3", "pin": "7075", "limit": 45, "bedtime": "22:00"}, {"anon": "HS07", "name": "Hồ Ngô Gia Bảo", "class": "10A3", "pin": "9171", "limit": 45, "bedtime": "22:00"}, {"anon": "HS08", "name": "Phùng Ngọc Diệp", "class": "10A3", "pin": "1331", "limit": 45, "bedtime": "22:00"}, {"anon": "HS09", "name": "Nguyễn Hoàng Duy", "class": "10A3", "pin": "4736", "limit": 45, "bedtime": "22:00"}, {"anon": "HS10", "name": "Nguyễn Đức Đảm", "class": "10A3", "pin": "7346", "limit": 45, "bedtime": "22:00"}, {"anon": "HS11", "name": "Lê Phan Linh Đan", "class": "10A3", "pin": "1106", "limit": 45, "bedtime": "22:00"}, {"anon": "HS12", "name": "Đặng Nhựt Đăng", "class": "10A3", "pin": "9872", "limit": 45, "bedtime": "22:00"}, {"anon": "HS13", "name": "Hồ Hoài Đức", "class": "10A3", "pin": "2206", "limit": 45, "bedtime": "22:00"}, {"anon": "HS14", "name": "Tô Khánh Hạ", "class": "10A3", "pin": "8494", "limit": 45, "bedtime": "22:00"}, {"anon": "HS15", "name": "Nguyễn Thị Ngọc Hân", "class": "10A3", "pin": "7154", "limit": 45, "bedtime": "22:00"}, {"anon": "HS16", "name": "Trần Lê Gia Hân", "class": "10A3", "pin": "1464", "limit": 45, "bedtime": "22:00"}, {"anon": "HS17", "name": "Phan Lê Thanh Huyền", "class": "10A3", "pin": "8344", "limit": 45, "bedtime": "22:00"}, {"anon": "HS18", "name": "Nguyễn Trần Việt Hương", "class": "10A3", "pin": "3625", "limit": 45, "bedtime": "22:00"}, {"anon": "HS19", "name": "Lê Minh Khang", "class": "10A3", "pin": "9966", "limit": 45, "bedtime": "22:00"}, {"anon": "HS20", "name": "Lê Thế Khang", "class": "10A3", "pin": "8720", "limit": 45, "bedtime": "22:00"}, {"anon": "HS21", "name": "Nguyễn Bảo Khang", "class": "10A3", "pin": "4920", "limit": 45, "bedtime": "22:00"}, {"anon": "HS22", "name": "Quảng Trọng Khang", "class": "10A3", "pin": "2889", "limit": 45, "bedtime": "22:00"}, {"anon": "HS23", "name": "Lê Minh Khánh", "class": "10A3", "pin": "5681", "limit": 45, "bedtime": "22:00"}, {"anon": "HS24", "name": "Nguyễn Tống Đăng Khoa", "class": "10A3", "pin": "5770", "limit": 45, "bedtime": "22:00"}, {"anon": "HS25", "name": "Trần Ngọc Kim Khoa", "class": "10A3", "pin": "4485", "limit": 45, "bedtime": "22:00"}, {"anon": "HS26", "name": "Nguyễn Minh Khôi", "class": "10A3", "pin": "2820", "limit": 45, "bedtime": "22:00"}, {"anon": "HS27", "name": "Thái Mỹ Kỳ", "class": "10A3", "pin": "6235", "limit": 45, "bedtime": "22:00"}, {"anon": "HS28", "name": "Nguyễn Hoàng Nam", "class": "10A3", "pin": "9254", "limit": 45, "bedtime": "22:00"}, {"anon": "HS29", "name": "Phạm Hoàng Nam", "class": "10A3", "pin": "9158", "limit": 45, "bedtime": "22:00"}, {"anon": "HS30", "name": "Lê Nguyễn Thu Ngân", "class": "10A3", "pin": "9615", "limit": 45, "bedtime": "22:00"}, {"anon": "HS31", "name": "Trần Hồ Bảo Ngân", "class": "10A3", "pin": "9083", "limit": 45, "bedtime": "22:00"}, {"anon": "HS32", "name": "Nguyễn Trần Mộng Nghi", "class": "10A3", "pin": "7317", "limit": 45, "bedtime": "22:00"}, {"anon": "HS33", "name": "Hồ Phan Minh Nhật", "class": "10A3", "pin": "9712", "limit": 45, "bedtime": "22:00"}, {"anon": "HS34", "name": "Nguyễn Trọng Phát", "class": "10A3", "pin": "8403", "limit": 45, "bedtime": "22:00"}, {"anon": "HS35", "name": "Đào Quốc Phú", "class": "10A3", "pin": "6128", "limit": 45, "bedtime": "22:00"}, {"anon": "HS36", "name": "Đặng Thiên Phú", "class": "10A3", "pin": "3972", "limit": 45, "bedtime": "22:00"}, {"anon": "HS37", "name": "Trần Mạnh Phú", "class": "10A3", "pin": "7818", "limit": 45, "bedtime": "22:00"}, {"anon": "HS38", "name": "Lê Hoàng Trúc Quỳnh", "class": "10A3", "pin": "4458", "limit": 45, "bedtime": "22:00"}, {"anon": "HS39", "name": "Mai Huỳnh Chí Tâm", "class": "10A3", "pin": "3512", "limit": 45, "bedtime": "22:00"}, {"anon": "HS40", "name": "Nguyễn Hoàng Thiên", "class": "10A3", "pin": "4610", "limit": 45, "bedtime": "22:00"}, {"anon": "HS41", "name": "Nguyễn Tấn Thiện", "class": "10A3", "pin": "1594", "limit": 45, "bedtime": "22:00"}, {"anon": "HS42", "name": "Nguyễn Hoài Thương", "class": "10A3", "pin": "9726", "limit": 45, "bedtime": "22:00"}, {"anon": "HS43", "name": "Lê Bảo Thy", "class": "10A3", "pin": "6169", "limit": 45, "bedtime": "22:00"}, {"anon": "HS44", "name": "Bùi Giả Minh Toàn", "class": "10A3", "pin": "9064", "limit": 45, "bedtime": "22:00"}, {"anon": "HS45", "name": "Lư Phúc Toàn", "class": "10A3", "pin": "9475", "limit": 45, "bedtime": "22:00"}, {"anon": "HS46", "name": "Lý Nguyễn Ngọc Trâm", "class": "10A3", "pin": "1195", "limit": 45, "bedtime": "22:00"}, {"anon": "HS47", "name": "Tô Huỳnh Quang Tú", "class": "10A3", "pin": "9380", "limit": 45, "bedtime": "22:00"}, {"anon": "HS48", "name": "Trương Trần Anh Tuấn", "class": "10A3", "pin": "6758", "limit": 45, "bedtime": "22:00"}, {"anon": "HS49", "name": "Phan Kiến Văn", "class": "10A3", "pin": "9091", "limit": 45, "bedtime": "22:00"}, {"anon": "HS50", "name": "Võ Bảo Gia Văn", "class": "10A3", "pin": "7241", "limit": 45, "bedtime": "22:00"}, {"anon": "HS51", "name": "Cao Dương Thúy An", "class": "10A5", "pin": "8166", "limit": 45, "bedtime": "22:00"}, {"anon": "HS52", "name": "Lê Nguyễn Nhật An", "class": "10A5", "pin": "4176", "limit": 45, "bedtime": "22:00"}, {"anon": "HS53", "name": "Du Gia Bảo", "class": "10A5", "pin": "5047", "limit": 45, "bedtime": "22:00"}, {"anon": "HS54", "name": "Huỳnh Thị Ý Chị", "class": "10A5", "pin": "9517", "limit": 45, "bedtime": "22:00"}, {"anon": "HS55", "name": "Hồ Nguyễn Nguyên Chương", "class": "10A5", "pin": "1203", "limit": 45, "bedtime": "22:00"}, {"anon": "HS56", "name": "Trần Thị Kim Cương", "class": "10A5", "pin": "9634", "limit": 45, "bedtime": "22:00"}, {"anon": "HS57", "name": "Hồ Ngọc Hân", "class": "10A5", "pin": "8534", "limit": 45, "bedtime": "22:00"}, {"anon": "HS58", "name": "Trần Thị Thu Hiền", "class": "10A5", "pin": "9748", "limit": 45, "bedtime": "22:00"}, {"anon": "HS59", "name": "Đặng Trung Hiếu", "class": "10A5", "pin": "4646", "limit": 45, "bedtime": "22:00"}, {"anon": "HS60", "name": "Bùi Huỳnh Hoa", "class": "10A5", "pin": "6078", "limit": 45, "bedtime": "22:00"}, {"anon": "HS61", "name": "Nguyễn Quốc Huy", "class": "10A5", "pin": "8167", "limit": 45, "bedtime": "22:00"}, {"anon": "HS62", "name": "Bùi Huỳnh Hương", "class": "10A5", "pin": "1654", "limit": 45, "bedtime": "22:00"}, {"anon": "HS63", "name": "Nguyễn Thiên Hương", "class": "10A5", "pin": "2715", "limit": 45, "bedtime": "22:00"}, {"anon": "HS64", "name": "Trần Phúc Khang", "class": "10A5", "pin": "9319", "limit": 45, "bedtime": "22:00"}, {"anon": "HS65", "name": "Hồ Hào Kiệt", "class": "10A5", "pin": "2764", "limit": 45, "bedtime": "22:00"}, {"anon": "HS66", "name": "Nguyễn Thị Thúy Kiều", "class": "10A5", "pin": "6622", "limit": 45, "bedtime": "22:00"}, {"anon": "HS67", "name": "Trần Thị Kiều Lam", "class": "10A5", "pin": "8111", "limit": 45, "bedtime": "22:00"}, {"anon": "HS68", "name": "Phan Võ Duy Long", "class": "10A5", "pin": "3296", "limit": 45, "bedtime": "22:00"}, {"anon": "HS69", "name": "Đoàn Thị Trà My", "class": "10A5", "pin": "9792", "limit": 45, "bedtime": "22:00"}, {"anon": "HS70", "name": "Hồ Hà My", "class": "10A5", "pin": "1080", "limit": 45, "bedtime": "22:00"}, {"anon": "HS71", "name": "Võ Thị Trà My", "class": "10A5", "pin": "5224", "limit": 45, "bedtime": "22:00"}, {"anon": "HS72", "name": "Trần Tuyết Ngân", "class": "10A5", "pin": "7083", "limit": 45, "bedtime": "22:00"}, {"anon": "HS73", "name": "Nguyễn Ngọc Phương Nghi", "class": "10A5", "pin": "2039", "limit": 45, "bedtime": "22:00"}, {"anon": "HS74", "name": "Nguyễn Thị Huệ Ngọc", "class": "10A5", "pin": "3721", "limit": 45, "bedtime": "22:00"}, {"anon": "HS75", "name": "Lưu Minh Nguyệt", "class": "10A5", "pin": "2301", "limit": 45, "bedtime": "22:00"}, {"anon": "HS76", "name": "Nguyễn Phạm Ngọc Nhi", "class": "10A5", "pin": "7020", "limit": 45, "bedtime": "22:00"}, {"anon": "HS77", "name": "Nguyễn Võ Đoan Như", "class": "10A5", "pin": "6100", "limit": 45, "bedtime": "22:00"}, {"anon": "HS78", "name": "Trần Thanh Phi", "class": "10A5", "pin": "7776", "limit": 45, "bedtime": "22:00"}, {"anon": "HS79", "name": "Lê Hoàng Quân", "class": "10A5", "pin": "4941", "limit": 45, "bedtime": "22:00"}, {"anon": "HS80", "name": "Trần Quốc Sỹ", "class": "10A5", "pin": "8305", "limit": 45, "bedtime": "22:00"}, {"anon": "HS81", "name": "Nguyễn Thu Thảo", "class": "10A5", "pin": "4649", "limit": 45, "bedtime": "22:00"}, {"anon": "HS82", "name": "Bùi Anh Thư", "class": "10A5", "pin": "3711", "limit": 45, "bedtime": "22:00"}, {"anon": "HS83", "name": "Trần Hữu Tín", "class": "10A5", "pin": "2670", "limit": 45, "bedtime": "22:00"}, {"anon": "HS84", "name": "Nguyễn Quốc Toàn", "class": "10A5", "pin": "5792", "limit": 45, "bedtime": "22:00"}, {"anon": "HS85", "name": "Lê Thị Uyên Trang", "class": "10A5", "pin": "4618", "limit": 45, "bedtime": "22:00"}, {"anon": "HS86", "name": "Bùi Bảo Trâm", "class": "10A5", "pin": "7237", "limit": 45, "bedtime": "22:00"}, {"anon": "HS87", "name": "Trần Thị Thanh Tuyền", "class": "10A5", "pin": "2491", "limit": 45, "bedtime": "22:00"}, {"anon": "HS88", "name": "Dương Ngọc Cát Tường", "class": "10A5", "pin": "9668", "limit": 45, "bedtime": "22:00"}, {"anon": "HS89", "name": "Lâm Hoàng Khánh Vinh", "class": "10A5", "pin": "3041", "limit": 45, "bedtime": "22:00"}, {"anon": "HS90", "name": "Dương Thị Tường Vy", "class": "10A5", "pin": "9848", "limit": 45, "bedtime": "22:00"}, {"anon": "HS91", "name": "Huỳnh Ngọc Vy", "class": "10A5", "pin": "7325", "limit": 45, "bedtime": "22:00"}, {"anon": "HS92", "name": "Nguyễn Ngọc Tường Vy", "class": "10A5", "pin": "2540", "limit": 45, "bedtime": "22:00"}, {"anon": "HS93", "name": "Phạm Ngọc Thảo Vy", "class": "10A5", "pin": "5156", "limit": 45, "bedtime": "22:00"}, {"anon": "HS94", "name": "Tống Vân An", "class": "11A5", "pin": "2757", "limit": 45, "bedtime": "22:00"}, {"anon": "HS95", "name": "Trần Ngọc Vân Anh", "class": "11A5", "pin": "7684", "limit": 45, "bedtime": "22:00"}, {"anon": "HS96", "name": "Huỳnh Khiết Băng", "class": "11A5", "pin": "4300", "limit": 45, "bedtime": "22:00"}, {"anon": "HS97", "name": "Trần Huỳnh Bích Châu", "class": "11A5", "pin": "6106", "limit": 45, "bedtime": "22:00"}, {"anon": "HS98", "name": "Phạm Tấn Đạt", "class": "11A5", "pin": "4870", "limit": 45, "bedtime": "22:00"}, {"anon": "HS99", "name": "Trần Nguyễn Kim Hân", "class": "11A5", "pin": "5960", "limit": 45, "bedtime": "22:00"}, {"anon": "HS100", "name": "Thái Khải Hoàng", "class": "11A5", "pin": "9876", "limit": 45, "bedtime": "22:00"}, {"anon": "HS101", "name": "Đào Xuân Hương", "class": "11A5", "pin": "4338", "limit": 45, "bedtime": "22:00"}, {"anon": "HS102", "name": "Nguyễn Tuấn Khang", "class": "11A5", "pin": "6160", "limit": 45, "bedtime": "22:00"}, {"anon": "HS103", "name": "Nguyễn Hoàng Tường Lam", "class": "11A5", "pin": "8658", "limit": 45, "bedtime": "22:00"}, {"anon": "HS104", "name": "Trần Thị Trúc Lam", "class": "11A5", "pin": "9524", "limit": 45, "bedtime": "22:00"}, {"anon": "HS105", "name": "Đoàn Thị Kim Ngân", "class": "11A5", "pin": "1519", "limit": 45, "bedtime": "22:00"}, {"anon": "HS106", "name": "Quãng Thảo Nghi", "class": "11A5", "pin": "2423", "limit": 45, "bedtime": "22:00"}, {"anon": "HS107", "name": "Lê Thị Bích Ngọc", "class": "11A5", "pin": "3728", "limit": 45, "bedtime": "22:00"}, {"anon": "HS108", "name": "Trần Bảo Ngọc", "class": "11A5", "pin": "1023", "limit": 45, "bedtime": "22:00"}, {"anon": "HS109", "name": "Phùng Trần Xuân Nguyên", "class": "11A5", "pin": "5959", "limit": 45, "bedtime": "22:00"}, {"anon": "HS110", "name": "Lý Minh Nhân", "class": "11A5", "pin": "1312", "limit": 45, "bedtime": "22:00"}, {"anon": "HS111", "name": "Dương Hoàng Long Nhật", "class": "11A5", "pin": "8968", "limit": 45, "bedtime": "22:00"}, {"anon": "HS112", "name": "Hồ Thị Tâm Như", "class": "11A5", "pin": "3830", "limit": 45, "bedtime": "22:00"}, {"anon": "HS113", "name": "Lê Thị Huỳnh Như", "class": "11A5", "pin": "2953", "limit": 45, "bedtime": "22:00"}, {"anon": "HS114", "name": "Đặng Huỳnh Bảo Ny", "class": "11A5", "pin": "7464", "limit": 45, "bedtime": "22:00"}, {"anon": "HS115", "name": "Võ Thị Kiều Oanh", "class": "11A5", "pin": "5754", "limit": 45, "bedtime": "22:00"}, {"anon": "HS116", "name": "Bùi Thị Như Quỳnh", "class": "11A5", "pin": "6022", "limit": 45, "bedtime": "22:00"}, {"anon": "HS117", "name": "Võ Anh Thơ", "class": "11A5", "pin": "3688", "limit": 45, "bedtime": "22:00"}, {"anon": "HS118", "name": "Lê Bảo Thy", "class": "11A5", "pin": "1168", "limit": 45, "bedtime": "22:00"}, {"anon": "HS119", "name": "Lê Thị Anh Thy", "class": "11A5", "pin": "3233", "limit": 45, "bedtime": "22:00"}, {"anon": "HS120", "name": "Đào Thiên Trang", "class": "11A5", "pin": "5320", "limit": 45, "bedtime": "22:00"}, {"anon": "HS121", "name": "Đặng Khổng Nguyễn Thùy Trâm", "class": "11A5", "pin": "1084", "limit": 45, "bedtime": "22:00"}, {"anon": "HS122", "name": "Nguyễn Huỳnh Bảo Trâm", "class": "11A5", "pin": "1998", "limit": 45, "bedtime": "22:00"}, {"anon": "HS123", "name": "Trần Thị Quỳnh Trâm", "class": "11A5", "pin": "5471", "limit": 45, "bedtime": "22:00"}, {"anon": "HS124", "name": "Lê Đình Trí", "class": "11A5", "pin": "9986", "limit": 45, "bedtime": "22:00"}, {"anon": "HS125", "name": "Đặng Ngọc Trinh", "class": "11A5", "pin": "8357", "limit": 45, "bedtime": "22:00"}, {"anon": "HS126", "name": "Phùng Đào Đức Trung", "class": "11A5", "pin": "8617", "limit": 45, "bedtime": "22:00"}, {"anon": "HS127", "name": "Nguyễn Nhật Trường", "class": "11A5", "pin": "5313", "limit": 45, "bedtime": "22:00"}, {"anon": "HS128", "name": "Trần Tú Uyên", "class": "11A5", "pin": "8740", "limit": 45, "bedtime": "22:00"}, {"anon": "HS129", "name": "Ngô Thị Thanh Vân", "class": "11A5", "pin": "3395", "limit": 45, "bedtime": "22:00"}, {"anon": "HS130", "name": "Đỗ Huỳnh Phương Vy", "class": "11A5", "pin": "2573", "limit": 45, "bedtime": "22:00"}, {"anon": "HS131", "name": "Nguyễn Lan Vy", "class": "11A5", "pin": "8348", "limit": 45, "bedtime": "22:00"}, {"anon": "HS132", "name": "Nguyễn Ngọc Thảo Vy", "class": "11A5", "pin": "7505", "limit": 45, "bedtime": "22:00"}, {"anon": "HS133", "name": "Phạm Phương Vy", "class": "11A5", "pin": "5487", "limit": 45, "bedtime": "22:00"}, {"anon": "HS134", "name": "Trần Ngọc Như Ý", "class": "11A5", "pin": "3819", "limit": 45, "bedtime": "22:00"}, {"anon": "HS135", "name": "Phạm Thanh An", "class": "11B7", "pin": "5757", "limit": 45, "bedtime": "22:00"}, {"anon": "HS136", "name": "Bùi Thùy Vân Anh", "class": "11B7", "pin": "7862", "limit": 45, "bedtime": "22:00"}, {"anon": "HS137", "name": "Tiêu Hồng Anh", "class": "11B7", "pin": "2088", "limit": 45, "bedtime": "22:00"}, {"anon": "HS138", "name": "Trần Nguyễn Ngọc Ân", "class": "11B7", "pin": "1420", "limit": 45, "bedtime": "22:00"}, {"anon": "HS139", "name": "Đặng Võ Ngọc Bích", "class": "11B7", "pin": "5796", "limit": 45, "bedtime": "22:00"}, {"anon": "HS140", "name": "Lê Văn Danh", "class": "11B7", "pin": "4271", "limit": 45, "bedtime": "22:00"}, {"anon": "HS141", "name": "Đào Thị Mỹ Duyên", "class": "11B7", "pin": "6869", "limit": 45, "bedtime": "22:00"}, {"anon": "HS142", "name": "Lâm Thị Kim Duyên", "class": "11B7", "pin": "4188", "limit": 45, "bedtime": "22:00"}, {"anon": "HS143", "name": "Cao Quốc Dự", "class": "11B7", "pin": "5298", "limit": 45, "bedtime": "22:00"}, {"anon": "HS144", "name": "Đặng Hồng Hạnh", "class": "11B7", "pin": "8541", "limit": 45, "bedtime": "22:00"}, {"anon": "HS145", "name": "Lâm Thị Bảo Khanh", "class": "11B7", "pin": "6723", "limit": 45, "bedtime": "22:00"}, {"anon": "HS146", "name": "Võ Quốc Khánh", "class": "11B7", "pin": "4206", "limit": 45, "bedtime": "22:00"}, {"anon": "HS147", "name": "Lữ Trương Anh Kiệt", "class": "11B7", "pin": "4786", "limit": 45, "bedtime": "22:00"}, {"anon": "HS148", "name": "Lê Khánh Lam", "class": "11B7", "pin": "1148", "limit": 45, "bedtime": "22:00"}, {"anon": "HS149", "name": "Lê Trần Bá Long", "class": "11B7", "pin": "1110", "limit": 45, "bedtime": "22:00"}, {"anon": "HS150", "name": "Đinh Thị Tuyết Minh", "class": "11B7", "pin": "6215", "limit": 45, "bedtime": "22:00"}, {"anon": "HS151", "name": "Ngô Đỗ Khai Minh", "class": "11B7", "pin": "6222", "limit": 45, "bedtime": "22:00"}, {"anon": "HS152", "name": "Lê Hoàng My", "class": "11B7", "pin": "6272", "limit": 45, "bedtime": "22:00"}, {"anon": "HS153", "name": "Nguyễn Ngọc Trà My", "class": "11B7", "pin": "1329", "limit": 45, "bedtime": "22:00"}, {"anon": "HS154", "name": "Cao Hoàng Nam", "class": "11B7", "pin": "4115", "limit": 45, "bedtime": "22:00"}, {"anon": "HS155", "name": "Nguyễn Quỳnh Nga", "class": "11B7", "pin": "4225", "limit": 45, "bedtime": "22:00"}, {"anon": "HS156", "name": "Trần Thanh Ngân", "class": "11B7", "pin": "2579", "limit": 45, "bedtime": "22:00"}, {"anon": "HS157", "name": "Võ Phương Ngọc", "class": "11B7", "pin": "4167", "limit": 45, "bedtime": "22:00"}, {"anon": "HS158", "name": "Lâm Thành Nhân", "class": "11B7", "pin": "6556", "limit": 45, "bedtime": "22:00"}, {"anon": "HS159", "name": "Nguyễn Trần Yến Nhi", "class": "11B7", "pin": "5207", "limit": 45, "bedtime": "22:00"}, {"anon": "HS160", "name": "Phạm Thị Huỳnh Như", "class": "11B7", "pin": "8409", "limit": 45, "bedtime": "22:00"}, {"anon": "HS161", "name": "Lê Tràng Mỹ Quyên", "class": "11B7", "pin": "3551", "limit": 45, "bedtime": "22:00"}, {"anon": "HS162", "name": "Võ Cẩm Quyên", "class": "11B7", "pin": "4355", "limit": 45, "bedtime": "22:00"}, {"anon": "HS163", "name": "Nguyễn Thị Hương Quỳnh", "class": "11B7", "pin": "2192", "limit": 45, "bedtime": "22:00"}, {"anon": "HS164", "name": "Đặng Thị Thanh", "class": "11B7", "pin": "8862", "limit": 45, "bedtime": "22:00"}, {"anon": "HS165", "name": "Phan Thị Phương Thảo", "class": "11B7", "pin": "3814", "limit": 45, "bedtime": "22:00"}, {"anon": "HS166", "name": "Khổng Trần Thịnh", "class": "11B7", "pin": "6874", "limit": 45, "bedtime": "22:00"}, {"anon": "HS167", "name": "Huỳnh Hoài Thuận", "class": "11B7", "pin": "8213", "limit": 45, "bedtime": "22:00"}, {"anon": "HS168", "name": "Cao Thái Anh Thư", "class": "11B7", "pin": "7772", "limit": 45, "bedtime": "22:00"}, {"anon": "HS169", "name": "Đặng Mai Thư", "class": "11B7", "pin": "2533", "limit": 45, "bedtime": "22:00"}, {"anon": "HS170", "name": "Nguyễn Ngọc Anh Thư", "class": "11B7", "pin": "9470", "limit": 45, "bedtime": "22:00"}, {"anon": "HS171", "name": "Lê Hồ Ngọc Trâm", "class": "11B7", "pin": "6541", "limit": 45, "bedtime": "22:00"}, {"anon": "HS172", "name": "Nguyễn Huỳnh Trân", "class": "11B7", "pin": "4929", "limit": 45, "bedtime": "22:00"}, {"anon": "HS173", "name": "Trương Thanh Trúc", "class": "11B7", "pin": "7566", "limit": 45, "bedtime": "22:00"}, {"anon": "HS174", "name": "Lê Giang Cẩm Tú", "class": "11B7", "pin": "4173", "limit": 45, "bedtime": "22:00"}, {"anon": "HS175", "name": "Nguyễn Trần Phi Vương", "class": "11B7", "pin": "2104", "limit": 45, "bedtime": "22:00"}, {"anon": "HS176", "name": "Bùi Ngọc Khánh Vy", "class": "11B7", "pin": "4299", "limit": 45, "bedtime": "22:00"}, {"anon": "HS177", "name": "Võ Thị Tường Vy", "class": "11B7", "pin": "3545", "limit": 45, "bedtime": "22:00"}, {"anon": "HS178", "name": "Võ Thị Tường Vy", "class": "11B7", "pin": "5040", "limit": 45, "bedtime": "22:00"}, {"anon": "HS179", "name": "Huỳnh Nguyễn Bảo An", "class": "12A1", "pin": "1978", "limit": 45, "bedtime": "22:00"}, {"anon": "HS180", "name": "Lê Nguyễn Thúy An", "class": "12A1", "pin": "9150", "limit": 45, "bedtime": "22:00"}, {"anon": "HS181", "name": "Trần Phúc An", "class": "12A1", "pin": "1124", "limit": 45, "bedtime": "22:00"}, {"anon": "HS182", "name": "Hồ Đức Anh", "class": "12A1", "pin": "3470", "limit": 45, "bedtime": "22:00"}, {"anon": "HS183", "name": "Hồ Quỳnh Anh", "class": "12A1", "pin": "1457", "limit": 45, "bedtime": "22:00"}, {"anon": "HS184", "name": "Lâm Hoài Anh", "class": "12A1", "pin": "4010", "limit": 45, "bedtime": "22:00"}, {"anon": "HS185", "name": "Lê Quang Bình Anh", "class": "12A1", "pin": "5122", "limit": 45, "bedtime": "22:00"}, {"anon": "HS186", "name": "Châu Văn Gia Bảo", "class": "12A1", "pin": "6198", "limit": 45, "bedtime": "22:00"}, {"anon": "HS187", "name": "Phạm Gia Bảo", "class": "12A1", "pin": "5738", "limit": 45, "bedtime": "22:00"}, {"anon": "HS188", "name": "Võ Trần Nhật Duy", "class": "12A1", "pin": "7340", "limit": 45, "bedtime": "22:00"}, {"anon": "HS189", "name": "Diếp Thành Đạt", "class": "12A1", "pin": "1170", "limit": 45, "bedtime": "22:00"}, {"anon": "HS190", "name": "Nguyễn Gia Hân", "class": "12A1", "pin": "6664", "limit": 45, "bedtime": "22:00"}, {"anon": "HS191", "name": "Nguyễn Phạm Gia Hân", "class": "12A1", "pin": "3838", "limit": 45, "bedtime": "22:00"}, {"anon": "HS192", "name": "Nguyễn Huỳnh Phúc Hậu", "class": "12A1", "pin": "1447", "limit": 45, "bedtime": "22:00"}, {"anon": "HS193", "name": "Phạm Minh Hiển", "class": "12A1", "pin": "9271", "limit": 45, "bedtime": "22:00"}, {"anon": "HS194", "name": "Hồ Trần Diễm Hương", "class": "12A1", "pin": "3891", "limit": 45, "bedtime": "22:00"}, {"anon": "HS195", "name": "Mai Vĩ Khang", "class": "12A1", "pin": "1280", "limit": 45, "bedtime": "22:00"}, {"anon": "HS196", "name": "Thái Vũ Khang", "class": "12A1", "pin": "3461", "limit": 45, "bedtime": "22:00"}, {"anon": "HS197", "name": "Lương Nhã Lan", "class": "12A1", "pin": "7102", "limit": 45, "bedtime": "22:00"}, {"anon": "HS198", "name": "Dương Thảo Ngân", "class": "12A1", "pin": "5303", "limit": 45, "bedtime": "22:00"}, {"anon": "HS199", "name": "Đặng Chí Nghĩa", "class": "12A1", "pin": "8400", "limit": 45, "bedtime": "22:00"}, {"anon": "HS200", "name": "Hồ Như Ngọc", "class": "12A1", "pin": "1916", "limit": 45, "bedtime": "22:00"}, {"anon": "HS201", "name": "Trần Băng Ngọc", "class": "12A1", "pin": "1934", "limit": 45, "bedtime": "22:00"}, {"anon": "HS202", "name": "Hồ Cao Xuân Nhật", "class": "12A1", "pin": "3715", "limit": 45, "bedtime": "22:00"}, {"anon": "HS203", "name": "Đặng Thị Yến Nhi", "class": "12A1", "pin": "5072", "limit": 45, "bedtime": "22:00"}, {"anon": "HS204", "name": "Nguyễn Thị Hồng Nhung", "class": "12A1", "pin": "3907", "limit": 45, "bedtime": "22:00"}, {"anon": "HS205", "name": "Hồ Quỳnh Như", "class": "12A1", "pin": "8633", "limit": 45, "bedtime": "22:00"}, {"anon": "HS206", "name": "Nguyễn Hồ Quế Như", "class": "12A1", "pin": "1772", "limit": 45, "bedtime": "22:00"}, {"anon": "HS207", "name": "Đào Nguyễn Đức Phát", "class": "12A1", "pin": "6577", "limit": 45, "bedtime": "22:00"}, {"anon": "HS208", "name": "Bùi Nhật Quang", "class": "12A1", "pin": "7499", "limit": 45, "bedtime": "22:00"}, {"anon": "HS209", "name": "Huỳnh Minh Quân", "class": "12A1", "pin": "1005", "limit": 45, "bedtime": "22:00"}, {"anon": "HS210", "name": "Trần Khả Quí", "class": "12A1", "pin": "2179", "limit": 45, "bedtime": "22:00"}, {"anon": "HS211", "name": "Trần Quang Quí", "class": "12A1", "pin": "4696", "limit": 45, "bedtime": "22:00"}, {"anon": "HS212", "name": "Phan Dư Quỳnh", "class": "12A1", "pin": "8808", "limit": 45, "bedtime": "22:00"}, {"anon": "HS213", "name": "Đặng Thành Tài", "class": "12A1", "pin": "5082", "limit": 45, "bedtime": "22:00"}, {"anon": "HS214", "name": "Lê Thị Anh Thư", "class": "12A1", "pin": "5777", "limit": 45, "bedtime": "22:00"}, {"anon": "HS215", "name": "Phạm Anh Thư", "class": "12A1", "pin": "8620", "limit": 45, "bedtime": "22:00"}, {"anon": "HS216", "name": "Ngô Hoàng Tín", "class": "12A1", "pin": "1731", "limit": 45, "bedtime": "22:00"}, {"anon": "HS217", "name": "Nguyễn Thị Mai Trâm", "class": "12A1", "pin": "8935", "limit": 45, "bedtime": "22:00"}, {"anon": "HS218", "name": "Nguyễn Huyền Trân", "class": "12A1", "pin": "7129", "limit": 45, "bedtime": "22:00"}, {"anon": "HS219", "name": "Nguyễn Thị Huyền Trân", "class": "12A1", "pin": "5055", "limit": 45, "bedtime": "22:00"}, {"anon": "HS220", "name": "Nguyễn Ngọc Phương Trinh", "class": "12A1", "pin": "7047", "limit": 45, "bedtime": "22:00"}, {"anon": "HS221", "name": "Trần Hà Trinh", "class": "12A1", "pin": "8196", "limit": 45, "bedtime": "22:00"}, {"anon": "HS222", "name": "Đinh Khả Tú", "class": "12A1", "pin": "7519", "limit": 45, "bedtime": "22:00"}, {"anon": "HS223", "name": "Châu Lê Ngọc Tứ", "class": "12A1", "pin": "8712", "limit": 45, "bedtime": "22:00"}, {"anon": "HS224", "name": "Lê Nguyễn Kim Vy", "class": "12A1", "pin": "1561", "limit": 45, "bedtime": "22:00"}, {"anon": "HS225", "name": "Huỳnh Trần Chi Bảo", "class": "12A2", "pin": "5275", "limit": 45, "bedtime": "22:00"}, {"anon": "HS226", "name": "Nguyễn Võ Thành Chương", "class": "12A2", "pin": "4410", "limit": 45, "bedtime": "22:00"}, {"anon": "HS227", "name": "Trần Kim Cương", "class": "12A2", "pin": "4901", "limit": 45, "bedtime": "22:00"}, {"anon": "HS228", "name": "Mai Phong Duy", "class": "12A2", "pin": "1075", "limit": 45, "bedtime": "22:00"}, {"anon": "HS229", "name": "Châu Thị Ngọc Giàu", "class": "12A2", "pin": "1865", "limit": 45, "bedtime": "22:00"}, {"anon": "HS230", "name": "Huỳnh Gia Hân", "class": "12A2", "pin": "4304", "limit": 45, "bedtime": "22:00"}, {"anon": "HS231", "name": "Nguyễn Phúc Hậu", "class": "12A2", "pin": "1908", "limit": 45, "bedtime": "22:00"}, {"anon": "HS232", "name": "Nguyễn Thanh Hậu", "class": "12A2", "pin": "2724", "limit": 45, "bedtime": "22:00"}, {"anon": "HS233", "name": "Nguyễn Trọng Hậu", "class": "12A2", "pin": "3781", "limit": 45, "bedtime": "22:00"}, {"anon": "HS234", "name": "Hồ Quốc Huy", "class": "12A2", "pin": "2822", "limit": 45, "bedtime": "22:00"}, {"anon": "HS235", "name": "Nguyễn Phương Nhân Huy", "class": "12A2", "pin": "7725", "limit": 45, "bedtime": "22:00"}, {"anon": "HS236", "name": "Nguyễn Quốc Huy", "class": "12A2", "pin": "8091", "limit": 45, "bedtime": "22:00"}, {"anon": "HS237", "name": "Võ Thúy Huỳnh", "class": "12A2", "pin": "1917", "limit": 45, "bedtime": "22:00"}, {"anon": "HS238", "name": "Tạ Gia Khánh", "class": "12A2", "pin": "9943", "limit": 45, "bedtime": "22:00"}, {"anon": "HS239", "name": "Lê Đăng Khoa", "class": "12A2", "pin": "4994", "limit": 45, "bedtime": "22:00"}, {"anon": "HS240", "name": "Lê Minh Khôi", "class": "12A2", "pin": "1059", "limit": 45, "bedtime": "22:00"}, {"anon": "HS241", "name": "Đặng Đăng Khương", "class": "12A2", "pin": "8931", "limit": 45, "bedtime": "22:00"}, {"anon": "HS242", "name": "Phan Trung Kiên", "class": "12A2", "pin": "5378", "limit": 45, "bedtime": "22:00"}, {"anon": "HS243", "name": "Lê Thái Ngân Kỳ", "class": "12A2", "pin": "2559", "limit": 45, "bedtime": "22:00"}, {"anon": "HS244", "name": "Nguyễn Minh Luân", "class": "12A2", "pin": "3519", "limit": 45, "bedtime": "22:00"}, {"anon": "HS245", "name": "Nguyễn Hà Huyền My", "class": "12A2", "pin": "1546", "limit": 45, "bedtime": "22:00"}, {"anon": "HS246", "name": "Phan Đoàn Như Mỹ", "class": "12A2", "pin": "4143", "limit": 45, "bedtime": "22:00"}, {"anon": "HS247", "name": "Nguyễn Thúy Nga", "class": "12A2", "pin": "6701", "limit": 45, "bedtime": "22:00"}, {"anon": "HS248", "name": "Nguyễn Thị Mộng Nghi", "class": "12A2", "pin": "8503", "limit": 45, "bedtime": "22:00"}, {"anon": "HS249", "name": "Trịnh Thị Bảo Ngọc", "class": "12A2", "pin": "3084", "limit": 45, "bedtime": "22:00"}, {"anon": "HS250", "name": "Mai Thành Nhân", "class": "12A2", "pin": "5595", "limit": 45, "bedtime": "22:00"}, {"anon": "HS251", "name": "Trần Ngọc Yến Nhi", "class": "12A2", "pin": "8568", "limit": 45, "bedtime": "22:00"}, {"anon": "HS252", "name": "Võ Thị Huỳnh Như", "class": "12A2", "pin": "9363", "limit": 45, "bedtime": "22:00"}, {"anon": "HS253", "name": "Trịnh Nhật Quang", "class": "12A2", "pin": "4890", "limit": 45, "bedtime": "22:00"}, {"anon": "HS254", "name": "Bùi Thị Khánh Quỳnh", "class": "12A2", "pin": "5254", "limit": 45, "bedtime": "22:00"}, {"anon": "HS255", "name": "Nguyễn Thúy Quỳnh", "class": "12A2", "pin": "4628", "limit": 45, "bedtime": "22:00"}, {"anon": "HS256", "name": "Đặng Thiên Tân", "class": "12A2", "pin": "2614", "limit": 45, "bedtime": "22:00"}, {"anon": "HS257", "name": "Lê Hồng Thảo", "class": "12A2", "pin": "2470", "limit": 45, "bedtime": "22:00"}, {"anon": "HS258", "name": "Hà Trường Thịnh", "class": "12A2", "pin": "2175", "limit": 45, "bedtime": "22:00"}, {"anon": "HS259", "name": "Nguyễn Việt Thường", "class": "12A2", "pin": "8878", "limit": 45, "bedtime": "22:00"}, {"anon": "HS260", "name": "Huỳnh Trọng Tín", "class": "12A2", "pin": "7944", "limit": 45, "bedtime": "22:00"}, {"anon": "HS261", "name": "Nguyễn Thị Bảo Trân", "class": "12A2", "pin": "5238", "limit": 45, "bedtime": "22:00"}, {"anon": "HS262", "name": "Thạch Thị Bảo Trân", "class": "12A2", "pin": "9811", "limit": 45, "bedtime": "22:00"}, {"anon": "HS263", "name": "Võ Huyền Trân", "class": "12A2", "pin": "7005", "limit": 45, "bedtime": "22:00"}, {"anon": "HS264", "name": "Huỳnh Thanh Trúc", "class": "12A2", "pin": "5611", "limit": 45, "bedtime": "22:00"}, {"anon": "HS265", "name": "Lê Nguyễn Minh Tú", "class": "12A2", "pin": "7500", "limit": 45, "bedtime": "22:00"}, {"anon": "HS266", "name": "Phan Cẩm Tú", "class": "12A2", "pin": "3646", "limit": 45, "bedtime": "22:00"}, {"anon": "HS267", "name": "Đoàn Ngọc Tường Vy", "class": "12A2", "pin": "9299", "limit": 45, "bedtime": "22:00"}, {"anon": "HS268", "name": "Đỗ Trường Vy", "class": "12A2", "pin": "3278", "limit": 45, "bedtime": "22:00"}, {"anon": "HS269", "name": "Nguyễn Ngọc Phương Vy", "class": "12A2", "pin": "9948", "limit": 45, "bedtime": "22:00"}, {"anon": "HS270", "name": "Nguyễn Phạm Thảo Vy", "class": "12A2", "pin": "3083", "limit": 45, "bedtime": "22:00"}];
+const LS_KEY = 'mindful_screen_v1';
+/* Hai link kết nối Sheet GẮN SẴN (đã kiểm chứng đang hoạt động, chốt bản hoàn chỉnh 04/11/2026):
+   dùng làm mặc định cho máy mới, tự điền khi dữ liệu cũ trống, và tự thay thế nếu dữ liệu cũ
+   đang trỏ tới một trong các URL Apps Script đã hỏng hẳn (SCRIPT_URL_DEAD). URL tuỳ chỉnh
+   khác của người dùng luôn được giữ nguyên. */
+const SHEET_LINK_DEFAULT='https://docs.google.com/spreadsheets/d/1V9YPyw_-wyM1FbFjscvTo3jeYYGbb34STz-OMmLBSNE/edit';
+const SCRIPT_URL_DEFAULT='https://script.google.com/macros/s/AKfycbw6qZoDWPyuzaRPPAEZ_GtpOMfFV7ROg00R54G0d0Y3UAaLMss_vPCoBOZiX-1PpLG9/exec';
+const SCRIPT_URL_DEAD=['https://script.google.com/macros/s/AKfycbwfijy90s_H9-9aE-TYNGBIQdg5wXIEBIRzRW7QnE6_G2BjAT5W27809eJFnDxfQc0M/exec','https://script.google.com/macros/s/AKfycbzwTjdEEvGqLy8WPyzYVC8YwryIwU7XEhXsY0jgwpK-IuDhNpPWTsCHKmweZOe_cPDQ/exec','https://script.google.com/macros/s/AKfycbxt-JSuR_yqH9nP8wJNy7LqA2XfyeYJqZTc0MKS4hcqFc7c-GnGtVAbbKluWsIK6fAR/exec'];
+let DB = loadDB();
+let cur = null; // {anon} học sinh đang đăng nhập
+let pauseTimer = null, swapTimer = null, swapLeft = 900;
+
+function mergeTree(d){ let changed=false; if(!d.settings){ d.settings={}; changed=true; } if(typeof d.settings.sheetLink!=='string'||!d.settings.sheetLink.trim()){ d.settings.sheetLink=SHEET_LINK_DEFAULT; changed=true; } const su=(typeof d.settings.scriptUrl==='string')?d.settings.scriptUrl.trim():''; if(!su||SCRIPT_URL_DEAD.indexOf(su)!==-1){ if(d.settings.scriptUrl!==SCRIPT_URL_DEFAULT){ d.settings.scriptUrl=SCRIPT_URL_DEFAULT; changed=true; } } else if(d.settings.scriptUrl!==su){ d.settings.scriptUrl=su; changed=true; } if(d.settings.scriptToken===undefined){ d.settings.scriptToken='MS-PTG-2026-X7K4P9'; changed=true; } (d.students||[]).forEach(s=>{ if(s.treeScore===undefined){ s.treeScore=0; changed=true; } if(!Array.isArray(s.treeHistory)){ s.treeHistory=[]; changed=true; } if(s.grades!==undefined){ delete s.grades; changed=true; } if(typeof s.lastStageIdx!=='number'){ const tt=[0,10,15,20,25,30]; let ii=0; for(let j=0;j<tt.length;j++){ if((s.treeScore||0)>=tt[j]) ii=j; } s.lastStageIdx=ii; changed=true; } }); if(changed){ try{ localStorage.setItem(LS_KEY, JSON.stringify(d)); }catch(e){} } }
+function loadDB(){
+  try{ const raw = localStorage.getItem(LS_KEY); if(raw){ const d = JSON.parse(raw); if(d && d.version === 1){ mergeTree(d); return d; } } }catch(e){}
+  const d = { version:1,
+    students: SEED_STUDENTS.map(s=>({anon:s.anon,name:s.name,className:s.class,pin:s.pin,limit:s.limit||45,bedtime:s.bedtime||'22:00',consent:false,consentDate:'',treeScore:0,treeHistory:[],lastStageIdx:0})),
+    logs:[], pauses:[], swaps:[], challenges:{}, reflections:[], assessments:[], reports:[],
+    settings:{ sheetLink:SHEET_LINK_DEFAULT, phase:'Tuần nền — chỉ ghi nhật ký', preOpen:true, postOpen:true, teacherPass:'123456', scriptUrl:SCRIPT_URL_DEFAULT, scriptToken:'MS-PTG-2026-X7K4P9' } };
+  localStorage.setItem(LS_KEY, JSON.stringify(d)); return d;
+}
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(DB)); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none',2600); }
+function esc(s){ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function todayStr(d=new Date()){ return d.toISOString().slice(0,10); }
+function addDays(ds,n){ const d=new Date(ds+'T00:00:00'); d.setDate(d.getDate()+n); return todayStr(d); }
+function weekOf(ds){ const d=new Date(ds+'T00:00:00'); const dow=(d.getDay()+6)%7; const start=addDays(ds,-dow); return {start, end:addDays(start,6)}; }
+function fmtVN(ds){ if(!ds) return ''; const p=ds.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+function classes(){ return [...new Set(DB.students.map(s=>s.className))].sort(); }
+function stu(anon){ return DB.students.find(s=>s.anon===anon); }
+function myLogs(anon){ return DB.logs.filter(l=>l.anon===anon); }
+function dayTotal(anon,ds){ return myLogs(anon).filter(l=>l.date===ds).reduce((a,l)=>a+l.minutes,0); }
+function last7(){ const out=[]; for(let i=6;i>=0;i--) out.push(addDays(todayStr(),-i)); return out; }
+function treePoints(anon){
+  const s=stu(anon); if(!s) return 0;
+  let pts = DB.pauses.filter(p=>p.anon===anon).length*10 + DB.swaps.filter(p=>p.anon===anon).length*15;
+  const dates=[...new Set(myLogs(anon).map(l=>l.date))];
+  dates.forEach(ds=>{ if(dayTotal(anon,ds) <= s.limit) pts += 5; });
+  return pts;
+}
+const STAGES=[['Hạt mầm',0,'🌱'],['Mầm xanh',50,'🌿'],['Chồi non',120,'🌾'],['Lá',220,'🍃'],['Hoa',350,'🌸'],['Trái',500,'🍎']];
+function stageOf(pts){ let curS=STAGES[0], next=null; for(let i=0;i<STAGES.length;i++){ if(pts>=STAGES[i][1]){ curS=STAGES[i]; next=STAGES[i+1]||null; } } return {cur:curS, next}; }
+
+/* ================= CỔNG VÀO ================= */
+function gateRole(r){
+  document.getElementById('gateStudent').classList.toggle('hidden', r!=='student');
+  document.getElementById('gateTeacher').classList.toggle('hidden', r!=='teacher');
+  document.querySelectorAll('.rolebtn').forEach(b=>b.classList.toggle('on', b.dataset.role===r));
+  if(r==='student'){ const sel=document.getElementById('gClass'); sel.innerHTML='<option value="">— Chọn lớp —</option>'+classes().map(c=>`<option>${esc(c)}</option>`).join(''); }
+}
+function fillStudentSelect(){
+  const cls=document.getElementById('gClass').value;
+  const sel=document.getElementById('gStudent');
+  sel.innerHTML='<option value="">— Chọn tên —</option>'+DB.students.filter(s=>s.className===cls).map(s=>`<option value="${esc(s.anon)}">${esc(s.name)} (${esc(s.anon)})</option>`).join('');
+}
+function studentLogin(){
+  const anon=document.getElementById('gStudent').value, pin=document.getElementById('gPin').value.trim();
+  const err=document.getElementById('gErr'); err.textContent='';
+  if(!anon){ err.textContent='Em hãy chọn lớp và tên của mình trước nhé.'; return; }
+  const s=stu(anon);
+  if(String(s.pin)!==pin){ err.textContent='Sai mã PIN. Em kiểm tra lại hoặc hỏi giáo viên nhé.'; return; }
+  cur={anon};
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('teacherApp').classList.add('hidden');
+  document.getElementById('studentApp').classList.remove('hidden');
+  document.getElementById('sTitle').textContent='🎒 '+s.name+' — '+s.anon;
+  document.getElementById('sSub').textContent='Lớp '+s.className+' · Giai đoạn: '+DB.settings.phase;
+  document.getElementById('lDate').value=todayStr();
+  document.getElementById('repDate').value=todayStr();
+  fillPhaseSelects(); renderHome(); renderLogs(); renderChallenge(); renderQuizHistory(); renderReflect(); previewReport(); renderMyReports(); renderScenarios(); renderScenariosPost();
+}
+function teacherLogin(){
+  const p=document.getElementById('gPass').value;
+  const err=document.getElementById('gPassErr'); err.textContent='';
+  if(p!==DB.settings.teacherPass){ err.textContent='Sai mật khẩu Nhóm nghiên cứu.'; return; }
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('studentApp').classList.add('hidden');
+  document.getElementById('teacherApp').classList.remove('hidden');
+  document.getElementById('tSub').textContent='Tổng số học sinh: '+DB.students.length+' · Giai đoạn: '+DB.settings.phase+' · Sheet: '+(DB.settings.sheetLink?'đã gắn':'chưa gắn');
+  ['tsClass','sumClass','resClass','treeClass'].forEach(id=>{ const el=document.getElementById(id); el.innerHTML=classes().map(c=>`<option>${esc(c)}</option>`).join(''); });
+  document.getElementById('inClass').innerHTML='<option value="">Tất cả lớp</option>'+classes().map(c=>`<option>${esc(c)}</option>`).join('');
+  document.getElementById('setSheet').value=DB.settings.sheetLink||'';
+  document.getElementById('setScriptUrl').value=DB.settings.scriptUrl||'';
+  document.getElementById('setScriptToken').value=DB.settings.scriptToken||'';
+  document.getElementById('setPhase').value=DB.settings.phase;
+  document.getElementById('setPre').checked=!!DB.settings.preOpen;
+  document.getElementById('setPost').checked=!!DB.settings.postOpen;
+  renderTeacherStudents(); renderSummary(); renderInbox(); renderResearch(); renderTreeTab();
+}
+function logout(){ cur=null; clearInterval(pauseTimer); clearInterval(swapTimer);
+  document.getElementById('studentApp').classList.add('hidden'); document.getElementById('teacherApp').classList.add('hidden'); document.getElementById('gate').classList.remove('hidden'); }
+function sTab(t){ document.querySelectorAll('#sTabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  ['home','log','pause','swap','challenge','quiz','reflect','report'].forEach(x=>document.getElementById('s-'+x).classList.toggle('hidden',x!==t)); }
+function tTab(t){ document.querySelectorAll('#tTabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  ['students','summary','inbox','research','tree','stats','export','settings'].forEach(x=>document.getElementById('t-'+x).classList.toggle('hidden',x!==t)); if(t==='stats') renderStats(); if(t==='tree') renderTreeTab(); }
+
+/* ================= HỌC SINH: TRANG CHỦ + NHẬT KÝ ================= */
+/* Chuỗi ngày ghi nhật ký liên tiếp: tính đến hôm nay; hôm nay chưa ghi thì tính đến hôm qua
+   (chuỗi vẫn giữ); đứt chuỗi khi có ít nhất 1 ngày trống trọn vẹn trước hôm qua. */
+function logStreak(anon){
+  const set=new Set(myLogs(anon).map(l=>l.date));
+  if(!set.size) return 0;
+  let d=todayStr();
+  if(!set.has(d)) d=addDays(d,-1);
+  let n=0;
+  while(set.has(d)){ n++; d=addDays(d,-1); }
+  return n;
+}
+/* So giai đoạn cây (điểm giáo viên chấm) với lần xem trước: trả chỉ số giai đoạn mới nếu vừa
+   LÊN giai đoạn (để chúc mừng đúng 1 lần), ngược lại -1. Thiếu lastStageIdx thì khởi tạo thầm lặng. */
+function checkStageUp(s){
+  const idx=treeStageIdx(s.treeScore||0);
+  if(typeof s.lastStageIdx!=='number'){ s.lastStageIdx=idx; save(); return -1; }
+  if(idx>s.lastStageIdx){ s.lastStageIdx=idx; save(); return idx; }
+  if(idx<s.lastStageIdx){ s.lastStageIdx=idx; save(); }
+  return -1;
+}
+function renderHome(){
+  if(!cur) return; const s=stu(cur.anon); const pts=treePoints(cur.anon); const st=stageOf(pts);
+  const upIdx=checkStageUp(s);
+  if(upIdx>=0){ const b=document.getElementById('stageBanner');
+    if(b){ const g=TREE_STAGE_SHORT[upIdx]; b.classList.remove('hidden');
+      b.innerHTML='🎉 <b>Chúc mừng '+esc(s.name)+'!</b> Cây Hạnh Phúc của em đã lên giai đoạn <b>'+g[0]+' '+g[1]+' — '+g[2]+'</b>! Nỗ lực đều đặn của em đã được ghi nhận — tiếp tục phát huy nhé! 🌳'; } }
+  document.getElementById('treeEmoji').textContent=st.cur[2];
+  document.getElementById('treeStage').textContent='Giai đoạn: '+st.cur[0];
+  document.getElementById('treePts').textContent=pts;
+  const bar=document.getElementById('treeBar');
+  if(st.next){ const pct=Math.min(100,Math.round((pts-st.cur[1])/(st.next[1]-st.cur[1])*100)); bar.style.width=pct+'%';
+    document.getElementById('treeNext').textContent='Còn '+(st.next[1]-pts)+' điểm nữa để lên giai đoạn '+st.next[0]+' '+st.next[2]; }
+  else { bar.style.width='100%'; document.getElementById('treeNext').textContent='Cây đã ra trái — em đã làm rất tốt! 🍎'; }
+  const days=last7();
+  document.getElementById('stToday').textContent=dayTotal(cur.anon,todayStr());
+  const totals=days.map(ds=>dayTotal(cur.anon,ds));
+  const sum=totals.reduce((a,b)=>a+b,0);
+  document.getElementById('stSum7').textContent=sum;
+  document.getElementById('stAvg7').textContent=(sum/7).toFixed(1).replace('.',',');
+  document.getElementById('stOver').textContent=totals.filter(v=>v>s.limit).length;
+  document.getElementById('stLate').textContent=myLogs(cur.anon).filter(l=>days.includes(l.date)&&l.slot==='Sau giờ đi ngủ').length;
+  let streak=0; for(let i=0;i<60;i++){ const ds=addDays(todayStr(),-i); const has=myLogs(cur.anon).some(l=>l.date===ds);
+    if(has && dayTotal(cur.anon,ds)<=s.limit) streak++; else if(i===0 && !has) continue; else break; }
+  document.getElementById('stStreak').textContent=streak;
+  const lsEl=document.getElementById('stLogStreak'); if(lsEl) lsEl.textContent=logStreak(cur.anon);
+  document.getElementById('stLimit').textContent=s.limit; document.getElementById('stBed').textContent=s.bedtime;
+  const max=Math.max(s.limit,...totals,1);
+  document.getElementById('chart7').innerHTML=days.map((ds,i)=>{ const v=totals[i]; const h=Math.max(3,Math.round(v/max*100));
+    const dow=['CN','T2','T3','T4','T5','T6','T7'][new Date(ds+'T00:00:00').getDay()];
+    return `<div class="bar ${v>s.limit?'over':''}" style="height:${h}%"><span>${v||''}</span><em>${dow}</em></div>`; }).join('');
+  renderMyTreeScore();
+}
+function addLog(){
+  const err=document.getElementById('lErr'); err.textContent='';
+  const date=document.getElementById('lDate').value, minutes=parseInt(document.getElementById('lMin').value,10);
+  if(!date){ err.textContent='Hãy chọn ngày.'; return; }
+  if(!minutes||minutes<1||minutes>1440){ err.textContent='Số phút phải từ 1 đến 1440.'; return; }
+  DB.logs.push({ id:Date.now(), anon:cur.anon, date, minutes,
+    platform:document.getElementById('lPlat').value, slot:document.getElementById('lSlot').value,
+    trigger:document.getElementById('lTrig').value, mood:document.getElementById('lMood').value,
+    stopped:document.getElementById('lStop').checked, note:document.getElementById('lNote').value.trim() });
+  save(); document.getElementById('lMin').value=''; document.getElementById('lNote').value='';
+  toast('Đã ghi nhật ký xem ✅'); renderLogs(); renderHome();
+}
+function renderLogs(){
+  const list=myLogs(cur.anon).slice().sort((a,b)=>b.id-a.id).slice(0,15);
+  document.getElementById('logList').innerHTML=list.length? list.map(l=>
+    `<p style="margin:6px 0">📅 ${fmtVN(l.date)} — <b>${l.minutes} phút</b> · ${esc(l.platform)} · ${esc(l.slot)} · Kích hoạt: ${esc(l.trigger)} · ${esc(l.mood)}${l.stopped?' · ✅ dừng đúng giờ':''} <button class="ghost small" onclick="delLog(${l.id})">Xoá</button></p>`).join('')
+    : '<p class="mut">Chưa có nhật ký nào. Hãy ghi lần xem đầu tiên của em nhé.</p>';
+}
+function delLog(id){ if(!confirm('Xoá dòng nhật ký này?')) return; DB.logs=DB.logs.filter(l=>l.id!==id); save(); renderLogs(); renderHome(); }
+
+/* ================= DỪNG 10 GIÂY + ĐỔI 15 PHÚT ================= */
+function startPause(){
+  clearInterval(pauseTimer); let left=10;
+  const tEl=document.getElementById('pTimer'), bEl=document.getElementById('pBreath');
+  document.getElementById('pDone').classList.add('hidden'); document.getElementById('pStart').disabled=true;
+  tEl.textContent=left; bEl.textContent='Hít vào chậm… 2… 3… 4…';
+  pauseTimer=setInterval(()=>{ left--; 
+    if(left===7) bEl.textContent='Giữ hơi… và thả lỏng vai…';
+    if(left===4) bEl.textContent='Thở ra từ từ… tự hỏi: mình thật sự muốn xem, hay chỉ là thói quen?';
+    if(left<=0){ clearInterval(pauseTimer); tEl.textContent='✓'; bEl.textContent='Xong 10 giây tĩnh tâm. Em quyết định thế nào cũng được — miễn là quyết định của CHÍNH em.';
+      document.getElementById('pDone').classList.remove('hidden'); document.getElementById('pStart').disabled=false; }
+    else tEl.textContent=left;
+  },1000);
+}
+function donePause(){
+  DB.pauses.push({ id:Date.now(), anon:cur.anon, date:todayStr(), trigger:document.getElementById('pTrig').value, intended:parseInt(document.getElementById('pIntend').value,10)||15 });
+  save(); document.getElementById('pDone').classList.add('hidden'); document.getElementById('pTimer').textContent='10';
+  toast('Đã ghi nhận Dừng 10 giây: +10 điểm Cây Hạnh Phúc 🌳'); renderHome();
+}
+function fmtMS(sec){ return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0'); }
+function startSwap(){
+  clearInterval(swapTimer); swapLeft=900;
+  const tEl=document.getElementById('wTimer'); tEl.textContent=fmtMS(swapLeft);
+  document.getElementById('wDone').classList.add('hidden'); document.getElementById('wStart').disabled=true;
+  swapTimer=setInterval(()=>{ swapLeft--; tEl.textContent=fmtMS(Math.max(0,swapLeft));
+    if(swapLeft<=0){ clearInterval(swapTimer); document.getElementById('wDone').classList.remove('hidden'); document.getElementById('wStart').disabled=false; toast('Đã đủ 15 phút! Bấm ghi nhận để nhận điểm nhé.'); } },1000);
+}
+function doneSwap(){
+  DB.swaps.push({ id:Date.now(), anon:cur.anon, date:todayStr(), activity:document.getElementById('wAct').value });
+  save(); document.getElementById('wDone').classList.add('hidden'); document.getElementById('wTimer').textContent='15:00';
+  toast('Đã ghi nhận Đổi 15 phút: +15 điểm Cây Hạnh Phúc 🌳'); renderHome(); renderSwapList();
+}
+function renderSwapList(){
+  const list=DB.swaps.filter(p=>p.anon===cur.anon).slice().sort((a,b)=>b.id-a.id).slice(0,5);
+  document.getElementById('swapList').innerHTML=list.length? '<h3>Lần đổi gần đây</h3>'+list.map(p=>`<p style="margin:5px 0">🔄 ${fmtVN(p.date)} — ${esc(p.activity)}</p>`).join('') : '';
+}
+
+/* ================= THỬ THÁCH 7 NGÀY + PHẢN TƯ ================= */
+const CHALLENGE_NAMES={ less10:'Giảm 10 phút xem mỗi ngày', nolatenight:'Không xem sau giờ đi ngủ', oneswap:'Mỗi ngày 1 lần Đổi 15 phút', pause:'Dừng 10 giây trước mỗi lần xem' };
+function startChallenge(){
+  const kind=document.getElementById('cKind').value;
+  if(DB.challenges[cur.anon] && !confirm('Em đang có một thử thách. Bắt đầu thử thách mới sẽ thay thế thử thách cũ. Tiếp tục?')) return;
+  DB.challenges[cur.anon]={ kind, start:todayStr(), days:{} }; save(); renderChallenge(); toast('Đã bắt đầu thử thách 7 ngày 🎯');
+}
+function toggleDay(ds){
+  const ch=DB.challenges[cur.anon]; if(!ch) return;
+  ch.days[ds]=!ch.days[ds]; save(); renderChallenge();
+}
+function renderChallenge(){
+  const box=document.getElementById('challengeBox'); const ch=DB.challenges[cur.anon];
+  if(!ch){ box.innerHTML='<p class="mut">Em chưa có thử thách nào. Chọn một thử thách phía trên để bắt đầu nhé.</p>'; return; }
+  let html=`<p><b>${esc(CHALLENGE_NAMES[ch.kind])}</b> · Bắt đầu ${fmtVN(ch.start)}</p><div class="rowflex">`;
+  for(let i=0;i<7;i++){ const ds=addDays(ch.start,i); const done=!!ch.days[ds];
+    html+=`<button class="${done?'':'ghost'} small" onclick="toggleDay('${ds}')">${done?'✅':'⬜'} Ngày ${i+1}<br>${fmtVN(ds)}</button>`; }
+  const doneCount=Object.values(ch.days).filter(Boolean).length;
+  html+=`</div><p class="mut">Đã hoàn thành ${doneCount}/7 ngày.${doneCount===7?' Tuyệt vời — em đã thắng thử thách! 🏆':''}</p>`;
+  box.innerHTML=html;
+}
+function addReflection(){
+  const g=[1,2,3].map(i=>document.getElementById('rG'+i).value.trim()).filter(Boolean);
+  DB.reflections.push({ id:Date.now(), anon:cur.anon, date:todayStr(), emotion:document.getElementById('rEmo').value.trim(), note:document.getElementById('rNote').value.trim(), gratitude:g });
+  save(); ['rEmo','rNote','rG1','rG2','rG3'].forEach(id=>document.getElementById(id).value='');
+  toast('Đã lưu phản tư 🌙'); renderReflect();
+}
+function renderReflect(){
+  const list=DB.reflections.filter(r=>r.anon===cur.anon).slice().sort((a,b)=>b.id-a.id).slice(0,7);
+  document.getElementById('reflectList').innerHTML=list.length? list.map(r=>
+    `<div class="q"><b>${fmtVN(r.date)}</b> — ${esc(r.emotion||'')}<br>${esc(r.note||'')}${r.gratitude&&r.gratitude.length?'<br>🙏 Biết ơn: '+r.gratitude.map(esc).join(' · '):''}</div>`).join('')
+    : '<p class="mut">Chưa có phản tư nào.</p>';
+}
+</script>
+<script>
+/* ================= TRẮC NGHIỆM / SAS / TÌNH HUỐNG ================= */
+const QUIZ=[
+ {q:'Thuật toán gợi ý của các nền tảng video ngắn được thiết kế chủ yếu để làm gì?',o:['Giúp người xem học bài nhanh hơn','Giữ người xem ở lại ứng dụng càng lâu càng tốt','Giảm thời gian dùng điện thoại','Chỉ hiện video của bạn bè'],a:1,e:'Thuật toán ưu tiên nội dung có khả năng giữ chân người xem lâu nhất, vì thời gian xem là nguồn doanh thu quảng cáo.',s:'Nguồn: tài liệu minh bạch thuật toán của các nền tảng; UNICEF — báo cáo về trẻ em và môi trường số.'},
+ {q:'Vì sao việc "kéo xuống để xem video tiếp theo" dễ làm ta xem mãi không dừng?',o:['Vì video nào cũng rất dài','Vì phần thưởng bất định: video hay có thể xuất hiện bất cứ lúc nào, não luôn muốn thử thêm một lần nữa','Vì điện thoại tự tăng độ sáng','Vì không có nút thoát ứng dụng'],a:1,e:'Cơ chế phần thưởng không đoán trước (như máy đánh bạc) kích thích dopamine và tạo vòng lặp "thêm một video nữa thôi".',s:'Nguồn: nghiên cứu về thiết kế gây nghiện và vòng lặp phần thưởng đăng trên các tạp chí tâm lý học hành vi.'},
+ {q:'Xem video ngắn sát giờ ngủ ảnh hưởng đến giấc ngủ chủ yếu vì lý do nào?',o:['Âm thanh quá lớn','Ánh sáng xanh ức chế melatonin và nội dung kích thích khiến não khó "tắt máy"','Pin điện thoại nóng','Mắt mỏi nên ngủ ngon hơn'],a:1,e:'Ánh sáng xanh từ màn hình làm giảm melatonin — hormone gây buồn ngủ; nội dung dồn dập cũng giữ não ở trạng thái kích thích.',s:'Nguồn: Học viện Nhi khoa Hoa Kỳ (AAP) — khuyến nghị về truyền thông và giấc ngủ của thanh thiếu niên.'},
+ {q:'Việc chuyển video liên tục mỗi vài giây trong thời gian dài có thể ảnh hưởng gì?',o:['Tăng khả năng tập trung dài hạn','Khiến não quen với kích thích nhanh, khó duy trì tập trung vào việc chậm như đọc sách, làm bài','Giúp ghi nhớ tốt hơn','Không ảnh hưởng gì'],a:1,e:'Não thích nghi với nhịp kích thích: việc cần tập trung lâu dần trở nên "chán" nhanh hơn, trí nhớ làm việc bị phân mảnh bởi việc chuyển đổi liên tục.',s:'Nguồn: nghiên cứu về chú ý và đa nhiệm truyền thông ở thanh thiếu niên (tổng quan trên các tạp chí khoa học thần kinh).'},
+ {q:'Vì sao xem video của người khác trên mạng dễ làm ta tụt tâm trạng?',o:['Vì video luôn buồn','Vì ta có xu hướng so sánh bản thân với hình ảnh đã được chọn lọc, tô vẽ của người khác','Vì xem tốn pin','Vì bình luận luôn tiêu cực'],a:1,e:'So sánh xã hội hướng lên (so với người "hoàn hảo" hơn) liên quan đến giảm tự trọng và tâm trạng tiêu cực, nhất là ở tuổi dậy thì.',s:'Nguồn: nghiên cứu tâm lý học về so sánh xã hội trên mạng xã hội; WHO — sức khoẻ tâm thần thanh thiếu niên.'},
+ {q:'Tính năng "tự động phát video tiếp theo" gây khó dừng chủ yếu vì:',o:['Video sau luôn hay hơn','Nó loại bỏ điểm dừng tự nhiên — khoảnh khắc ta thường tự quyết định dừng lại','Nó khoá nút thoát','Nó tăng âm lượng dần'],a:1,e:'Khi không có điểm dừng, quyết định "xem tiếp" trở thành mặc định; muốn dừng ta phải chủ động chống lại quán tính.',s:'Nguồn: nghiên cứu thiết kế giao diện về "cuộn vô hạn" và điểm dừng (stopping cues).'},
+ {q:'Một đêm lướt video khuya thường dẫn tới điều gì vào hôm sau?',o:['Học thuộc bài nhanh hơn','Buồn ngủ, giảm tập trung và dễ cáu gắt trên lớp','Không có ảnh hưởng nào','Thị lực tăng lên'],a:1,e:'Thiếu ngủ làm giảm khả năng tập trung, ghi nhớ và điều tiết cảm xúc trong ngày học hôm sau.',s:'Nguồn: AAP và CDC Hoa Kỳ — khuyến nghị giấc ngủ 8–10 giờ cho thanh thiếu niên và hệ quả của thiếu ngủ.'},
+ {q:'"Chuỗi ngày liên tiếp" (streak) và thông báo đẩy liên tục trong ứng dụng có mục đích gì?',o:['Giúp người dùng nhớ học bài','Tạo áp lực sợ mất chuỗi và kéo người dùng quay lại ứng dụng thường xuyên','Tiết kiệm pin','Chống nghiện điện thoại'],a:1,e:'Đây là kỹ thuật giữ chân: nỗi sợ mất thành tích (chuỗi, huy hiệu) khiến ta mở ứng dụng dù không thật sự muốn.',s:'Nguồn: phân tích thiết kế giữ chân người dùng trong các ứng dụng mạng xã hội.'},
+ {q:'Vừa làm bài tập vừa để video chạy bên cạnh sẽ thế nào?',o:['Học nhanh gấp đôi','Não phải liên tục chuyển đổi chú ý, làm giảm khả năng hiểu và ghi nhớ bài','Không ảnh hưởng nếu để âm lượng nhỏ','Giúp đỡ buồn ngủ nên học tốt hơn'],a:1,e:'Đa nhiệm truyền thông khiến việc chuyển đổi chú ý tốn "chi phí" nhận thức; học và ghi nhớ đều kém hơn so với tập trung một việc.',s:'Nguồn: nghiên cứu về đa nhiệm truyền thông và thành tích học tập của học sinh, sinh viên.'},
+ {q:'Cảm xúc nào sau đây thường là "cò súng" khiến ta lướt video vô thức nhất?',o:['Vui vẻ khi đang chơi với bạn','Buồn chán, căng thẳng hoặc mệt sau giờ học','Hào hứng trước một trận bóng','Bình tĩnh khi đang đọc sách'],a:1,e:'Buồn chán và căng thẳng là hai yếu tố kích hoạt phổ biến nhất: não tìm phần thưởng nhanh để xoa dịu cảm xúc khó chịu.',s:'Nguồn: nghiên cứu hành vi về yếu tố kích hoạt của thói quen sử dụng điện thoại.'},
+ {q:'Cách nào sau đây là chiến lược tự quản lý thời gian xem có căn cứ?',o:['Cài giới hạn thời gian trong ứng dụng và đặt điểm dừng rõ ràng trước khi xem','Xem đến khi điện thoại hết pin','Chỉ xem bằng điện thoại của bạn','Xem thật nhanh để đỡ tốn thời gian'],a:0,e:'Đặt giới hạn trước (khi đang tỉnh táo) giúp "cái tôi lúc mệt" không phải tự đấu tranh: đến giờ là ứng dụng nhắc/dừng.',s:'Nguồn: khuyến nghị quản lý thời gian màn hình của AAP — kế hoạch sử dụng truyền thông gia đình.'},
+ {q:'Hoạt động thay thế (đi bộ, đọc sách, nghe nhạc...) giúp giảm thôi thúc lướt video vì:',o:['Làm điện thoại hết pin','Đáp ứng cùng nhu cầu (thư giãn, hết buồn chán) bằng phần thưởng lành mạnh khác','Khiến ta quên mật khẩu điện thoại','Không có tác dụng gì'],a:1,e:'Thôi thúc thường là tín hiệu của một nhu cầu (nghỉ ngơi, giải khuây). Đáp ứng nhu cầu bằng hoạt động khác sẽ làm cơn thôi thúc yếu dần.',s:'Nguồn: liệu pháp hành vi — kỹ thuật thay thế hành vi trong thay đổi thói quen.'},
+ {q:'Vì sao nhiều video ngắn có tiêu đề giật gân, nội dung gây sốc?',o:['Vì người quay thích la hét','Vì cảm xúc mạnh (giận, tò mò, bất ngờ) khiến người xem dừng lại lâu và chia sẻ nhiều hơn','Vì thuật toán cấm video nhẹ nhàng','Vì đó là quy định của nền tảng'],a:1,e:'Nội dung kích cảm xúc mạnh giữ chân tốt hơn nên được thuật toán ưu tiên — hiểu điều này giúp ta bớt bị "dắt" cảm xúc.',s:'Nguồn: nghiên cứu về lan truyền thông tin và cảm xúc trên mạng xã hội.'},
+ {q:'Thanh thiếu niên 13–18 tuổi nên ngủ khoảng bao lâu mỗi đêm để khoẻ và học tốt?',o:['4–5 giờ','6 giờ là đủ','8–10 giờ','Càng ít càng tốt để có thời gian học'],a:2,e:'Ngủ đủ 8–10 giờ giúp củng cố trí nhớ và ổn định cảm xúc. Xem video khuya là nguyên nhân phổ biến khiến giấc ngủ bị "ăn" mất.',s:'Nguồn: CDC Hoa Kỳ và AAP — khuyến nghị thời lượng ngủ cho thanh thiếu niên.'},
+ {q:'"Dừng 10 giây" trước khi mở video giúp ích theo cơ chế nào?',o:['Làm điện thoại chậm lại','Chèn một khoảng dừng giữa thôi thúc và hành động, để quyết định có ý thức kịp can thiệp thay cho phản xạ tự động','Làm ứng dụng bị lỗi','Không có cơ chế gì'],a:1,e:'Thói quen chạy theo vòng: kích hoạt → hành động tự động → phần thưởng. Một khoảng dừng ngắn giúp cắt vòng lặp ở khâu hành động.',s:'Nguồn: tâm lý học hành vi — mô hình vòng lặp thói quen và kỹ thuật trì hoãn xung động.'}
+];
+const SAS_ITEMS=[
+ 'Tôi bỏ lỡ việc đã định làm (học bài, việc nhà...) vì mải xem điện thoại/video.',
+ 'Tôi khó tập trung học hoặc nghe giảng khi điện thoại ở ngay bên cạnh.',
+ 'Tôi cảm thấy bứt rứt, khó chịu khi không được cầm điện thoại.',
+ 'Việc đầu tiên tôi làm khi thức dậy là kiểm tra điện thoại.',
+ 'Tôi thường dùng điện thoại lâu hơn nhiều so với dự định ban đầu.',
+ 'Người thân hoặc bạn bè từng phàn nàn rằng tôi dùng điện thoại quá nhiều.',
+ 'Tôi vẫn xem điện thoại trong giờ ăn hoặc trong giờ học.',
+ 'Tôi khó đi vào giấc ngủ vì dùng điện thoại sát giờ ngủ.',
+ 'Tôi mở ứng dụng video một cách tự động, gần như không suy nghĩ.',
+ 'Tôi đã từng cố giảm thời gian dùng điện thoại nhưng chưa làm được.'];
+const SCENARIOS=[
+ {t:'📱 23 giờ đêm, bạn thân gửi link một video "cực hay, không xem phí cả đời", trong khi mai em có tiết kiểm tra đầu giờ.',o:['Xem luôn, chỉ vài phút thôi','Lưu lại để xem vào giờ nghỉ trưa mai, tắt máy đi ngủ','Xem nhưng đặt hẹn giờ 5 phút rồi tính tiếp'],best:1,f:'Lưu lại xem sau là lựa chọn tốt nhất: em không mất video hay, không mất giấc ngủ trước ngày kiểm tra. Đặt hẹn giờ 5 phút lúc đang mệt thường thất bại vì ý chí yếu nhất vào ban đêm.'},
+ {t:'✋ Đang làm bài tập, tay em cứ tự động với lấy điện thoại mở TikTok dù em biết còn nhiều bài.',o:['Kệ, xem "một chút" rồi làm tiếp','Để điện thoại ở phòng khác / nhờ người thân giữ 30 phút, làm xong một phần bài rồi mới xem','Vứt điện thoại đi'],best:1,f:'Đưa điện thoại ra xa là cách hiệu quả nhất vì nó cắt "kích hoạt" khỏi tầm tay — tốt hơn nhiều so với tự hứa "chỉ xem một chút" khi thôi thúc đang mạnh.'},
+ {t:'🛏️ Đã tới giờ đi ngủ nhưng video đang xem dở, thuật toán lại vừa gợi ý một video còn hấp dẫn hơn.',o:['Xem hết video này và video gợi ý rồi ngủ','Dừng ngay, ghi nhớ tên video để mai xem tiếp','Giảm độ sáng và xem tiếp trong bóng tối'],best:1,f:'"Xem hết cái này" là cái bẫy vô hạn vì luôn có video tiếp theo. Dừng ngay và hẹn mai xem giúp em giữ giờ ngủ — tài sản quý nhất cho buổi học hôm sau.'}];
+
+/* ===== PHẦN MỞ RỘNG SAU CAN THIỆP (bổ sung 04/11/2026) =====
+   Nguyên tắc thiết kế: giữ nguyên 15 câu cố định + SAS 10 câu để so sánh Trước/Sau
+   được công bằng cho nghiên cứu; phần dưới đây CHỈ làm ở mốc Sau, đo 3 tầng tiến bộ
+   mà bộ cũ chưa đo được: (1) vận dụng vào tình huống thật, (2) năng lực tự chủ tự
+   đánh giá, (3) ứng phó với tình huống khó / tái lướt. */
+const QUIZ_POST=[
+ {q:'Em đã xem đủ 45 phút theo giới hạn tự đặt, nhưng video tiếp theo hiện lên đúng đoạn gay cấn nhất. Cách xử lý thể hiện tiến bộ rõ nhất là:',o:['Xem nốt video này vì "chỉ thêm 3 phút thôi"','Tắt ứng dụng đúng cam kết, ghi lại tên video để xem vào khung giờ đã định ngày mai nếu vẫn muốn','Xem tiếp nhưng để chế độ im lặng cho đỡ cảm giác tội lỗi','Xoá ứng dụng ngay trong lúc đang bực mình'],a:1,e:'Tiến bộ không phải là hết thèm xem, mà là giữ được cam kết đã đặt khi đang tỉnh táo — và có kế hoạch thay thế cụ thể (hẹn xem sau) thay vì đấu tranh bằng ý chí suông.',s:'Vận dụng: kỹ thuật "điểm dừng đã định trước" trong chương trình Mindful Screen.'},
+ {q:'Sau giờ học căng thẳng, cơn thôi thúc lướt video đến rất mạnh. Chuỗi hành động đúng thứ tự của "Dừng 10 giây" là:',o:['Mở video trước rồi vừa xem vừa thở','Dừng tay — thở chậm — gọi tên cảm xúc/cơn kích hoạt (mệt, chán, căng thẳng) — rồi mới quyết định xem hay đổi hoạt động','Uống nước rồi xem tiếp cho đỡ mệt','Nhắn tin cho bạn than mệt rồi cùng xem'],a:1,e:'Dừng 10 giây hiệu quả khi nó chèn được 3 bước: dừng hành động tự động, nhận diện kích hoạt, và ra quyết định có ý thức. Chỉ đếm số mà không nhận diện cảm xúc thì cơn thôi thúc sẽ quay lại ngay.',s:'Vận dụng: vòng lặp thói quen — kích hoạt → hành động → phần thưởng.'},
+ {q:'Ba đêm liên tiếp em đều xem sau giờ đi ngủ. Bước ĐẦU TIÊN hợp lý nhất để chỉnh lại là:',o:['Tự phạt mình bằng cách không dùng điện thoại cả tuần','Xem lại nhật ký để tìm điểm chung của 3 đêm đó (kích hoạt là gì, xem ở đâu, mấy giờ bắt đầu), rồi đổi đúng một yếu tố môi trường — ví dụ sạc điện thoại ngoài phòng ngủ','Giấu việc này, không ghi nhật ký nữa','Đặt giờ đi ngủ sớm hơn 2 tiếng ngay lập tức'],a:1,e:'Tiến bộ bền bắt đầu bằng phân tích nguyên nhân từ dữ liệu của chính mình và thay đổi nhỏ, làm được ngay — không phải bằng tự phạt hay mục tiêu quá lớn dễ bỏ cuộc.',s:'Vận dụng: nhật ký xem + thiết kế môi trường giảm kích hoạt.'},
+ {q:'"Đổi 15 phút" sẽ hiệu quả nhất khi hoạt động thay thế:',o:['Bất kỳ việc gì, miễn là không phải video','Đáp ứng đúng nhu cầu lúc đó (cần nghỉ thì nghe nhạc/đi bộ nhẹ, buồn chán thì làm việc có thành quả nhỏ) và đã chuẩn bị sẵn từ trước','Là việc em ghét nhất, để tự rèn kỷ luật','Chỉ làm đúng một lần duy nhất trong tuần'],a:1,e:'Hoạt động thay thế chỉ thắng được video khi nó đáp ứng cùng nhu cầu và có sẵn trong tầm tay. Chuẩn bị trước 2–3 lựa chọn giúp em không phải suy nghĩ giữa lúc cơn thôi thúc đang mạnh.',s:'Vận dụng: liệu pháp hành vi — thay thế hành vi cùng chức năng.'},
+ {q:'Một ngày em lỡ xem 120 phút, vượt xa giới hạn. Phản ứng nào cho thấy em THẬT SỰ tiến bộ?',o:['Giận mình, xoá nhật ký ngày hôm đó và bỏ luôn thử thách','Ghi nhật ký trung thực, viết 1 dòng nguyên nhân, đặt lại một mục tiêu nhỏ cho ngày mai và tiếp tục như bình thường','Xem thêm cho "đã lỡ" rồi mai tính','Tự hứa ngày mai xem 0 phút để bù lại'],a:1,e:'Nghiên cứu thay đổi thói quen cho thấy: người duy trì được lâu không phải người không bao giờ lỡ, mà là người quay lại kế hoạch ngay ngày hôm sau mà không tự trách đến bỏ cuộc. Trung thực với nhật ký chính là bằng chứng tiến bộ.',s:'Vận dụng: tư duy "lỡ một lần ≠ thất bại" — hiệu ứng phá vỡ kiêng khem (abstinence violation effect).'},
+ {q:'Bạn thân nói: "Mày dạo này chảnh, rủ xem video chung cũng không xem." Cách đáp thể hiện vai trò "Sứ giả Hạnh phúc" tốt nhất là:',o:['Chê bạn nghiện điện thoại để bạn tự xấu hổ mà bỏ','Giải thích nhẹ nhàng giới hạn của mình, rủ bạn làm việc khác cùng nhau (đi bộ, đá bóng, nghe nhạc), và không phán xét lựa chọn của bạn','Đồng ý xem xuyên đêm cho bạn vui','Tránh mặt bạn từ nay'],a:1,e:'Lan toả thói quen tốt bằng lời mời thay thế và sự tôn trọng sẽ hiệu quả hơn phán xét — phán xét chỉ làm bạn phòng thủ và giấu việc xem đi.',s:'Vận dụng: tiêu chí Sứ giả Hạnh phúc trong chấm điểm Cây Hạnh Phúc.'},
+ {q:'Để điện thoại sạc ngoài phòng ngủ, tắt thông báo TikTok, để sách ở đầu giường là ví dụ của nguyên tắc nào?',o:['Dựa hoàn toàn vào ý chí mạnh','Thiết kế lại môi trường để kích hoạt khó xuất hiện và hành vi tốt dễ xảy ra hơn','Trốn tránh công nghệ hoàn toàn','Tiết kiệm điện cho điện thoại'],a:1,e:'Người tiến bộ bền không thắng cơn thèm bằng ý chí mỗi ngày — họ sắp xếp môi trường để ít phải đấu tranh hơn. Đây là chiến lược có căn cứ mạnh nhất trong thay đổi thói quen.',s:'Vận dụng: thiết kế môi trường (choice architecture) trong khoa học hành vi.'},
+ {q:'Đúng lúc em đang buồn, thuật toán gợi ý liên tiếp video giật gân khiến em càng xem càng tức và buồn hơn. Nhận diện đúng nhất là:',o:['Tại em yếu đuối nên mới bị ảnh hưởng','Thuật toán ưu tiên nội dung kích cảm xúc mạnh vì nó giữ chân lâu; cảm xúc của em đang bị "dắt" — nên dừng, đổi hoạt động xoa dịu thật (nói chuyện, đi bộ, nghe nhạc)','Cứ xem tiếp đến khi hết buồn','Chia sẻ ngay các video đó để mọi người cùng tức'],a:1,e:'Gọi tên được cơ chế thuật toán + cảm xúc của mình là bước tiến lớn về nhận thức: em chuyển từ "bị cuốn đi" sang "người quan sát có lựa chọn".',s:'Vận dụng: nhận thức về thuật toán gợi ý + điều tiết cảm xúc.'},
+ {q:'Mục tiêu tự quản lý thời gian xem nào dưới đây là mục tiêu TỐT (dễ duy trì và đo được)?',o:['"Từ nay không bao giờ xem video ngắn nữa"','"Tuần này: không xem sau 22 giờ trong 5/7 tối, ghi nhật ký mỗi ngày, nếu lỡ thì ghi nguyên nhân"','"Xem ít đi" (không số liệu, không thời hạn)','"Xem bao nhiêu cũng được miễn là vui"'],a:1,e:'Mục tiêu tốt phải cụ thể, đo được, vừa sức và có kế hoạch khi lỡ. Mục tiêu tuyệt đối ("không bao giờ") thường sụp đổ ngay sau lần lỡ đầu tiên.',s:'Vận dụng: đặt mục tiêu SMART trong phản hồi và cam kết cuối ngày.'},
+ {q:'Sau khi chương trình kết thúc, không còn điểm Cây Hạnh Phúc nữa, điều gì giữ được thói quen tốt của em lâu dài nhất?',o:['Sợ giáo viên kiểm tra đột xuất','Em đã thấy rõ lợi ích cho chính mình (ngủ ngon, tập trung hơn), có sẵn môi trường đã thiết kế và 1–2 hoạt động thay thế quen thuộc để dùng khi cơn thôi thúc đến','Cài càng nhiều ứng dụng khoá màn hình càng tốt rồi phó mặc cho chúng','Nhờ bạn bè cấm mình xem mỗi ngày'],a:1,e:'Động lực bên trong (tự mình thấy lợi ích) + môi trường + thói quen thay thế mới là nền tảng duy trì lâu dài; điểm thưởng và kiểm tra bên ngoài chỉ là cầu nối ở giai đoạn đầu.',s:'Vận dụng: thuyết tự quyết (Self-Determination Theory) — động lực nội tại.'}
+];
+const PROGRESS_ITEMS=[
+ 'Em NHẬN RA được khoảnh khắc mình sắp lướt video vô thức (trước đây tay tự mở mà không biết).',
+ 'Em DỪNG 10 GIÂY trước khi mở video thường xuyên hơn trước.',
+ 'Em DỪNG ĐÚNG giới hạn đã đặt, kể cả khi video đang hay.',
+ 'Em CHỌN ĐƯỢC hoạt động thay thế (Đổi 15 phút) thay vì lướt tiếp khi buồn chán/căng thẳng.',
+ 'Em ÍT XEM SAU GIỜ ĐI NGỦ hơn so với trước can thiệp.',
+ 'Em TẬP TRUNG học / làm việc lâu hơn mà không kiểm tra điện thoại.',
+ 'Em GIỮ ĐƯỢC kế hoạch của mình kể cả khi bạn bè rủ xem tiếp.',
+ 'Em TIN rằng mình có thể duy trì thói quen này trong ít nhất 2 tuần tới mà không cần ai nhắc.'];
+const SCENARIOS_POST=[
+ {t:'👥 Cả nhóm bạn hẹn nhau "cày" video xuyên đêm thứ Bảy và chê em là "phá đội" nếu không tham gia.',o:['Tham gia xuyên đêm cho hoà đồng, một đêm chắc không sao','Tham gia cùng bạn đến giờ đã định (ví dụ 21 giờ) bằng hoạt động chung khác, rồi rút lui đi ngủ đúng giờ và nói rõ lý do một cách vui vẻ từ đầu buổi','Nói dối là bận để ở nhà một mình buồn'],best:1,f:'Tiến bộ không đồng nghĩa với tách khỏi bạn bè. Tham gia có giới hạn, báo trước giờ rút và đề xuất hoạt động chung khác giúp em giữ cả tình bạn lẫn giờ ngủ — kỹ năng khó nhất và quý nhất sau can thiệp.'},
+ {t:'🏆 Vừa thi xong học kỳ, em tự nhủ "xả hơi, xem không giới hạn một hôm cũng đáng".',o:['Xem không giới hạn đến khi chán thì thôi','Tự thưởng có kế hoạch: định trước khung giờ và tổng phút (ví dụ 60 phút sau bữa tối), đặt hẹn giờ, hết giờ thì chuyển sang hoạt động tự thưởng khác em thích','Cấm mình xem tuyệt đối, thi xong cũng không được vui'],best:1,f:'Tự chủ không phải là không bao giờ tự thưởng — mà là tự thưởng trong kế hoạch mình đã định khi tỉnh táo. "Không giới hạn" chính là cách các đợt tái lướt kéo dài nhiều ngày thường bắt đầu.'},
+ {t:'📉 Sau 3 tuần rất tốt, cuối tuần này em lỡ xem liền 2 giờ và bỏ ghi nhật ký 2 ngày. Em thấy chán nản, muốn bỏ luôn.',o:['Bỏ luôn — bằng chứng là em không làm được','Ghi bù nhật ký trung thực cho 2 ngày đó, tự hỏi điều gì khác thường cuối tuần này (mệt? ở nhà một mình? không có kế hoạch?), rồi khởi động lại bằng một mục tiêu nhỏ cho ngày mai','Giấu giáo viên và xoá dữ liệu tuần này'],best:1,f:'Đây là tình huống phân biệt tiến bộ thật và tiến bộ bề ngoài. Số liệu trung thực + phân tích nguyên nhân + khởi động lại nhỏ = chu trình của người thay đổi thói quen thành công. Một cuối tuần lỡ không xoá được 3 tuần em đã làm được.'},
+ {t:'💬 Nửa đêm, bạn thân đang buồn và gửi liên tục video, giận dỗi nói "mày không xem là không thương tao".',o:['Thức xem và trả lời đến khi bạn hết buồn, dù mai phải dậy sớm','Thấu cảm và trả lời bạn bằng tin nhắn/cuộc gọi ngắn gọn, hẹn nói chuyện tử tế vào sáng mai, giải thích em phải ngủ để mai còn ở bên bạn tốt hơn','Không trả lời gì và tắt máy lạnh lùng'],best:1,f:'Giúp bạn lúc nửa đêm tốt nhất bằng sự quan tâm thật (lắng nghe, hẹn giờ tử tế) chứ không phải bằng việc cùng thức lướt video. Đặt ranh giới nhẹ nhàng mà rõ ràng là kỹ năng tự chủ trong quan hệ — mức vận dụng cao nhất của chương trình.'}];
+
+/* ===== BỘ B — BỘ CÂU HỎI RIÊNG CHO MỐC SAU CAN THIỆP (15 câu) =====
+   Song song với Bộ A (QUIZ): câu số i của Bộ B đo cùng chủ đề với câu số i của Bộ A,
+   nhưng là câu hỏi khác hoàn toàn (tình huống mới, cách hỏi mới, đáp án xáo trộn).
+   Chấm /15 như Bộ A để điểm Trước/Sau so sánh được mà học sinh không thể thuộc đáp án. */
+/* ===== BỘ B — ĐÁNH GIÁ HIỆU QUẢ ĐẠT ĐƯỢC SAU CAN THIỆP (15 câu) =====
+   Khác Bộ A (trắc nghiệm nhận thức, có đáp án đúng): Bộ B đo KẾT QUẢ THẬT học sinh
+   đạt được sau can thiệp, dạng tự báo cáo theo 5 nhóm hiệu quả của chương trình:
+   hành vi xem (1–3), giấc ngủ & học tập (4–6), hiệu quả 2 kỹ thuật cốt lõi (7–8),
+   năng lực tự chủ (9–13), lan toả & duy trì (14–15).
+   Mỗi câu chọn 1 mức: Đạt rõ rệt = 3, Đạt khá = 2, Đạt một phần = 1, Chưa đạt = 0.
+   Tổng /45. Quy đổi: 34–45 Hiệu quả rõ rệt · 25–33 Có hiệu quả · 15–24 Hiệu quả
+   bước đầu · 0–14 Chưa đạt — cần hỗ trợ thêm. Lưu type 'effect', mốc 'post'. */
+const EFFECT_ITEMS=[
+ 'Thời gian xem video ngắn mỗi ngày của em đã GIẢM so với trước can thiệp.',
+ 'Em DỪNG XEM ĐÚNG GIỚI HẠN phút đã đặt thường xuyên hơn trước.',
+ 'Em ÍT LƯỚT VIDEO VÔ THỨC hơn — số lần tay tự mở ứng dụng mà không chủ đích đã giảm.',
+ 'Em ÍT XEM SAU GIỜ ĐI NGỦ hơn và ngủ ngon, ngủ đủ hơn trước.',
+ 'Em TẬP TRUNG HỌC BÀI LÂU HƠN, ít bị điện thoại làm gián đoạn hơn trước.',
+ 'Em ÍT TRÌ HOÃN bài tập / việc quan trọng vì mải xem video hơn trước.',
+ 'Kỹ thuật "DỪNG 10 GIÂY" thực sự giúp em KIỀM ĐƯỢC cơn muốn xem ngay lập tức.',
+ '"ĐỔI 15 PHÚT" thực sự giúp em THAY việc lướt video bằng hoạt động khác khi buồn chán, căng thẳng.',
+ 'Em NHẬN RA ĐƯỢC yếu tố kích hoạt của mình (buồn chán, căng thẳng, thói quen...) trước khi lướt.',
+ 'Em đã CHỦ ĐỘNG SẮP XẾP MÔI TRƯỜNG để giữ thói quen tốt (để điện thoại xa khi học/ngủ, tắt thông báo ứng dụng video...).',
+ 'Khi LỠ xem vượt giới hạn, em biết ghi lại nguyên nhân và LÀM LẠI vào ngày hôm sau thay vì bỏ cuộc.',
+ 'Em GIỮ ĐƯỢC GIỚI HẠN của mình ngay cả khi BẠN BÈ RỦ xem tiếp.',
+ 'TÂM TRẠNG em ỔN ĐỊNH HƠN, ít bị tụt cảm xúc vì so sánh bản thân với người khác trên mạng.',
+ 'Em đã GIÚP ĐƯỢC bạn bè hoặc người thân giảm lướt video vô thức (vai trò Sứ giả Hạnh phúc).',
+ 'Em TỰ TIN DUY TRÌ ĐƯỢC thói quen xem có kiểm soát này trong thời gian tới mà không cần ai nhắc.'];
+const EFFECT_OPTS=['Đạt rõ rệt — đúng với em hầu như mọi lúc','Đạt khá — đúng với em phần lớn thời gian','Đạt một phần — thỉnh thoảng em mới làm được','Chưa đạt — em chưa thay đổi so với trước'];
+const EFFECT_VALS=[3,2,1,0];
+function effectBand(score){ return score>=34?'Hiệu quả rõ rệt':(score>=25?'Có hiệu quả':(score>=15?'Hiệu quả bước đầu':'Chưa đạt — cần hỗ trợ thêm')); }
+function startEffect(){
+  const box=document.getElementById('quizBox');
+  box.innerHTML='<p class="ok" style="margin-bottom:10px">📋 Em đang làm: <b>Bộ B — Đánh giá HIỆU QUẢ ĐẠT ĐƯỢC sau can thiệp (15 câu)</b><br><span style="color:#334155">Bộ này <b>không có đáp án đúng/sai</b>: mỗi câu là một kết quả của chương trình — em chọn mức <b>đúng với bản thân mình nhất</b> sau thời gian can thiệp. Hãy trả lời thật lòng, kết quả chỉ để em và giáo viên thấy em đã tiến bộ ở đâu và cần hỗ trợ ở đâu.</span></p>'+
+   EFFECT_ITEMS.map((t,i)=>`<div class="q"><b>Câu ${i+1}.</b> ${esc(t)}<br>`+
+    EFFECT_OPTS.map((o,j)=>`<label><input type="radio" name="ef${i}" value="${EFFECT_VALS[j]}">${esc(o)}</label>`).join('')+`</div>`).join('')+
+   `<button onclick="submitEffect()">Nộp đánh giá hiệu quả (Bộ B)</button>`;
+  box.scrollIntoView({behavior:'smooth'});
+}
+function submitEffect(){
+  let total=0;
+  for(let i=0;i<EFFECT_ITEMS.length;i++){ const sel=document.querySelector(`input[name="ef${i}"]:checked`);
+    if(!sel){ toast('Em còn câu chưa chọn — hãy đánh giá đủ 15 câu nhé.'); return; } total+=parseInt(sel.value,10); }
+  DB.assessments.push({ id:Date.now(), anon:cur.anon, type:'effect', phase:'post', score:total, date:todayStr() }); save();
+  toast('Hiệu quả đạt được (Bộ B): '+total+'/45 — '+effectBand(total)+' 🎯'); renderQuizHistory();
+}
+let activeQuizSet=null;
+function fillPhaseSelects(){
+  /* Bản này mốc Sau LUÔN chọn được (Bộ B riêng) — không còn chờ giáo viên mở mốc,
+     để học sinh mở app ra là chọn được ngay "Sau can thiệp — Bộ B". */
+  document.getElementById('qPhase').innerHTML='<option value="pre">Trước can thiệp — Bộ A nhận thức (15 câu)</option><option value="post">Sau can thiệp — Bộ B hiệu quả đạt được (15 câu)</option>';
+  document.getElementById('sasPhase').innerHTML='<option value="pre">Trước can thiệp</option><option value="post">Sau can thiệp</option>';
+}
+function phaseName(p){ return p==='pre'?'Trước':'Sau'; }
+function moNgayBoB(){
+  const sel=document.getElementById('qPhase');
+  if(sel) sel.value='post';
+  startQuiz();
+}
+function startQuiz(){
+  const phase=document.getElementById('qPhase').value; const box=document.getElementById('quizBox');
+  if(!phase){ box.innerHTML='<p class="err">Giáo viên chưa mở mốc trắc nghiệm nào.</p>'; return; }
+  if(phase==='post'){ startEffect(); return; }
+  activeQuizSet = QUIZ;
+  const formName = 'Bộ A — bộ câu hỏi của mốc Trước (15 câu)';
+  box.innerHTML='<p class="ok" style="margin-bottom:10px">📋 Em đang làm: <b>'+formName+'</b></p>'+activeQuizSet.map((item,i)=>`<div class="q"><b>Câu ${i+1}.</b> ${esc(item.q)}`+
+    item.o.map((o,j)=>`<label><input type="radio" name="qq${i}" value="${j}">${esc(o)}</label>`).join('')+
+    `<div class="expl" id="qe${i}"></div></div>`).join('')+
+    `<button onclick="submitQuiz('${phase}')">Nộp bài trắc nghiệm</button>`;
+  box.scrollIntoView({behavior:'smooth'});
+}
+function submitQuiz(phase){
+  let score=0, unanswered=0;
+  const set=(activeQuizSet && activeQuizSet.length===15) ? activeQuizSet : QUIZ;
+  set.forEach((item,i)=>{ const sel=document.querySelector(`input[name="qq${i}"]:checked`);
+    if(!sel){ unanswered++; return; } const v=parseInt(sel.value,10); if(v===item.a) score++;
+    const ex=document.getElementById('qe'+i); ex.style.display='block';
+    ex.innerHTML=(v===item.a?'✅ <b>Đúng!</b> ':'❌ <b>Chưa đúng.</b> Đáp án đúng: '+esc(item.o[item.a])+'<br>')+esc(item.e)+'<br><i>'+esc(item.s)+'</i>'; });
+  if(unanswered){ toast('Em còn '+unanswered+' câu chưa trả lời — hãy làm hết rồi nộp lại nhé.'); return; }
+  DB.assessments.push({ id:Date.now(), anon:cur.anon, type:'quiz', phase, score, date:todayStr() }); save();
+  toast('Điểm trắc nghiệm '+phaseName(phase)+': '+score+'/15 🎉'); renderQuizHistory();
+}
+function startSas(){
+  const phase=document.getElementById('sasPhase').value; const box=document.getElementById('sasBox');
+  if(!phase){ box.innerHTML='<p class="err">Giáo viên chưa mở mốc nào.</p>'; return; }
+  box.innerHTML=SAS_ITEMS.map((t,i)=>`<div class="q"><b>Câu ${i+1}.</b> ${esc(t)}<br>`+
+    [1,2,3,4,5,6].map(v=>`<label style="display:inline-block;margin-right:10px"><input type="radio" name="ss${i}" value="${v}">${v}</label>`).join('')+
+    `<div class="mut">1 = Hoàn toàn không đồng ý · 6 = Hoàn toàn đồng ý</div></div>`).join('')+
+    `<button onclick="submitSas('${phase}')">Nộp bảng tự đánh giá</button>`;
+  box.scrollIntoView({behavior:'smooth'});
+}
+function submitSas(phase){
+  let total=0;
+  for(let i=0;i<SAS_ITEMS.length;i++){ const sel=document.querySelector(`input[name="ss${i}"]:checked`);
+    if(!sel){ toast('Em còn câu chưa chọn — hãy trả lời đủ 10 câu nhé.'); return; } total+=parseInt(sel.value,10); }
+  DB.assessments.push({ id:Date.now(), anon:cur.anon, type:'sas', phase, score:total, date:todayStr() }); save();
+  toast('Điểm tự đánh giá '+phaseName(phase)+': '+total+'/60'); renderQuizHistory();
+}
+function renderQuizHistory(){
+  const mine=DB.assessments.filter(a=>a.anon===cur.anon);
+  const q=mine.filter(a=>a.type==='quiz'), s=mine.filter(a=>a.type==='sas');
+  const line=a=>`<p style="margin:5px 0">${a.type==='quiz'?'🧠 Trắc nghiệm':(a.type==='quiz_post'?'🚀 Vận dụng Sau':'📏 Tự đánh giá')} — mốc ${phaseName(a.phase)}: <b>${a.score}${a.type==='quiz'?'/15':(a.type==='quiz_post'?'/10':'/60')}</b> (${fmtVN(a.date)})</p>`;
+  document.getElementById('quizHistory').innerHTML=q.length?'<h3>Kết quả trắc nghiệm của em</h3>'+q.map(line).join(''):'';
+  const pre=q.find(a=>a.phase==='pre'), post=q.find(a=>a.phase==='post');
+  if(pre&&post) document.getElementById('quizHistory').innerHTML+=`<p class="ok">Thay đổi nhận thức: ${post.score-pre.score>=0?'+':''}${post.score-pre.score} điểm so với mốc Trước.</p>`;
+  document.getElementById('sasHistory').innerHTML=s.length?'<h3>Kết quả tự đánh giá của em</h3>'+s.map(line).join('')+'<p class="mut">Điểm thấp hơn ở mốc Sau nghĩa là thói quen đã tốt lên. Đây là công cụ tự nhìn lại, không phải nhãn dán cho bất kỳ ai.</p>':'';
+  const qp=mine.filter(a=>a.type==='quiz_post'), pg=mine.filter(a=>a.type==='progress');
+  const ef=mine.filter(a=>a.type==='effect');
+  if(ef.length) document.getElementById('quizHistory').innerHTML+='<h3>Kết quả Bộ B — Hiệu quả đạt được của em</h3>'+ef.map(a=>`<p style="margin:5px 0">🎯 Bộ B · Hiệu quả đạt được — mốc Sau: <b>${a.score}/45</b> · Mức: <b>${effectBand(a.score)}</b> (${fmtVN(a.date)})</p>`).join('');
+  const qpEl=document.getElementById('quizPostHistory');
+  if(qpEl) qpEl.innerHTML=qp.length?'<h3>Kết quả vận dụng Sau can thiệp của em</h3>'+qp.map(line).join('')+'<p class="mut">Điểm vận dụng cho thấy em dùng được kiến thức vào tình huống thật — đây là tầng tiến bộ cao hơn thuộc lòng kiến thức.</p>':'';
+  const pgEl=document.getElementById('progressSelfHistory');
+  if(pgEl) pgEl.innerHTML=pg.length?'<h3>Tự đánh giá tiến bộ của em</h3>'+pg.map(a=>`<p style="margin:5px 0">🌟 Tự đánh giá tiến bộ — mốc Sau: <b>${a.score}/40</b> (${fmtVN(a.date)})</p>`).join(''):'';
+  renderProgressDashboard();
+}
+function renderScenarios(){
+  document.getElementById('scenarioBox').innerHTML=SCENARIOS.map((sc,i)=>`<div class="q"><b>Tình huống ${i+1}.</b> ${esc(sc.t)}`+
+    sc.o.map((o,j)=>`<label><input type="radio" name="sc${i}" value="${j}">${esc(o)}</label>`).join('')+
+    `<button class="small" onclick="checkScenario(${i})">Xem phản hồi</button><div class="expl" id="scf${i}"></div></div>`).join('');
+}
+function checkScenario(i){
+  const sel=document.querySelector(`input[name="sc${i}"]:checked`); const f=document.getElementById('scf'+i);
+  if(!sel){ toast('Em hãy chọn một cách xử lý trước nhé.'); return; }
+  const v=parseInt(sel.value,10), sc=SCENARIOS[i]; f.style.display='block';
+  f.innerHTML=(v===sc.best?'✅ <b>Lựa chọn rất tốt!</b> ':'💡 Cách xử lý được khuyên hơn: <b>'+esc(sc.o[sc.best])+'</b><br>')+esc(sc.f);
+}
+
+/* ===== LÀM BÀI PHẦN SAU CAN THIỆP ===== */
+function latestAssess(anon,type,phase){ const m=DB.assessments.filter(a=>a.anon===anon&&a.type===type&&(!phase||a.phase===phase)); return m.length? m[m.length-1] : null; }
+function startQuizPost(){
+  const box=document.getElementById('quizPostBox');
+  box.innerHTML=QUIZ_POST.map((item,i)=>`<div class="q"><b>Câu ${i+1}.</b> ${esc(item.q)}`+
+    item.o.map((o,j)=>`<label><input type="radio" name="qp${i}" value="${j}">${esc(o)}</label>`).join('')+
+    `<div class="expl" id="qpe${i}"></div></div>`).join('')+
+    `<button onclick="submitQuizPost()">Nộp bài vận dụng</button>`;
+  box.scrollIntoView({behavior:'smooth'});
+}
+function submitQuizPost(){
+  let score=0, unanswered=0;
+  QUIZ_POST.forEach((item,i)=>{ const sel=document.querySelector(`input[name="qp${i}"]:checked`);
+    if(!sel){ unanswered++; return; } const v=parseInt(sel.value,10); if(v===item.a) score++;
+    const ex=document.getElementById('qpe'+i); ex.style.display='block';
+    ex.innerHTML=(v===item.a?'✅ <b>Đúng!</b> ':'❌ <b>Chưa đúng.</b> Đáp án đúng: '+esc(item.o[item.a])+'<br>')+esc(item.e)+'<br><i>'+esc(item.s)+'</i>'; });
+  if(unanswered){ toast('Em còn '+unanswered+' câu chưa trả lời — hãy làm hết rồi nộp lại nhé.'); return; }
+  DB.assessments.push({ id:Date.now(), anon:cur.anon, type:'quiz_post', phase:'post', score, date:todayStr() }); save();
+  toast('Điểm vận dụng Sau can thiệp: '+score+'/10 🚀'); renderQuizHistory();
+}
+function startProgressSelf(){
+  const box=document.getElementById('progressSelfBox');
+  box.innerHTML=PROGRESS_ITEMS.map((t,i)=>`<div class="q"><b>Câu ${i+1}.</b> ${esc(t)}<br>`+
+    [1,2,3,4,5].map(v=>`<label style="display:inline-block;margin-right:10px"><input type="radio" name="pg${i}" value="${v}">${v}</label>`).join('')+
+    `<div class="mut">1 = Chưa làm được · 2 = Mới làm được ít · 3 = Làm được một phần · 4 = Làm khá tốt · 5 = Làm rất tốt, đã thành thói quen</div></div>`).join('')+
+    `<button onclick="submitProgressSelf()">Nộp tự đánh giá tiến bộ</button>`;
+  box.scrollIntoView({behavior:'smooth'});
+}
+function submitProgressSelf(){
+  let total=0;
+  for(let i=0;i<PROGRESS_ITEMS.length;i++){ const sel=document.querySelector(`input[name="pg${i}"]:checked`);
+    if(!sel){ toast('Em còn câu chưa chọn — hãy trả lời đủ 8 câu nhé.'); return; } total+=parseInt(sel.value,10); }
+  DB.assessments.push({ id:Date.now(), anon:cur.anon, type:'progress', phase:'post', score:total, date:todayStr() }); save();
+  toast('Tự đánh giá tiến bộ: '+total+'/40 🌟'); renderQuizHistory();
+}
+function renderScenariosPost(){
+  const el=document.getElementById('scenarioPostBox'); if(!el) return;
+  el.innerHTML=SCENARIOS_POST.map((sc,i)=>`<div class="q"><b>Tình huống nâng cao ${i+1}.</b> ${esc(sc.t)}`+
+    sc.o.map((o,j)=>`<label><input type="radio" name="scp${i}" value="${j}">${esc(o)}</label>`).join('')+
+    `<button class="small" onclick="checkScenarioPost(${i})">Xem phản hồi</button><div class="expl" id="scpf${i}"></div></div>`).join('');
+}
+function checkScenarioPost(i){
+  const sel=document.querySelector(`input[name="scp${i}"]:checked`); const f=document.getElementById('scpf'+i);
+  if(!sel){ toast('Em hãy chọn một cách xử lý trước nhé.'); return; }
+  const v=parseInt(sel.value,10), sc=SCENARIOS_POST[i]; f.style.display='block';
+  f.innerHTML=(v===sc.best?'✅ <b>Lựa chọn rất tốt!</b> ':'💡 Cách xử lý được khuyên hơn: <b>'+esc(sc.o[sc.best])+'</b><br>')+esc(sc.f);
+}
+/* Bảng tiến bộ Trước → Sau của từng học sinh */
+function renderProgressDashboard(){
+  const box=document.getElementById('progressBox'); if(!box||!cur) return;
+  const preQ=latestAssess(cur.anon,'quiz','pre'), postQ=latestAssess(cur.anon,'quiz','post');
+  const preS=latestAssess(cur.anon,'sas','pre'), postS=latestAssess(cur.anon,'sas','post');
+  const qp=latestAssess(cur.anon,'quiz_post','post'), pg=latestAssess(cur.anon,'progress','post');
+  const eff=latestAssess(cur.anon,'effect','post');
+  if(!preQ&&!postQ&&!preS&&!postS&&!qp&&!pg){ box.innerHTML='<p class="mut">Em chưa có đủ dữ liệu. Hãy làm mốc Trước và mốc Sau để thấy hành trình của mình nhé.</p>'; return; }
+  const fmtDelta=(d,goodWhenUp)=>{ if(d===null||d===undefined||isNaN(d)) return '—';
+    const good = goodWhenUp? d>0 : d<0;
+    const flat = d===0;
+    return `<b style="color:${flat?'#64748b':(good?'#059669':'#dc2626')}">${d>0?'+':''}${d}</b> ${flat?'(chưa thay đổi)':(good?'(tiến bộ ✅)':'(cần hỗ trợ thêm)')}`; };
+  let rows='';
+  rows+=`<tr><td>🧠 Nhận thức (trắc nghiệm 15 câu)</td><td>${preQ?preQ.score+'/15':'—'}</td><td>${postQ?postQ.score+'/15':'—'}</td><td>${(preQ&&postQ)?fmtDelta(postQ.score-preQ.score,true):'Chưa đủ 2 mốc'}</td></tr>`;
+  rows+=`<tr><td>📏 Thói quen (tự đánh giá SAS /60 — thấp là tốt)</td><td>${preS?preS.score+'/60':'—'}</td><td>${postS?postS.score+'/60':'—'}</td><td>${(preS&&postS)?fmtDelta(postS.score-preS.score,false):'Chưa đủ 2 mốc'}</td></tr>`;
+  rows+=`<tr><td>🚀 Vận dụng vào tình huống thật (chỉ Sau /10)</td><td>—</td><td>${qp?qp.score+'/10':'Chưa làm'}</td><td>${qp?(qp.score>=8?'Vận dụng vững ✅':(qp.score>=5?'Vận dụng được một phần':'Cần luyện thêm qua Tình huống nâng cao')):'—'}</td></tr>`;
+  rows+=`<tr><td>🌟 Năng lực tự chủ tự đánh giá (chỉ Sau /40)</td><td>—</td><td>${pg?pg.score+'/40':'Chưa làm'}</td><td>${pg?(pg.score>=32?'Tự chủ vững ✅':(pg.score>=20?'Đang hình thành':'Mới bắt đầu — tiếp tục nhé')):'—'}</td></tr>`;
+  rows+=`<tr><td>🎯 HIỆU QUẢ ĐẠT ĐƯỢC — Bộ B (chỉ Sau /45)</td><td>—</td><td>${eff?eff.score+'/45':'Chưa làm'}</td><td>${eff?('<b>'+effectBand(eff.score)+'</b>'):'—'}</td></tr>`;
+  let verdict='';
+  const dq=(preQ&&postQ)? postQ.score-preQ.score : null;
+  const ds=(preS&&postS)? preS.score-postS.score : null; /* SAS giảm = tốt, ds dương = tốt */
+  const signals=[dq,ds].filter(v=>v!==null&&v!==undefined);
+  if(signals.length||qp||pg){
+    const scoreSign=(dq===null?0:(dq>=3?2:(dq>0?1:(dq<0?-1:0)))) + (ds===null?0:(ds>=6?2:(ds>0?1:(ds<0?-1:0)))) + (qp?(qp.score>=8?1:0):0) + (eff?(eff.score>=34?2:(eff.score>=25?1:(eff.score<15?-1:0))):0);
+    if(scoreSign>=3) verdict='🌳 <b>Tiến bộ rõ rệt.</b> Nhận thức / thói quen của em đã thay đổi nhìn thấy được so với chính em trước can thiệp. Hãy duy trì bằng môi trường đã thiết kế và hoạt động thay thế quen thuộc của em.';
+    else if(scoreSign>=1) verdict='🌿 <b>Có tiến bộ.</b> Em đã đi đúng hướng so với trước can thiệp. Chọn MỘT điểm còn yếu nhất (xem khuya, vượt giới hạn, hay quên Dừng 10 giây) để tập trung thêm 1 tuần nữa.';
+    else if(scoreSign===0 && signals.length) verdict='🌱 <b>Đang ở vạch xuất phát của sự thay đổi.</b> Điểm số chưa nhúc nhích không có nghĩa em không cố gắng — hãy xem lại nhật ký: em có ghi đều không, giới hạn đặt có vừa sức không, và trao đổi với giáo viên để chỉnh kế hoạch.';
+    else verdict='💬 <b>Cần được hỗ trợ thêm.</b> Đây không phải nhãn "thất bại" — nhiều bạn cần thêm thời gian và một kế hoạch vừa sức hơn. Hãy chia sẻ với giáo viên để cùng tìm kích hoạt chính và cách đổi hoạt động phù hợp với em.';
+  }
+  box.innerHTML=`<div class="tblwrap"><table><thead><tr><th>Năng lực</th><th>Trước</th><th>Sau</th><th>Thay đổi / Nhận xét</th></tr></thead><tbody>${rows}</tbody></table></div>`+(verdict?`<p style="margin-top:10px">${verdict}</p>`:'');
+}
+/* Tổng hợp Sau can thiệp cho giáo viên (dùng trong Nghiên cứu Trước/Sau) */
+function researchPostHtml(cls){
+  const ok=new Set(DB.students.filter(s=>s.className===cls&&s.consent).map(s=>s.anon));
+  if(!ok.size) return '';
+  const perStu=[...ok].map(anon=>({ anon, qp:latestAssess(anon,'quiz_post','post'), pg:latestAssess(anon,'progress','post'), eff:latestAssess(anon,'effect','post'),
+    preQ:latestAssess(anon,'quiz','pre'), postQ:latestAssess(anon,'quiz','post'), preS:latestAssess(anon,'sas','pre'), postS:latestAssess(anon,'sas','post') }));
+  const qps=perStu.filter(x=>x.qp), pgs=perStu.filter(x=>x.pg), effs=perStu.filter(x=>x.eff);
+  const paired=perStu.filter(x=>x.preQ&&x.postQ), pairedS=perStu.filter(x=>x.preS&&x.postS);
+  const improvedQ=paired.filter(x=>x.postQ.score>x.preQ.score).length;
+  const improvedS=pairedS.filter(x=>x.postS.score<x.preS.score).length;
+  const avg=a=>a.length? (a.reduce((x,y)=>x+y,0)/a.length).toFixed(2).replace('.',',') : '—';
+  return `<h3 style="margin-top:16px">🚀 Kết quả mở rộng SAU can thiệp — vận dụng &amp; tiến bộ (chỉ học sinh đã đồng thuận)</h3>
+  <div class="grid">
+    <div class="stat"><b>${qps.length}</b><span>em đã làm Trắc nghiệm vận dụng Sau</span></div>
+    <div class="stat"><b>${avg(qps.map(x=>x.qp.score))}${qps.length?'/10':''}</b><span>TB điểm vận dụng Sau</span></div>
+    <div class="stat"><b>${avg(pgs.map(x=>x.pg.score))}${pgs.length?'/40':''}</b><span>TB tự đánh giá tiến bộ Sau (${pgs.length} em)</span></div>
+    <div class="stat"><b>${avg(effs.map(x=>x.eff.score))}${effs.length?'/45':''}</b><span>TB HIỆU QUẢ ĐẠT ĐƯỢC — Bộ B (${effs.length} em đã làm)</span></div>
+    <div class="stat"><b>${effs.length? effs.filter(x=>x.eff.score>=25).length+'/'+effs.length : '—'}</b><span>em đạt mức "Có hiệu quả" trở lên ở Bộ B (≥25/45)</span></div>
+    <div class="stat"><b>${paired.length? improvedQ+'/'+paired.length : '—'}</b><span>em tăng điểm nhận thức Trước → Sau</span></div>
+    <div class="stat"><b>${pairedS.length? improvedS+'/'+pairedS.length : '—'}</b><span>em giảm điểm SAS (thói quen tốt lên)</span></div>
+  </div>
+  <p class="mut">Cách đọc cho báo cáo nghiên cứu: Bộ A (Trước) cho điểm nhận thức nền /15; Bộ B (Sau) là đánh giá HIỆU QUẢ ĐẠT ĐƯỢC do học sinh tự báo cáo, thang /45 — trình bày kèm tỉ lệ em đạt từ mức Có hiệu quả (≥25/45). Khẳng định thay đổi Trước/Sau dựa trên các chỉ số đo cùng một thứ ở hai mốc: phút xem trong nhật ký, điểm SAS và điểm Cây Hạnh Phúc; Bộ B và điểm Vận dụng/Tự đánh giá tiến bộ là bằng chứng kết quả và mức chuyển hoá sang hành vi. Khi số em làm phần Sau còn ít, chỉ trình bày mô tả, không kết luận.</p>`;
+}
+
+
+/* ================= BÁO CÁO TUẦN ================= */
+function weekLabel(w){ return w.start+'_'+w.end; }
+function buildSnapshot(anon,w){
+  const s=stu(anon);
+  const logs=myLogs(anon).filter(l=>l.date>=w.start&&l.date<=w.end);
+  const total=logs.reduce((a,l)=>a+l.minutes,0);
+  const daysWith=[...new Set(logs.map(l=>l.date))];
+  const exceed=daysWith.filter(ds=>dayTotal(anon,ds)>s.limit).length;
+  const late=logs.filter(l=>l.slot==='Sau giờ đi ngủ').length;
+  const pauses=DB.pauses.filter(p=>p.anon===anon&&p.date>=w.start&&p.date<=w.end).length;
+  const swaps=DB.swaps.filter(p=>p.anon===anon&&p.date>=w.start&&p.date<=w.end).length;
+  const mine=DB.assessments.filter(a=>a.anon===anon);
+  const quiz=[...mine.filter(a=>a.type==='quiz')].pop(), sas=[...mine.filter(a=>a.type==='sas')].pop();
+  return { anon, className:s.className, weekStart:w.start, weekEnd:w.end, total,
+    avg: daysWith.length? Math.round(total/daysWith.length*10)/10 : 0,
+    exceedDays:exceed, lateSessions:late, pauses, swaps, tree:treePoints(anon),
+    quizScore: quiz?quiz.score:-1, sasScore: sas?sas.score:-1, consent:!!s.consent, phase:DB.settings.phase };
+}
+function previewReport(){
+  const d=document.getElementById('repDate').value; const box=document.getElementById('repPreview');
+  if(!d||!cur){ box.innerHTML=''; return; }
+  const w=weekOf(d), sn=buildSnapshot(cur.anon,w);
+  box.innerHTML=`<div class="q"><b>Xem trước báo cáo — tuần ${fmtVN(w.start)} → ${fmtVN(w.end)}</b><br>
+  Mã học sinh: <b>${sn.anon}</b> · Lớp: ${esc(sn.className)}<br>
+  Tổng phút xem: <b>${sn.total}</b> · TB/ngày (ngày có ghi): <b>${String(sn.avg).replace('.',',')}</b><br>
+  Ngày vượt giới hạn: ${sn.exceedDays} · Phiên sau giờ ngủ: ${sn.lateSessions}<br>
+  Dừng 10 giây: ${sn.pauses} lần · Đổi 15 phút: ${sn.swaps} lần · Điểm Cây Hạnh Phúc: ${sn.tree}<br>
+  Trắc nghiệm gần nhất: ${sn.quizScore>=0?sn.quizScore+'/15':'chưa làm'} · Tự đánh giá gần nhất: ${sn.sasScore>=0?sn.sasScore+'/60':'chưa làm'}</div>`;
+}
+function submitReport(){
+  const d=document.getElementById('repDate').value; if(!d){ toast('Hãy chọn ngày trong tuần muốn gửi.'); return; }
+  const w=weekOf(d), sn=buildSnapshot(cur.anon,w);
+  const sameWeek=DB.reports.filter(r=>r.anon===cur.anon&&r.weekStart===w.start);
+  const ver=sameWeek.length+1;
+  const code='BC-'+sn.anon+'-'+w.start.replace(/-/g,'')+'-v'+ver;
+  const rep={ id:Date.now(), code, version:ver, submittedAt:new Date().toLocaleString('vi-VN'), ...sn };
+  DB.reports.push(rep);
+  save(); renderMyReports(); previewReport();
+  if(sheetUrl()){
+    toast('Đã gửi báo cáo '+code+' ✉️ — đang đồng bộ lên Google Sheet…');
+    pushReportToSheet(rep).then(st=>{ renderMyReports();
+      if(st==='synced') toast('Đã gửi báo cáo và đồng bộ lên Google Sheet ✓');
+      else if(st==='sent') toast('Đã gửi báo cáo '+code+' ✉️ Đã đẩy lên Google Sheet — em báo giáo viên kiểm tra lại trên Sheet nhé.');
+      else toast('Đã lưu báo cáo '+code+' trong máy này; chưa đẩy được lên Sheet — em báo giáo viên để được đẩy lại.');
+    });
+  } else {
+    toast('Đã gửi báo cáo '+code+' ✉️ Báo cáo đang lưu trong máy này.');
+  }
+}
+function renderMyReports(){
+  const mine=DB.reports.filter(r=>r.anon===cur.anon).slice().sort((a,b)=>b.id-a.id);
+  document.getElementById('myReports').innerHTML=mine.length? mine.map(r=>
+    `<p style="margin:6px 0">📤 <b>${esc(r.code)}</b> — tuần ${fmtVN(r.weekStart)}→${fmtVN(r.weekEnd)} · Tổng ${r.total} phút · Gửi lúc ${esc(r.submittedAt)}${sheetBadge(r)}</p>`).join('')
+    : '<p class="mut">Em chưa gửi báo cáo nào.</p>';
+}
+/* ================= ĐỒNG BỘ GOOGLE SHEET QUA APPS SCRIPT ================= */
+function sheetUrl(){ return ((DB.settings&&DB.settings.scriptUrl)||'').trim(); }
+function sheetBadge(r){
+  if(r.sheetStatus==='synced') return ' <span class="badge b-safe">Đã lên Google Sheet ✓</span>';
+  if(r.sheetStatus==='sent') return ' <span class="badge b-warn">Đã đẩy lên Sheet (chờ kiểm chứng)</span>';
+  if(r.sheetStatus==='failed') return ' <span class="badge b-risk">Chưa lên được Sheet</span>';
+  return '';
+}
+function jsonpGet(url, timeoutMs){
+  return new Promise((resolve,reject)=>{
+    const cb='msCb'+Date.now()+'_'+Math.floor(Math.random()*1000000);
+    const s=document.createElement('script');
+    let done=false;
+    const timer=setTimeout(()=>{ cleanup(); reject(new Error('timeout')); }, timeoutMs||15000);
+    function cleanup(){ if(done) return; done=true; clearTimeout(timer); try{ delete window[cb]; }catch(e){ window[cb]=undefined; } if(s.parentNode) s.parentNode.removeChild(s); }
+    window[cb]=function(data){ cleanup(); resolve(data); };
+    s.onerror=function(){ cleanup(); reject(new Error('jsonp')); };
+    s.src=url+(url.includes('?')?'&':'?')+'callback='+cb;
+    document.head.appendChild(s);
+  });
+}
+function weekCodeOf(weekStart){
+  return weekStart.slice(0,4)+'-W'+String(Math.ceil(((new Date(weekStart+'T00:00:00')-new Date(weekStart.slice(0,4)+'-01-01T00:00:00'))/86400000+1)/7)).padStart(2,'0');
+}
+function reportToSheetRow(r){
+  return { MaGui:r.code, MaHS:r.anon, Lop:r.className, Tuan:weekCodeOf(r.weekStart), TuNgay:r.weekStart, DenNgay:r.weekEnd,
+    TongPhut:r.total, TBPhut_Ngay:r.avg, SoNgayVuotGioiHan:r.exceedDays, SoPhienSauGioNgu:r.lateSessions,
+    SoLanDung10s:r.pauses, SoLanDoi15p:r.swaps, DiemCayHanhPhuc:r.tree, PhienBan:r.version };
+}
+function reportLogsToSheetRows(r){
+  return DB.logs.filter(l=>l.anon===r.anon&&l.date>=r.weekStart&&l.date<=r.weekEnd).map(l=>({
+    MaHS:l.anon, Lop:r.className, Ngay:l.date, PhutXem:l.minutes, NenTang:l.platform, KhungGio:l.slot,
+    YeuToKichHoat:l.trigger, CamXuc:l.mood, DungDungGio:l.stopped?'Có':'Không', GiaiDoan:DB.settings.phase }));
+}
+async function pushReportToSheet(report){
+  const url=sheetUrl();
+  if(!url) return null;
+  const payload={ token:(DB.settings&&DB.settings.scriptToken)||'', report:reportToSheetRow(report), logs:reportLogsToSheetRows(report) };
+  try{
+    await fetch(url,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload) });
+  }catch(e){ report.sheetStatus='failed'; save(); return 'failed'; }
+  await new Promise(res=>setTimeout(res,2000));
+  let st='sent';
+  try{
+    const chk=await jsonpGet(url+'?code='+encodeURIComponent(report.code), 15000);
+    if(chk && (chk.found===true||chk.exists===true)) st='synced';
+  }catch(e){ /* đã gửi nhưng chưa kiểm chứng được */ }
+  report.sheetStatus=st; save(); return st;
+}
+const DEFAULT_SHEET_TOKEN='MS-PTG-2026-X7K4P9';
+/* Đọc giá trị ĐANG GÕ trong 3 ô cài đặt Sheet, tự lưu vào DB.settings rồi mới dùng —
+   để bấm "Kiểm tra kết nối" ngay (chưa bấm Lưu) vẫn test đúng giá trị vừa nhập.
+   - Token trống -> tự điền token mặc định vào cả ô lẫn settings.
+   - Ô Link Sheet chứa mã Apps Script (bắt đầu "AKfy") -> cảnh báo, KHÔNG ghi đè sheetLink cũ. */
+function readSettingsForm(){
+  const res={ tokenFilled:false, sheetWarn:false };
+  const sheetEl=document.getElementById('setSheet'), urlEl=document.getElementById('setScriptUrl'), tokEl=document.getElementById('setScriptToken');
+  if(!urlEl||!tokEl) return res;
+  let tok=(tokEl.value||'').trim();
+  if(!tok){ tok=DEFAULT_SHEET_TOKEN; tokEl.value=tok; res.tokenFilled=true; }
+  DB.settings.scriptUrl=(urlEl.value||'').trim();
+  DB.settings.scriptToken=tok;
+  if(sheetEl){
+    const sheetVal=(sheetEl.value||'').trim();
+    if(sheetVal.indexOf('AKfy')===0){ res.sheetWarn=true; }
+    else DB.settings.sheetLink=sheetVal;
+  }
+  save();
+  return res;
+}
+const SHEET_LINK_WARN='Ô Link Sheet đang chứa mã Apps Script (bắt đầu bằng “AKfy”) — hãy dán LINK Google Sheet (dạng https://docs.google.com/spreadsheets/d/...). Giá trị sai này KHÔNG được lưu.';
+async function testSheetConnection(){
+  const out=document.getElementById('sheetTestResult'); if(!out) return;
+  const rf=readSettingsForm();
+  if(rf.tokenFilled) toast('Đã tự điền token mặc định');
+  if(rf.sheetWarn){ out.innerHTML='⚠️ '+SHEET_LINK_WARN; return; }
+  const url=sheetUrl();
+  if(!url){ out.innerHTML='⚠️ Chưa nhập Apps Script Web App URL.'; return; }
+  out.innerHTML='⏳ Đang kiểm tra kết nối…';
+  try{
+    const res=await jsonpGet(url+'?ping=1', 15000);
+    if(res && (res.ok===true||res.sheetName)){
+      out.innerHTML='✅ Kết nối thành công — Sheet đích: <b>'+esc(res.sheetName||'(không rõ tên)')+'</b>. Kiểm tra đúng Sheet “Mindful Screen — Dữ liệu giáo viên”. Cài đặt vừa nhập đã được tự lưu.';
+    } else {
+      out.innerHTML='⚠️ Có phản hồi nhưng không đúng định dạng kỳ vọng. Hãy chắc chắn đang dùng URL của bản triển khai (Deploy) Apps Script mới nhất.';
+    }
+  }catch(e){
+    out.innerHTML='❌ Chưa kết nối được. Hai nguyên nhân hay gặp nhất: <b>1)</b> Bản triển khai Apps Script chưa để quyền “Bất kỳ ai” (Anyone) — vào Triển khai → Quản lý triển khai → bút chì sửa → “Ai có quyền truy cập: Bất kỳ ai” → Triển khai lại. <b>2)</b> URL không thuộc bản triển khai đang hoạt động (URL của bản đã lưu trữ/xoá sẽ bị lỗi 404) — sao chép lại URL của bản triển khai đang hoạt động. (Apps Script phải Deploy dạng Web App, Execute as: Me.)';
+  }
+}
+function sheetInboxCell(r){
+  const base = r.sheetStatus==='synced' ? '<span class="badge b-safe">Đã lên Sheet ✓</span>'
+    : r.sheetStatus==='sent' ? '<span class="badge b-warn">Đã đẩy · chờ kiểm chứng</span>'
+    : r.sheetStatus==='failed' ? '<span class="badge b-risk">Lỗi gửi</span>' : '<span class="mut">Chưa lên Sheet</span>';
+  if(r.sheetStatus==='synced') return base;
+  return base+'<br><button class="ghost small" onclick="pushFromInbox('+r.id+')">⬆️ Đẩy lên Sheet</button>';
+}
+function pushFromInbox(id){
+  const r=DB.reports.find(x=>x.id===id); if(!r) return;
+  if(!sheetUrl()){ toast('Chưa cài Apps Script Web App URL trong Cài đặt Nhóm nghiên cứu.'); return; }
+  toast('Đang đẩy báo cáo '+r.code+' lên Google Sheet…');
+  pushReportToSheet(r).then(st=>{ renderInbox(); if(cur) renderMyReports();
+    if(st==='synced') toast('Đã đồng bộ '+r.code+' lên Google Sheet ✓');
+    else if(st==='sent') toast('Đã đẩy '+r.code+' lên Sheet (chưa kiểm chứng được — mở Sheet kiểm tra giúp).');
+    else toast('Không đẩy được '+r.code+' — kiểm tra lại kết nối Sheet.'); });
+}
+</script>
+<script>
+/* ================= GIÁO VIÊN ================= */
+function copyPin(pin){ if(navigator.clipboard) navigator.clipboard.writeText(String(pin)); toast('Đã sao chép PIN '+pin); }
+function renderTeacherStudents(){
+  const cls=document.getElementById('tsClass').value, q=(document.getElementById('tsSearch').value||'').toLowerCase();
+  const list=DB.students.filter(s=>(!cls||s.className===cls)&&(!q||s.name.toLowerCase().includes(q)||s.anon.toLowerCase().includes(q)));
+  document.querySelector('#studentTable tbody').innerHTML=list.map(s=>
+    `<tr><td><b>${esc(s.anon)}</b></td><td>${esc(s.name)}</td><td>${esc(s.className)}</td>
+     <td><b>${esc(s.pin)}</b> <button class="ghost small" onclick="copyPin('${esc(s.pin)}')">📋 Chép</button></td>
+     <td>${s.limit}</td><td>${esc(s.bedtime)}</td>
+     <td>${s.consent?'<span class="badge b-safe">Đã có</span> '+fmtVN(s.consentDate):'<span class="badge b-warn">Chưa có</span>'}</td>
+     <td><button class="small" onclick="editStudent('${esc(s.anon)}')">Sửa</button></td></tr>`).join('')
+    || '<tr><td colspan="8" class="mut">Không tìm thấy học sinh nào.</td></tr>';
+}
+function editStudent(anon){
+  const s=stu(anon); if(!s) return;
+  document.getElementById('editCard').classList.remove('hidden');
+  document.getElementById('eAnon').value=s.anon; document.getElementById('eName').value=s.name;
+  document.getElementById('eClass').value=s.className; document.getElementById('ePin').value=s.pin;
+  document.getElementById('eLimit').value=s.limit; document.getElementById('eBed').value=s.bedtime;
+  document.getElementById('eConsent').value=s.consent?'1':'0'; document.getElementById('eConsentDate').value=s.consentDate||'';
+  document.getElementById('editCard').scrollIntoView({behavior:'smooth'});
+}
+function saveStudentEdit(){
+  const err=document.getElementById('eErr'); err.textContent='';
+  const anon=document.getElementById('eAnon').value, s=stu(anon); if(!s) return;
+  const pin=document.getElementById('ePin').value.trim();
+  if(!/^\d{4}$/.test(pin)){ err.textContent='Mã PIN phải đúng 4 chữ số.'; return; }
+  const limit=parseInt(document.getElementById('eLimit').value,10);
+  if(!limit||limit<1){ err.textContent='Giới hạn phút phải lớn hơn 0.'; return; }
+  s.name=document.getElementById('eName').value.trim()||s.name;
+  s.className=document.getElementById('eClass').value.trim()||s.className;
+  s.pin=pin; s.limit=limit; s.bedtime=document.getElementById('eBed').value||'22:00';
+  s.consent=document.getElementById('eConsent').value==='1';
+  s.consentDate=s.consent?(document.getElementById('eConsentDate').value||todayStr()):'';
+  save(); document.getElementById('editCard').classList.add('hidden'); renderTeacherStudents(); toast('Đã lưu hồ sơ '+anon+' ✅');
+}
+function addStudent(){
+  const err=document.getElementById('nErr'); err.textContent='';
+  const name=document.getElementById('nName').value.trim(), cls=document.getElementById('nClass').value.trim(), pin=document.getElementById('nPin').value.trim();
+  const limit=parseInt(document.getElementById('nLimit').value,10)||45;
+  if(!name||!cls){ err.textContent='Hãy nhập họ tên và lớp.'; return; }
+  if(!/^\d{4}$/.test(pin)){ err.textContent='Mã PIN phải đúng 4 chữ số.'; return; }
+  let maxN=0; DB.students.forEach(s=>{ const n=parseInt(String(s.anon).replace('HS',''),10); if(n>maxN) maxN=n; });
+  const anon='HS'+String(maxN+1).padStart(2,'0');
+  DB.students.push({ anon, name, className:cls, pin, limit, bedtime:'22:00', consent:false, consentDate:'' });
+  save(); ['nName','nClass','nPin'].forEach(id=>document.getElementById(id).value='');
+  renderTeacherStudents(); toast('Đã thêm học sinh '+anon+' ✅');
+}
+function riskOf(anon){
+  const s=stu(anon), days=last7();
+  const logs=myLogs(anon).filter(l=>days.includes(l.date));
+  const total=logs.reduce((a,l)=>a+l.minutes,0), avg=total/7;
+  const late=logs.filter(l=>l.slot==='Sau giờ đi ngủ').length;
+  const exceed=days.filter(ds=>dayTotal(anon,ds)>s.limit).length;
+  const reasons=[];
+  if(avg>s.limit) reasons.push('TB '+avg.toFixed(1).replace('.',',')+' phút/ngày vượt giới hạn '+s.limit);
+  if(late>=3) reasons.push(late+' phiên xem sau giờ ngủ trong 7 ngày');
+  if(exceed>=4) reasons.push(exceed+' ngày vượt giới hạn');
+  let level='An toàn', cls='b-safe';
+  if(reasons.length){ level='Nguy cơ cao'; cls='b-risk'; }
+  else if(avg>0.8*s.limit||late>=1||exceed>=2){ level='Cần chú ý'; cls='b-warn';
+    if(avg>0.8*s.limit) reasons.push('TB phút gần sát giới hạn');
+    if(late>=1) reasons.push('có '+late+' phiên xem sau giờ ngủ');
+    if(exceed>=2) reasons.push('có '+exceed+' ngày vượt giới hạn'); }
+  else reasons.push('thói quen trong tầm kiểm soát');
+  return { avg, late, exceed, level, cls, reasons:reasons.join('; ') };
+}
+function renderSummary(){
+  const cls=document.getElementById('sumClass').value; if(!cls) return;
+  const list=DB.students.filter(s=>s.className===cls);
+  const rows=list.map(s=>{ const r=riskOf(s.anon); return {s, r}; });
+  const avgClass=rows.reduce((a,x)=>a+x.r.avg,0)/(rows.length||1);
+  const lateTotal=rows.reduce((a,x)=>a+x.r.late,0);
+  document.getElementById('summaryBox').innerHTML=
+    `<div class="grid"><div class="stat"><b>${rows.length}</b><span>học sinh lớp ${esc(cls)}</span></div>
+     <div class="stat"><b>${avgClass.toFixed(1).replace('.',',')}</b><span>TB phút/ngày của lớp</span></div>
+     <div class="stat"><b>${lateTotal}</b><span>tổng phiên sau giờ ngủ (7 ngày)</span></div>
+     <div class="stat"><b>${rows.filter(x=>x.r.level==='Nguy cơ cao').length}</b><span>em ở mức Nguy cơ cao</span></div></div>
+     <div class="tblwrap" style="margin-top:10px"><table><thead><tr><th>Mã</th><th>Họ tên</th><th>TB phút/ngày</th><th>Ngày vượt</th><th>Xem khuya</th><th>Mức độ</th><th>Lý do</th></tr></thead><tbody>${
+     rows.map(x=>`<tr><td>${esc(x.s.anon)}</td><td>${esc(x.s.name)}</td><td>${x.r.avg.toFixed(1).replace('.',',')}</td><td>${x.r.exceed}</td><td>${x.r.late}</td><td><span class="badge ${x.r.cls}">${x.r.level}</span></td><td>${esc(x.r.reasons)}</td></tr>`).join('')
+     }</tbody></table></div>`;
+}
+function renderInbox(){
+  const cls=document.getElementById('inClass').value, wq=(document.getElementById('inWeek').value||'').trim();
+  const list=DB.reports.filter(r=>(!cls||r.className===cls)&&(!wq||r.weekStart===wq||r.code.includes(wq))).slice().sort((a,b)=>b.id-a.id);
+  document.getElementById('inboxBox').innerHTML=list.length?
+    `<div class="tblwrap"><table><thead><tr><th>Mã gửi</th><th>Mã HS</th><th>Lớp</th><th>Tuần</th><th>Tổng phút</th><th>TB/ngày</th><th>Vượt</th><th>Khuya</th><th>Dừng/Đổi</th><th>Điểm cây</th><th>TN/ĐG</th><th>Đồng thuận</th><th>Gửi lúc</th><th>Lên Sheet</th></tr></thead><tbody>${
+    list.map(r=>`<tr><td><b>${esc(r.code)}</b> (v${r.version})</td><td>${esc(r.anon)}</td><td>${esc(r.className)}</td><td>${fmtVN(r.weekStart)}→${fmtVN(r.weekEnd)}</td><td>${r.total}</td><td>${String(r.avg).replace('.',',')}</td><td>${r.exceedDays}</td><td>${r.lateSessions}</td><td>${r.pauses}/${r.swaps}</td><td>${r.tree}</td><td>${r.quizScore>=0?r.quizScore+'/15':'—'} / ${r.sasScore>=0?r.sasScore+'/60':'—'}</td><td>${r.consent?'Có':'Chưa'}</td><td>${esc(r.submittedAt)}</td><td>${sheetInboxCell(r)}</td></tr>`).join('')
+    }</tbody></table></div>`
+    : '<p class="mut">Chưa có báo cáo nào phù hợp.</p>';
+}
+/* ---- Chấm điểm Cây Hạnh Phúc (giáo viên): bảng lớp + chấm nhanh theo ô tick + panel tiêu chí có bằng chứng & điểm gợi ý ---- */
+const TREE_POS=[['Dừng 10 giây tĩnh tâm trước khi mở video',2],['Giữ thời gian xem trong giới hạn ngày (≤45p)',3],['Hoàn thành 1 lần Đổi 15 phút',2],['Không mở video sau giờ đi ngủ đã đặt',3],['Ghi nhật ký thật lòng',1],['Viết nhìn lại buổi tối và thực hiện cam kết',2],['Hoàn thành trọn vẹn Thử thách 7 ngày tự chủ',5],['Dừng xem ngay khi chuông hẹn giờ reo',2],['Sứ giả Hạnh phúc: giúp bạn giảm giờ lướt vô thức',5],['Để điện thoại ngoài phòng ngủ trước khi lên giường',2],['Tham gia hoạt động thể thao/CLB ngoài đời thực',2],['Tăng khả năng tập trung vào công việc',3],['Đạt chuỗi 7 ngày liên tiếp trong giới hạn an toàn',5],['Chủ động tắt thông báo ứng dụng video ngắn',2],['Đọc xong 1 cuốn sách trong tuần',4],['Giúp bạn cùng tiến tăng điểm và bỏ thói quen xem khuya',5]];
+const TREE_NEG=[['Lướt video khuya sau giờ ngủ đã đặt',2],['Xem vượt quá giới hạn ngày mà không dừng lại',2],['Mở ứng dụng theo quán tính mà không dừng 10 giây',1],['Dùng điện thoại không cần thiết trong giờ tập trung',2],['Ghi số liệu gian dối để đối phó',5],['Tắt chuông hẹn giờ rồi lướt tiếp >20 phút',2],['Ngủ gật trong lớp do thức khuya lướt màn hình',2],['Trì hoãn việc quan trọng do mải lướt mạng',2],['Không gửi báo cáo quá 3 ngày liên tiếp',1]];
+const TREE_STAGE_SHORT=[['🌱','Hạt mầm','Tự chủ'],['🌿','Mầm xanh','Tĩnh tâm'],['🌾','Chồi non','Cân bằng'],['🍃','Lá xanh','Vững vàng'],['🌸','Hoa thơm','Bản lĩnh'],['🍎','Trái ngọt','Sứ giả Hạnh phúc']];
+const TREE_STAGE_COLORS=[['#fde68a','#92400e'],['#bbf7d0','#14532d'],['#a5f3fc','#155e75'],['#bfdbfe','#1e3a8a'],['#fbcfe8','#9d174d'],['#fecaca','#991b1b']];
+let treePanelAnon=null, treeCurSuggest=null;
+function treeStageOf(score){ if(score<10) return 'Hạt mầm — Tự chủ'; if(score<15) return 'Mầm xanh — Tĩnh tâm'; if(score<20) return 'Chồi non — Cân bằng'; if(score<25) return 'Lá xanh — Vững vàng'; if(score<30) return 'Hoa thơm — Bản lĩnh'; return 'Trái ngọt — Sứ giả Hạnh phúc'; }
+function treeStageIdx(score){ const t=[0,10,15,20,25,30]; let idx=0; for(let i=0;i<t.length;i++){ if((score||0)>=t[i]) idx=i; } return idx; }
+function treeTick(score){ return Math.min(6, Math.floor((score||0)/5)); }
+function treeDelta(posCounts, negCounts){ let d=0; TREE_POS.forEach((c,i)=>{ d += c[1]*(posCounts[i]||0); }); TREE_NEG.forEach((c,i)=>{ d -= c[1]*(negCounts[i]||0); }); return d; }
+function applyTreeScore(anon, posCounts, negCounts, note, extra){
+  const s=stu(anon); if(!s) return null;
+  const items=[];
+  TREE_POS.forEach((c,i)=>{ const n=posCounts[i]||0; if(n>0) items.push({name:c[0], pts:c[1], count:n, sign:1}); });
+  TREE_NEG.forEach((c,i)=>{ const n=negCounts[i]||0; if(n>0) items.push({name:c[0], pts:c[1], count:n, sign:-1}); });
+  if(!items.length) return null;
+  const old=s.treeScore||0;
+  const total=Math.max(0, old + treeDelta(posCounts, negCounts));
+  const entry={ date: todayStr(), items, delta: total-old, total, note: note||'' };
+  if(extra){ if(extra.week) entry.week=extra.week; if(extra.reportCode) entry.reportCode=extra.reportCode; if(extra.type) entry.type=extra.type; }
+  if(!Array.isArray(s.treeHistory)) s.treeHistory=[];
+  s.treeScore=total; s.treeHistory.push(entry); save();
+  return entry;
+}
+/* --- Tuần chấm & dữ liệu bằng chứng của một học sinh trong tuần --- */
+function treeWeekOptions(){
+  const set = new Set();
+  
+  // Lấy các tuần đã có báo cáo
+  DB.reports.forEach(r => set.add(r.weekStart));
+  // Lấy các tuần học sinh đã có ghi nhật ký
+  DB.logs.forEach(l => set.add(weekOf(l.date).start));
+  
+  // Tự động sinh ra 25 tuần (từ 20 tuần trước đến 4 tuần sau hiện tại)
+  const currentWeekStart = weekOf(todayStr()).start;
+  for (let i = -20; i <= 4; i++) {
+    set.add(addDays(currentWeekStart, i * 7));
+  }
+  
+  // Trả về mảng đã sắp xếp
+  return [...set].sort().map(ws => weekOf(ws));
+}
+
+function fillTreeWeeks(){
+  const sel=document.getElementById('treeWeek'); if(!sel) return;
+  const prev=sel.value, opts=treeWeekOptions();
+  sel.innerHTML=opts.map(w=>`<option value="${w.start}">Tuần ${fmtVN(w.start)} → ${fmtVN(w.end)}</option>`).join('');
+  
+  const curWeek = weekOf(todayStr()).start;
+  if(prev && opts.some(w=>w.start===prev)) {
+    sel.value=prev; // Giữ nguyên tuần nếu giáo viên đang tự chọn
+  } else if(opts.some(w=>w.start===curWeek)) {
+    sel.value=curWeek; // Mở lên tự động nhảy vào tuần hiện tại
+  } else if(opts.length) {
+    sel.value=opts[opts.length-1].start;
+  }
+}
+function treeSelWeek(){
+  const sel=document.getElementById('treeWeek');
+  if(sel && sel.value) return weekOf(sel.value);
+  return weekOf(todayStr());
+}
+function reportForWeek(anon, weekStart){
+  const list=DB.reports.filter(r=>r.anon===anon&&r.weekStart===weekStart);
+  return list.length? list[list.length-1] : null;
+}
+function weekStatsFromLogs(anon, w){
+  const s=stu(anon);
+  const logs=myLogs(anon).filter(l=>l.date>=w.start&&l.date<=w.end);
+  const daysWith=[...new Set(logs.map(l=>l.date))];
+  const exceed=daysWith.filter(ds=>dayTotal(anon,ds)>s.limit).length;
+  const total=logs.reduce((a,l)=>a+l.minutes,0);
+  return { total, daysWith:daysWith.length, withinDays:daysWith.length-exceed, exceedDays:exceed,
+    lateSessions:logs.filter(l=>l.slot==='Sau giờ đi ngủ').length,
+    pauses:DB.pauses.filter(p=>p.anon===anon&&p.date>=w.start&&p.date<=w.end).length,
+    swaps:DB.swaps.filter(p=>p.anon===anon&&p.date>=w.start&&p.date<=w.end).length,
+    avg: daysWith.length? Math.round(total/daysWith.length*10)/10 : 0 };
+}
+function weekEvidence(anon, w){
+  const rep=reportForWeek(anon, w.start);
+  const ls=weekStatsFromLogs(anon, w);
+  let ev;
+  if(rep){
+    let daysWith=ls.daysWith;
+    if(!daysWith && rep.avg>0) daysWith=Math.max(1, Math.round(rep.total/rep.avg));
+    ev={ source:'report', report:rep, total:rep.total, avg:rep.avg, exceedDays:rep.exceedDays,
+      lateSessions:rep.lateSessions, pauses:rep.pauses, swaps:rep.swaps, daysWith,
+      withinDays:Math.max(0, daysWith-rep.exceedDays), quizScore:rep.quizScore, sasScore:rep.sasScore };
+  } else {
+    const mine=DB.assessments.filter(a=>a.anon===anon);
+    const quiz=[...mine.filter(a=>a.type==='quiz')].pop(), sas=[...mine.filter(a=>a.type==='sas')].pop();
+    ev={ source: ls.daysWith? 'logs':'none', report:null, total:ls.total, avg:ls.avg, exceedDays:ls.exceedDays,
+      lateSessions:ls.lateSessions, pauses:ls.pauses, swaps:ls.swaps, daysWith:ls.daysWith, withinDays:ls.withinDays,
+      quizScore: quiz? quiz.score : -1, sasScore: sas? sas.score : -1 };
+  }
+  ev.suggest=treeSuggestion(ev);
+  return ev;
+}
+function treeSuggestion(ev){
+  const pos=new Array(TREE_POS.length).fill(0), neg=new Array(TREE_NEG.length).fill(0);
+  pos[0]=Math.min(ev.pauses||0, 5);        /* Dừng 10 giây +2/lần, tối đa 5 lần/tuần */
+  pos[1]=ev.withinDays||0;                 /* Giữ giới hạn ngày +3/ngày đạt */
+  pos[2]=ev.swaps||0;                      /* Đổi 15 phút +2/lần */
+  pos[4]=Math.min(ev.daysWith||0, 7);      /* Ghi nhật ký thật lòng +1/ngày, tối đa 7 */
+  neg[0]=ev.lateSessions||0;               /* Lướt video khuya −2/phiên */
+  neg[1]=ev.exceedDays||0;                 /* Vượt giới hạn không dừng −2/ngày */
+  return { pos, neg, delta: treeDelta(pos, neg) };
+}
+/* --- Bảng lớp --- */
+function renderTreeTab(){ fillTreeWeeks(); fillStarSelects(); renderTreeTable(); renderProgressStars(); }
+/* --- Khích lệ: mục tiêu Tick chung của lớp + Sao Tiến Bộ --- */
+function renderClassGoal(list){
+  const box=document.getElementById('classGoalBox'); if(!box) return;
+  if(!list || !list.length){ box.innerHTML=''; return; }
+  const totalTick=list.reduce((a,s)=>a+treeTick(s.treeScore||0),0);
+  const goal=list.length*4;
+  const pct=goal? Math.min(100, Math.round(totalTick/goal*100)) : 0;
+  let msg='Mỗi Tick là một bước tiến — cả lớp cùng nhau vun cho cây lớn nhé! 🌱';
+  if(pct>=100) msg='🎉 Tuyệt vời! Cả lớp đã chạm mốc mục tiêu — xứng đáng một buổi ăn mừng Trái ngọt!';
+  else if(pct>=75) msg='🔥 Đã đi được 3/4 chặng đường — chỉ còn một chút nữa thôi, cố lên!';
+  else if(pct>=50) msg='🌟 Đã qua nửa đường — tiến bộ của cả lớp đang rất rõ rệt!';
+  else if(pct>=25) msg='🌱 Đã đạt 1/4 mục tiêu — khởi đầu vững chắc, tiếp tục phát huy!';
+  box.innerHTML='<h3 style="margin-top:4px">🎯 Mục tiêu Tick chung của lớp '+esc(list[0].className)+'</h3>'+
+   '<p style="margin:4px 0"><b>Tổng Tick của lớp: '+totalTick+' / '+goal+' Tick</b> <span class="mut">(mốc tham chiếu: mỗi học sinh 4 Tick; tổng tính theo điểm Cây Hạnh Phúc giáo viên đã chấm)</span></p>'+
+   '<div class="progress" style="height:18px"><div style="width:'+pct+'%;background:linear-gradient(90deg,#f59e0b,#ea580c)"></div></div>'+
+   '<p style="margin:6px 0 2px"><b>'+pct+'%</b> — '+msg+'</p>';
+}
+function weekAvgOf(anon, w){
+  const logs=myLogs(anon).filter(l=>l.date>=w.start&&l.date<=w.end);
+  const days=[...new Set(logs.map(l=>l.date))];
+  if(!days.length) return { days:0, avg:0 };
+  return { days:days.length, avg: logs.reduce((a,l)=>a+l.minutes,0)/days.length };
+}
+/* Sao Tiến Bộ: chỉ xét học sinh có từ 3 ngày ghi ở CẢ tuần chọn và tuần liền trước;
+   % cải thiện = (TB phút tuần trước − TB phút tuần này) ÷ TB phút tuần trước.
+   Đây là tiến bộ so với CHÍNH MÌNH của mỗi em — không phải xếp hạng điểm số giữa các em. */
+function computeProgressStars(cls, weekStart){
+  const w=weekOf(weekStart);
+  const prev={ start:addDays(w.start,-7), end:addDays(w.start,-1) };
+  const out=[];
+  DB.students.filter(s=>s.className===cls).forEach(s=>{
+    const curW=weekAvgOf(s.anon, w), prevW=weekAvgOf(s.anon, prev);
+    if(curW.days>=3 && prevW.days>=3 && prevW.avg>0){
+      out.push({ anon:s.anon, name:s.name, prevAvg:prevW.avg, curAvg:curW.avg, pct:(prevW.avg-curW.avg)/prevW.avg*100 });
+    }
+  });
+  out.sort((a,b)=>b.pct-a.pct);
+  return { stars: out.filter(o=>o.pct>0).slice(0,3), eligible: out.length, week:w, prev };
+}
+function fillStarSelects(){
+  const cEl=document.getElementById('starClass'), wEl=document.getElementById('starWeek');
+  if(!cEl || !wEl) return;
+  const cv=cEl.value, wv=wEl.value;
+  cEl.innerHTML=classes().map(c=>`<option>${esc(c)}</option>`).join('');
+  if(cv && classes().includes(cv)) cEl.value=cv;
+  const tc=document.getElementById('treeClass');
+  if((!cv || !classes().includes(cv)) && tc && tc.value) cEl.value=tc.value;
+  wEl.innerHTML=treeWeekOptions().map(w=>`<option value="${w.start}">Tuần ${fmtVN(w.start)} → ${fmtVN(w.end)}</option>`).join('');
+  if(wv && [...wEl.options].some(o=>o.value===wv)) wEl.value=wv;
+}
+function renderProgressStars(){
+  const box=document.getElementById('starBox'), cEl=document.getElementById('starClass'), wEl=document.getElementById('starWeek');
+  if(!box || !cEl || !wEl) return;
+  if(!cEl.options.length || !wEl.value){ box.innerHTML='<p class="mut">Chưa có dữ liệu tuần để xét Sao Tiến Bộ.</p>'; return; }
+  const r=computeProgressStars(cEl.value, wEl.value);
+  if(!r.eligible){
+    box.innerHTML='<p class="mut">Chưa đủ dữ liệu để vinh danh Sao Tiến Bộ cho lớp '+esc(cEl.value)+' ở tuần '+fmtVN(r.week.start)+' → '+fmtVN(r.week.end)+': cần học sinh có <b>từ 3 ngày ghi nhật ký ở cả tuần này và tuần liền trước</b> ('+fmtVN(r.prev.start)+' → '+fmtVN(r.prev.end)+') mới so sánh được mức tiến bộ. Khi các em ghi đều hơn, danh sách sẽ tự hiện ở đây.</p>';
+    return;
+  }
+  if(!r.stars.length){
+    box.innerHTML='<p class="mut">Tuần '+fmtVN(r.week.start)+' → '+fmtVN(r.week.end)+' có '+r.eligible+' em đủ dữ liệu so sánh, nhưng chưa em nào giảm được trung bình phút xem so với chính mình ở tuần trước — tuần này chưa có Sao Tiến Bộ. Hãy khích lệ cả lớp tiếp tục nỗ lực ở tuần tới nhé. 🌱</p>';
+    return;
+  }
+  const medals=['🥇','🥈','🥉'];
+  box.innerHTML='<p class="mut">Lớp '+esc(cEl.value)+' · Tuần '+fmtVN(r.week.start)+' → '+fmtVN(r.week.end)+' so với tuần '+fmtVN(r.prev.start)+' → '+fmtVN(r.prev.end)+' · Có '+r.eligible+' em đủ dữ liệu (ghi từ 3 ngày ở cả hai tuần). Đây là ghi nhận tiến bộ cá nhân — chỉ giáo viên thấy mục này.</p>'+
+   r.stars.map((o,i)=>'<div class="starcard"><b style="font-size:16px">'+medals[i]+' '+esc(o.name)+' ('+esc(o.anon)+')</b> — cải thiện <b style="color:var(--orange)">'+fmt1(o.pct)+'%</b> <span class="mut">(TB phút/ngày: '+fmt1(o.prevAvg)+' → '+fmt1(o.curAvg)+' · so với chính mình tuần trước)</span></div>').join('');
+}
+function onTreeClassWeek(){
+  renderTreeTable();
+  const hb=document.getElementById('treeHistoryBox'); if(hb) hb.innerHTML='';
+  if(treePanelAnon){
+    const s=stu(treePanelAnon), cls=document.getElementById('treeClass').value;
+    if(!s || s.className!==cls){ treePanelAnon=null; renderTreeForm(); }
+    else renderTreeForm();
+  }
+}
+function renderTreeTable(){
+  const clsEl=document.getElementById('treeClass'), box=document.getElementById('treeTableBox');
+  if(!clsEl || !box) return;
+  const w=treeSelWeek();
+  const list=DB.students.filter(s=>s.className===clsEl.value);
+  if(!list.length){ box.innerHTML='<p class="mut">Lớp chưa có học sinh.</p>'; return; }
+  const tickHead=[1,2,3,4,5,6].map(k=>`<th style="text-align:center">Ô ${k}</th>`).join('');
+  box.innerHTML=`<div class="tblwrap"><table><thead><tr><th>STT</th><th>Họ tên</th><th>Mã</th>${tickHead}<th>Trồng cây</th><th>Tiến độ</th><th>Điểm</th><th>Báo cáo tuần ${fmtVN(w.start)} → ${fmtVN(w.end)}</th><th>Thao tác</th></tr></thead><tbody>${
+    list.map((s,i)=>treeRowHtml(s,i,w)).join('')
+  }</tbody></table></div>`;
+  renderClassGoal(list);
+}
+function treeRowHtml(s, i, w){
+  const sc=s.treeScore||0, tick=treeTick(sc), idx=treeStageIdx(sc), col=TREE_STAGE_COLORS[idx], stg=TREE_STAGE_SHORT[idx];
+  const pct=Math.round(tick/6*100);
+  const cells=[1,2,3,4,5,6].map(k=>{
+    const f=k<=tick, c=TREE_STAGE_COLORS[treeStageIdx(k*5)];
+    return `<td style="text-align:center"><button type="button" class="tickcell${f?' f':''}"${f?` style="background:${c[0]}"`:''} title="Đặt điểm về mốc ${k} tick = ${k*5} điểm" onclick="quickTreeTick('${esc(s.anon)}',${k})">${f?'✓':''}</button></td>`;
+  }).join('');
+  const rep=reportForWeek(s.anon, w.start);
+  const repCell= rep? `<b>${esc(rep.code)}</b><br><span class="mut">${rep.total} phút · v${rep.version}</span>${sheetBadge(rep)}`
+    : '<span style="color:var(--amber);font-weight:700">Chưa gửi</span>';
+  return `<tr><td>${i+1}</td><td>${esc(s.name)}<br><span class="mut">🔥 Chuỗi ghi nhật ký: <b>${logStreak(s.anon)}</b> ngày</span></td><td><b>${esc(s.anon)}</b></td>${cells}
+   <td><span class="stagebadge" style="background:${col[0]};color:${col[1]}">${stg[0]} ${stg[1]}<br><span style="font-weight:400">${stg[2]}</span></span></td>
+   <td><div class="pbar"><div style="width:${pct}%"></div></div><span class="mut">${tick}/6 (${pct}%)</span></td>
+   <td><b>${sc}</b></td><td>${repCell}</td>
+   <td style="white-space:nowrap"><button class="small" onclick="openTreePanel('${esc(s.anon)}')">+ Chấm Điểm</button> <button class="ghost small" title="Xem lịch sử chấm" onclick="showTreeHistory('${esc(s.anon)}')">🏆</button></td></tr>`;
+}
+function quickTreeTick(anon, k){
+  const s=stu(anon); if(!s) return;
+  const old=s.treeScore||0, target=k*5;
+  if(target===old){ toast(s.name+' đang ở đúng mốc '+k+' tick ('+old+' điểm) rồi.'); return; }
+  if(target<old && !confirm('Giảm điểm Cây Hạnh Phúc của '+s.name+' từ '+old+' điểm xuống '+target+' điểm (mốc '+k+' tick)?')) return;
+  const w=treeSelWeek();
+  if(!Array.isArray(s.treeHistory)) s.treeHistory=[];
+  s.treeScore=target;
+  s.treeHistory.push({ date: todayStr(), type:'quick', week: w.start,
+    items:[{ name:'Chấm nhanh theo bảng lớp — đặt mốc '+k+' tick ('+target+' điểm)', pts: Math.abs(target-old), count:1, sign: target>old?1:-1 }],
+    delta: target-old, total: target, note:'' });
+  save();
+  toast('Đã '+(target>old?'tăng':'giảm')+' điểm của '+s.name+' → '+target+' điểm ('+treeTick(target)+'/6 tick) 🌳');
+  renderTreeTable();
+  if(treePanelAnon===anon) renderTreeForm();
+}
+function showTreeHistory(anon){
+  const box=document.getElementById('treeHistoryBox'), s=stu(anon); if(!box || !s) return;
+  const sc=s.treeScore||0;
+  const hist=(s.treeHistory||[]).slice().reverse();
+  box.innerHTML=`<div class="q" style="margin-top:12px"><b>🏆 Lịch sử chấm điểm — ${esc(s.name)} (${esc(s.anon)})</b> · Tổng hiện tại: <b>${sc}</b> điểm · Tick ${treeTick(sc)}/6 · ${treeStageOf(sc)}<br>`+
+   (hist.length? hist.map(h=>`<div style="padding:6px 0;border-top:1px dashed #cbd5e1"><b>${fmtVN(h.date)}</b>: <b>${h.delta>0?'+':''}${h.delta}</b> điểm → tổng ${h.total}${h.type==='quick'?' <span class="badge b-safe">Chấm nhanh</span>':''}${h.week?' · Tuần '+fmtVN(h.week):''}${h.reportCode?' · Theo báo cáo <b>'+esc(h.reportCode)+'</b>':''}${h.note?' · '+esc(h.note):''}<br><span class="mut">${(h.items||[]).map(it=>`${it.sign<0?'−':'+'}${it.pts} × ${it.count} — ${esc(it.name)}`).join('<br>')}</span></div>`).join('') : '<p class="mut">Chưa có đợt chấm nào.</p>')+'</div>';
+  box.scrollIntoView({behavior:'smooth'});
+}
+/* --- Panel chấm theo tiêu chí (có bằng chứng & điểm gợi ý) --- */
+function openTreePanel(anon){
+  if(!stu(anon)) return;
+  treePanelAnon=anon; renderTreeForm();
+  const box=document.getElementById('treeFormBox'); if(box) box.scrollIntoView({behavior:'smooth'});
+}
+function treeEvidenceHtml(s, w, ev){
+  const statsLine=`Tổng phút xem: <b>${ev.total}</b> · TB/ngày (ngày có ghi): <b>${String(ev.avg).replace('.',',')}</b> · Ngày có ghi: <b>${ev.daysWith}</b> · Ngày đạt giới hạn: <b>${ev.withinDays}</b> · Ngày vượt giới hạn: <b>${ev.exceedDays}</b> · Phiên sau giờ ngủ: <b>${ev.lateSessions}</b> · Dừng 10 giây: <b>${ev.pauses}</b> lần · Đổi 15 phút: <b>${ev.swaps}</b> lần<br>Trắc nghiệm gần nhất: <b>${ev.quizScore>=0? ev.quizScore+'/15' : 'chưa làm'}</b> · Tự đánh giá gần nhất: <b>${ev.sasScore>=0? ev.sasScore+'/60' : 'chưa làm'}</b>`;
+  if(ev.source==='report'){
+    const r=ev.report;
+    return `<div class="q" style="background:#f0fdf4;border-color:#86efac"><b>🧾 Bằng chứng từ báo cáo của học sinh — tuần ${fmtVN(w.start)} → ${fmtVN(w.end)}</b><br>Mã báo cáo: <b>${esc(r.code)}</b> (v${r.version} · gửi ${esc(r.submittedAt)}) ${sheetBadge(r)}<br>${statsLine}</div>`;
+  }
+  if(ev.source==='logs'){
+    return `<div class="q" style="background:#fffbeb;border-color:#fcd34d"><b>⚠️ Học sinh chưa gửi báo cáo tuần này</b> — điểm chấm sẽ dựa trên quan sát của giáo viên. Số liệu dưới đây lấy từ <b>nhật ký tuần ${fmtVN(w.start)} → ${fmtVN(w.end)}</b> của học sinh trên máy này:<br>${statsLine}</div>`;
+  }
+  return `<div class="q" style="background:#fffbeb;border-color:#fcd34d"><b>⚠️ Học sinh chưa gửi báo cáo tuần này</b> và cũng chưa có nhật ký nào trong tuần ${fmtVN(w.start)} → ${fmtVN(w.end)} trên máy này — điểm chấm sẽ dựa hoàn toàn trên quan sát của giáo viên.</div>`;
+}
+function renderTreeForm(){
+  const box=document.getElementById('treeFormBox'); if(!box) return;
+  const s=treePanelAnon? stu(treePanelAnon) : null;
+  if(!s){ treeCurSuggest=null; box.innerHTML='<p class="mut">Chọn một học sinh ở bảng lớp phía trên rồi bấm <b>+ Chấm Điểm</b> để chấm theo 16 tiêu chí cộng / 9 tiêu chí trừ cho tuần đang chọn.</p>'; return; }
+  const w=treeSelWeek(), ev=weekEvidence(s.anon, w), sg=ev.suggest;
+  treeCurSuggest=sg;
+  const sc=s.treeScore||0;
+  const row=(group,c,i)=>`<tr><td>${esc(c[0])}</td><td style="white-space:nowrap">${group==='pos'?'+':'−'}${c[1]} điểm</td><td><input type="number" min="0" max="99" value="0" id="tc_${group}_${i}" oninput="updateTreeDelta()" style="max-width:84px"></td></tr>`;
+  box.innerHTML=
+   `<p class="mut" style="margin-top:2px">Đang chấm: <b>${esc(s.name)}</b> (${esc(s.anon)}) · Lớp ${esc(s.className)} · Tuần ${fmtVN(w.start)} → ${fmtVN(w.end)}<br>Tổng điểm hiện tại: <b>${sc}</b> · Tick: <b>${treeTick(sc)}/6</b> · Giai đoạn: <b>${treeStageOf(sc)}</b></p>
+    ${treeEvidenceHtml(s, w, ev)}
+    <div class="q" style="background:#fffbeb;border-color:#fcd34d"><b>💡 Điểm gợi ý từ dữ liệu tuần: ${sg.delta>0?'+':''}${sg.delta} điểm</b> <span class="mut">(chỉ là gợi ý — giáo viên có thể sửa/xoá mọi số lần trước khi lưu; điểm cuối cùng do giáo viên quyết định)</span><br>
+    <span class="mut">Công thức gợi ý: Giữ giới hạn ngày +3 × <b>${ev.withinDays}</b> ngày đạt · Ghi nhật ký +1 × <b>${ev.daysWith}</b> ngày (tối đa 7) · Đổi 15 phút +2 × <b>${ev.swaps}</b> lần · Dừng 10 giây +2 × <b>${ev.pauses}</b> lần (tối đa 5/tuần) · Trừ: Lướt khuya −2 × <b>${ev.lateSessions}</b> phiên · Vượt giới hạn −2 × <b>${ev.exceedDays}</b> ngày.</span><br>
+    <button type="button" class="ghost small" style="margin-top:6px" onclick="applyTreeSuggestion()">↪️ Áp dụng gợi ý vào bảng tiêu chí</button></div>
+    <h3>✅ Tiêu chí cộng điểm</h3>
+    <div class="tblwrap"><table><thead><tr><th>Tiêu chí</th><th>Điểm/lần</th><th>Số lần</th></tr></thead><tbody>${TREE_POS.map((c,i)=>row('pos',c,i)).join('')}</tbody></table></div>
+    <h3>⚠️ Tiêu chí trừ điểm</h3>
+    <div class="tblwrap"><table><thead><tr><th>Tiêu chí</th><th>Điểm/lần</th><th>Số lần</th></tr></thead><tbody>${TREE_NEG.map((c,i)=>row('neg',c,i)).join('')}</tbody></table></div>
+    <label>Ghi chú đợt chấm (tuỳ chọn)</label><input id="treeNote" placeholder="Ví dụ: chấm theo báo cáo tuần ${fmtVN(w.start)}...">
+    <p>Điểm đợt này: <b id="treeDeltaBox">0</b></p>
+    <button onclick="saveTreeScore()">💾 Lưu đợt chấm</button>`;
+}
+function applyTreeSuggestion(){
+  if(!treeCurSuggest){ toast('Chưa có điểm gợi ý cho học sinh này.'); return; }
+  treeCurSuggest.pos.forEach((n,i)=>{ const el=document.getElementById('tc_pos_'+i); if(el) el.value=n; });
+  treeCurSuggest.neg.forEach((n,i)=>{ const el=document.getElementById('tc_neg_'+i); if(el) el.value=n; });
+  updateTreeDelta();
+  toast('Đã áp dụng điểm gợi ý vào bảng tiêu chí — giáo viên kiểm tra và chỉnh lại nếu cần trước khi lưu.');
+}
+function readTreeCounts(){
+  const pos=TREE_POS.map((c,i)=>{ const el=document.getElementById('tc_pos_'+i); return el? (parseInt(el.value,10)||0) : 0; });
+  const neg=TREE_NEG.map((c,i)=>{ const el=document.getElementById('tc_neg_'+i); return el? (parseInt(el.value,10)||0) : 0; });
+  return {pos, neg};
+}
+function updateTreeDelta(){ const {pos,neg}=readTreeCounts(); const d=treeDelta(pos,neg); const el=document.getElementById('treeDeltaBox'); if(el) el.textContent=(d>0?'+':'')+d; }
+function saveTreeScore(){
+  const anon=treePanelAnon;
+  if(!anon){ toast('Hãy bấm + Chấm Điểm ở một học sinh trong bảng lớp trước.'); return; }
+  const {pos,neg}=readTreeCounts();
+  const w=treeSelWeek(), rep=reportForWeek(anon, w.start);
+  const entry=applyTreeScore(anon, pos, neg, document.getElementById('treeNote').value.trim(), { week: w.start, reportCode: rep? rep.code : '' });
+  if(!entry){ toast('Hãy chọn ít nhất 1 tiêu chí (số lần lớn hơn 0).'); return; }
+  toast('Đã lưu đợt chấm: '+(entry.delta>0?'+':'')+entry.delta+' điểm → tổng '+entry.total+' 🌳');
+  renderTreeForm(); renderTreeTable();
+}
+function renderMyTreeScore(){
+  const box=document.getElementById('myTreeScore'); if(!box || !cur) return;
+  const s=stu(cur.anon); if(!s) return;
+  const sc=s.treeScore||0, tick=treeTick(sc);
+  const sIdx=treeStageIdx(sc), sCol=TREE_STAGE_COLORS[sIdx], sStg=TREE_STAGE_SHORT[sIdx], TH_TREE=[0,10,15,20,25,30];
+  const nextTxt= sIdx<5 ? 'Còn <b>'+(TH_TREE[sIdx+1]-sc)+' điểm</b> nữa để lên giai đoạn <b>'+TREE_STAGE_SHORT[sIdx+1][0]+' '+TREE_STAGE_SHORT[sIdx+1][1]+' — '+TREE_STAGE_SHORT[sIdx+1][2]+'</b>. Cố lên nhé!'
+    : 'Em đang ở giai đoạn cao nhất — <b>Trái ngọt, Sứ giả Hạnh phúc</b>! Hãy giữ phong độ và lan toả thói quen tốt cho bạn bè nhé. 🍎';
+  const hist=(s.treeHistory||[]).slice().reverse();
+  box.innerHTML=
+   `<p style="margin:2px 0 8px"><span class="stagebadge" style="background:${sCol[0]};color:${sCol[1]};font-size:15px;padding:8px 14px">${sStg[0]} ${sStg[1]} — ${sStg[2]}</span></p>
+    <p style="font-size:20px;margin:2px 0"><b>${sc}</b> điểm · Tick: <b>${'●'.repeat(tick)}${'○'.repeat(6-tick)}</b> (${tick}/6)</p>
+    <p class="mut">${nextTxt}</p>
+    ${hist.length? hist.slice(0,10).map(h=>`<div style="padding:6px 0;border-top:1px dashed #cbd5e1"><b>${fmtVN(h.date)}</b>: <b>${h.delta>0?'+':''}${h.delta}</b> điểm → tổng ${h.total}${h.type==='quick'?' · chấm nhanh theo bảng lớp':''}${h.week?' · tuần '+fmtVN(h.week):''}${h.reportCode?' · theo báo cáo '+esc(h.reportCode):''}${h.note? ' · '+esc(h.note) : ''}<br><span class="mut">${h.items.map(it=>`${it.sign<0?'−':'+'}${it.pts} × ${it.count} — ${esc(it.name)}`).join('<br>')}</span></div>`).join('') : '<p class="mut">Chưa có đợt chấm nào từ giáo viên.</p>'}`;
+}
+/* ---- Nghiên cứu Trước/Sau ---- */
+function mean(a){ return a.length? a.reduce((x,y)=>x+y,0)/a.length : NaN; }
+function sd(a){ if(a.length<2) return 0; const m=mean(a); return Math.sqrt(a.reduce((x,y)=>x+(y-m)*(y-m),0)/(a.length-1)); }
+function cohensD(pre,post){ const diffs=post.map((v,i)=>v-pre[i]); const md=mean(diffs), s=sd(diffs); return s>0? md/s : 0; }
+function minutesPrePost(anon){
+  const logs=myLogs(anon); if(!logs.length) return null;
+  const dates=[...new Set(logs.map(l=>l.date))].sort();
+  const w1=weekOf(dates[0]), w2=weekOf(dates[dates.length-1]);
+  if(w1.start===w2.start) return null;
+  const avgW=w=>{ const ls=logs.filter(l=>l.date>=w.start&&l.date<=w.end); const tot=ls.reduce((a,l)=>a+l.minutes,0); return tot/7; };
+  return { pre:avgW(w1), post:avgW(w2) };
+}
+function pairedRows(cls, getter){
+  const pre=[], post=[];
+  DB.students.filter(s=>s.className===cls&&s.consent).forEach(s=>{ const v=getter(s.anon); if(v) { pre.push(v.pre); post.push(v.post); } });
+  return {pre, post};
+}
+function assessGetter(type){ return anon=>{ const mine=DB.assessments.filter(a=>a.anon===anon&&a.type===type);
+  const pre=[...mine.filter(a=>a.phase==='pre')].pop(), post=[...mine.filter(a=>a.phase==='post')].pop();
+  return (pre&&post)? {pre:pre.score, post:post.score} : null; }; }
+function statLine(label, pr){
+  const n=pr.pre.length;
+  if(!n) return `<tr><td>${label}</td><td colspan="5" class="mut">Chưa có học sinh nào (đã đồng thuận) có đủ dữ liệu Trước và Sau.</td></tr>`;
+  const mp=mean(pr.pre), mq=mean(pr.post);
+  const d = n>=2? cohensD(pr.pre, pr.post) : 0;
+  const note = n<5 ? '<span class="badge b-warn">n&lt;5 — chỉ xem mô tả</span>' : "Cohen's d = "+d.toFixed(2);
+  return `<tr><td>${label}</td><td>${n}</td><td>${mp.toFixed(2).replace('.',',')}</td><td>${mq.toFixed(2).replace('.',',')}</td><td>${sd(pr.pre).toFixed(2).replace('.',',')} / ${sd(pr.post).toFixed(2).replace('.',',')}</td><td>${note}</td></tr>`;
+}
+
+function renderResearch(){
+  const cls=document.getElementById('resClass').value; if(!cls) return;
+  const total=DB.students.filter(s=>s.className===cls).length;
+  const consented=DB.students.filter(s=>s.className===cls&&s.consent).length;
+  document.getElementById('researchBox').innerHTML=
+   `<p class="mut">Lớp ${esc(cls)}: ${consented}/${total} học sinh đã có đồng thuận (chỉ tính các em này). ĐLC trình bày dạng Trước / Sau.</p>
+    <div class="tblwrap"><table><thead><tr><th>Chỉ số</th><th>n</th><th>TB Trước</th><th>TB Sau</th><th>ĐLC (Trước/Sau)</th><th>Cỡ hiệu ứng / Ghi chú</th></tr></thead><tbody>
+    ${statLine('Phút xem TB/ngày', pairedRows(cls, minutesPrePost))}
+    ${statLine('Điểm trắc nghiệm (/15)', pairedRows(cls, assessGetter('quiz')))}
+    ${statLine('Điểm tự đánh giá (/60)', pairedRows(cls, assessGetter('sas')))}
+    </tbody></table></div>` + researchPostHtml(cls);
+}
+/* ---- Xuất / nhập dữ liệu ---- */
+function dl(name, content, type){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\ufeff'+content],{type:type||'text/plain;charset=utf-8'}));
+  a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+function csvEsc(v){ v=String(v??''); return /[";,\n]/.test(v)? '"'+v.replace(/"/g,'""')+'"' : v; }
+function toCSV(headers, rows){ return [headers.join(';'), ...rows.map(r=>r.map(csvEsc).join(';'))].join('\n'); }
+function consentedAnons(){ return new Set(DB.students.filter(s=>s.consent).map(s=>s.anon)); }
+function exportCSV(kind){
+  const ok=consentedAnons();
+  if(!ok.size){ toast('Chưa có học sinh nào được đánh dấu đồng thuận — file nghiên cứu sẽ trống. Hãy tick đồng thuận trong hồ sơ trước.'); }
+  if(kind==='logs'){
+    const rows=DB.logs.filter(l=>ok.has(l.anon)).map(l=>{ const s=stu(l.anon);
+      return [l.anon, s.className, l.date, l.minutes, l.platform, l.slot, l.trigger, l.mood, l.stopped?'Có':'Không', DB.settings.phase]; });
+    dl('NhatKy.csv', toCSV(['MaHS','Lop','Ngay','PhutXem','NenTang','KhungGio','YeuToKichHoat','CamXuc','DungDungGio','GiaiDoan'], rows), 'text/csv;charset=utf-8');
+  } else if(kind==='reports'){
+    const rows=DB.reports.filter(r=>ok.has(r.anon)).map(r=>{ const wk=r.weekStart.slice(0,4)+'-W'+String(Math.ceil(((new Date(r.weekStart+'T00:00:00')-new Date(r.weekStart.slice(0,4)+'-01-01T00:00:00'))/86400000+1)/7)).padStart(2,'0');
+      return [r.code, r.anon, r.className, wk, r.weekStart, r.weekEnd, r.total, r.avg, r.exceedDays, r.lateSessions, r.pauses, r.swaps, r.tree, r.version, r.submittedAt, r.consent?'Có':'Không']; });
+    dl('BaoCaoTuan.csv', toCSV(['MaGui','MaHS','Lop','Tuan','TuNgay','DenNgay','TongPhut','TBPhut_Ngay','SoNgayVuotGioiHan','SoPhienSauGioNgu','SoLanDung10s','SoLanDoi15p','DiemCayHanhPhuc','PhienBan','ThoiGianGui','DongThuanNghienCuu'], rows), 'text/csv;charset=utf-8');
+  } else if(kind==='assess'){
+    const rows=[]; const byKey={};
+    DB.assessments.filter(a=>ok.has(a.anon)).forEach(a=>{ const k=a.anon+'|'+a.phase; byKey[k]=byKey[k]||{anon:a.anon, phase:a.phase, quiz:'', sas:'', quizPost:'', prog:'', effect:'', date:a.date};
+      if(a.type==='quiz'){ byKey[k].quiz=a.score; byKey[k].date=a.date; } else if(a.type==='sas'){ byKey[k].sas=a.score; byKey[k].date=a.date; } else if(a.type==='quiz_post'){ byKey[k].quizPost=a.score; byKey[k].date=a.date; } else if(a.type==='progress'){ byKey[k].prog=a.score; byKey[k].date=a.date; } else if(a.type==='effect'){ byKey[k].effect=a.score; byKey[k].date=a.date; } });
+    Object.values(byKey).forEach(v=>{ const s=stu(v.anon); rows.push([v.anon, s.className, v.phase==='pre'?'Truoc':'Sau', v.quiz, v.sas, v.date, v.quizPost||'', v.prog||'', v.effect||'']); });
+    dl('TracNghiem_TruocSau.csv', toCSV(['MaHS','Lop','Moc','DiemTracNghiem (/15)','DiemThangTuDanhGia (/60)','NgayLam','DiemVanDungSau (/10)','DiemTuDanhGiaTienBo (/40)','DiemHieuQuaBoB (/45)'], rows), 'text/csv;charset=utf-8');
+  } else if(kind==='class'){
+    const groups={};
+    DB.reports.filter(r=>ok.has(r.anon)).forEach(r=>{ const k=r.className+'|'+r.weekStart; groups[k]=groups[k]||[]; groups[k].push(r); });
+    const rows=Object.entries(groups).map(([k,rs])=>{ const [cls,ws]=k.split('|');
+      const n=new Set(rs.map(r=>r.anon)).size;
+      const avgMin=Math.round(rs.reduce((a,r)=>a+r.avg,0)/rs.length*10)/10;
+      const studs=DB.students.filter(s=>s.className===cls);
+      const overPct=studs.length? Math.round(rs.filter(r=>r.exceedDays>0).length/Math.max(1,n)*1000)/10 : 0;
+      const late=rs.reduce((a,r)=>a+r.lateSessions,0);
+      const q=rs.filter(r=>r.quizScore>=0), ss=rs.filter(r=>r.sasScore>=0);
+      return [cls, ws, n, avgMin, overPct, late, q.length?Math.round(q.reduce((a,r)=>a+r.quizScore,0)/q.length*10)/10:'', ss.length?Math.round(ss.reduce((a,r)=>a+r.sasScore,0)/ss.length*10)/10:'', DB.settings.phase]; });
+    dl('TongHopLop.csv', toCSV(['Lop','Tuan','SoHS','TBPhut_Ngay_Lop','TiLeVuotGioiHan (%)','TongPhienSauGioNgu','TB_DiemTracNghiem','TB_DiemThangTuDanhGia','GhiChu'], rows), 'text/csv;charset=utf-8');
+  }
+  toast('Đã tải file CSV ⬇️');
+}
+function exportJSON(){ dl('mindful-screen-backup.json', JSON.stringify(DB,null,1), 'application/json'); }
+function importJSON(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const reader=new FileReader();
+  reader.onload=()=>{ try{ const d=JSON.parse(reader.result);
+      if(!d||!Array.isArray(d.students)) throw new Error('bad');
+      if(!confirm('Nhập dữ liệu sẽ THAY THẾ toàn bộ dữ liệu hiện tại trên máy này. Tiếp tục?')) return;
+      DB=d; mergeTree(DB); save(); toast('Đã khôi phục dữ liệu ✅'); logout();
+    }catch(e){ toast('File JSON không hợp lệ.'); } };
+  reader.readAsText(f);
+}
+function saveSettings(){
+  const rf=readSettingsForm();
+  if(rf.tokenFilled) toast('Đã tự điền token mặc định');
+  DB.settings.phase=document.getElementById('setPhase').value;
+  DB.settings.preOpen=document.getElementById('setPre').checked;
+  DB.settings.postOpen=document.getElementById('setPost').checked;
+  save();
+  if(rf.sheetWarn) toast('⚠️ '+SHEET_LINK_WARN);
+  else toast('Đã lưu cài đặt ✅');
+}
+function changePass(){
+  const err=document.getElementById('setPassErr'); err.textContent='';
+  const p=document.getElementById('setPass').value;
+  if(p.length<6){ err.textContent='Mật khẩu mới cần ít nhất 6 ký tự.'; return; }
+  DB.settings.teacherPass=p; save(); document.getElementById('setPass').value='';
+  toast('Đã đổi mật khẩu Nhóm nghiên cứu 🔐');
+}
+/* Khởi tạo */
+(function(){ const sel=document.getElementById('gClass'); sel.innerHTML='<option value="">— Chọn lớp —</option>'+classes().map(c=>`<option>${esc(c)}</option>`).join(''); })();
+</script>
+<script>
+/* ================= THỐNG KÊ & BIỂU ĐỒ (giáo viên — chỉ đọc dữ liệu) ================= */
+const RISK_LEVELS=['An toàn','Cần chú ý','Nguy cơ cao'];
+const RISK_COLORS=['#0d7a69','#d97706','#dc2626'];
+const STAGE_NAMES=['Hạt mầm','Mầm xanh','Chồi non','Lá xanh','Hoa thơm','Trái ngọt'];
+const STAGE_EMOJI=['🌱','🌿','🌾','🍃','🌸','🍎'];
+function stageIdx(score){ const t=[0,10,15,20,25,30]; let idx=0; for(let i=0;i<t.length;i++){ if((score||0)>=t[i]) idx=i; } return idx; }
+function fmt1(x){ return (Math.round(x*10)/10).toString().replace('.',','); }
+function daysInRange(start,end){ return Math.round((new Date(end+'T00:00:00')-new Date(start+'T00:00:00'))/86400000)+1; }
+function medianOf(a){ if(!a.length) return NaN; const b=a.slice().sort((x,y)=>x-y); const m=Math.floor(b.length/2); return b.length%2? b[m] : (b[m-1]+b[m])/2; }
+function linSlope(pts){ if(!pts||pts.length<2) return null; const mx=mean(pts.map(p=>p.x)), my=mean(pts.map(p=>p.y)); let num=0, den=0; pts.forEach(p=>{ num+=(p.x-mx)*(p.y-my); den+=(p.x-mx)*(p.x-mx); }); return den? num/den : null; }
+function fillStatsClass(){ const el=document.getElementById('statsClass'); if(!el) return; const v=el.value;
+  const opts='<option value="">Tất cả các lớp</option>'+classes().map(c=>'<option>'+esc(c)+'</option>').join('');
+  if(el.innerHTML!==opts){ el.innerHTML=opts; el.value=v; } }
+function statsRangeDates(){
+  const el=document.getElementById('statsRange'); const mode=el? el.value : 'all'; const today=todayStr();
+  if(mode==='all'){ const ds=DB.logs.map(l=>l.date).sort(); if(!ds.length) return null;
+    const end=ds[ds.length-1]>today? ds[ds.length-1] : today; return { start:ds[0], end, days:daysInRange(ds[0],end) }; }
+  const n=parseInt(mode,10)||7; return { start:addDays(today,-(n-1)), end:today, days:n };
+}
+function studentWindow(anon,start,end){
+  const s=stu(anon); const byDay={}, lateSet={};
+  myLogs(anon).forEach(l=>{ if(l.date<start||l.date>end) return;
+    byDay[l.date]=(byDay[l.date]||0)+l.minutes;
+    if(l.slot==='Sau giờ đi ngủ') lateSet[l.date]=1; });
+  const dayList=Object.keys(byDay).sort();
+  const total=dayList.reduce((a,d)=>a+byDay[d],0);
+  const overDays=dayList.filter(d=>byDay[d]>s.limit).length;
+  return { anon, name:s.name, className:s.className, limit:s.limit, byDay, nDays:dayList.length, total,
+    avgDay: dayList.length? total/dayList.length : 0, overDays, okDays: dayList.length-overDays,
+    lateDays: Object.keys(lateSet).length, pctOk: dayList.length? (dayList.length-overDays)/dayList.length*100 : 0 };
+}
+function riskOf(sw, rangeDays){
+  if(!sw || sw.nDays<3) return null;
+  const A=sw.overDays/sw.nDays*40;
+  const B=Math.min(30, Math.max(0,(sw.avgDay-sw.limit)/sw.limit)*30);
+  const C=sw.lateDays/sw.nDays*20;
+  const D= rangeDays>=7 ? Math.max(0,(1 - sw.nDays/rangeDays))*10 : 0;
+  const score=Math.round(A+B+C+D);
+  const level= score<30?0 : (score<60?1:2);
+  const parts=[['Hay vượt giới hạn ngày',A],['Phút xem trung bình/ngày cao hơn giới hạn',B],['Hay xem sau giờ đi ngủ',C],['Ghi nhật ký chưa đều',D]];
+  let top=parts[0]; parts.forEach(p=>{ if(p[1]>top[1]) top=p; });
+  return { score, A, B, C, D, level, levelName:RISK_LEVELS[level], reason: top[1]>0? top[0] : 'Không có yếu tố nổi bật' };
+}
+function dailySeries(students,start,end){
+  const perDay={};
+  students.forEach(s=>{ const sw=studentWindow(s.anon,start,end);
+    Object.keys(sw.byDay).forEach(d=>{ if(!perDay[d]) perDay[d]={sum:0,n:0,ok:0};
+      perDay[d].sum+=sw.byDay[d]; perDay[d].n+=1; if(sw.byDay[d]<=s.limit) perDay[d].ok+=1; }); });
+  return Object.keys(perDay).sort().map(d=>({ date:d, avg:perDay[d].sum/perDay[d].n, pctOk:perDay[d].ok/perDay[d].n*100, n:perDay[d].n }));
+}
+function modeLimit(students){ const cnt={}; students.forEach(s=>{ cnt[s.limit]=(cnt[s.limit]||0)+1; });
+  let best=45, bn=0; Object.keys(cnt).forEach(k=>{ if(cnt[k]>bn){ bn=cnt[k]; best=parseInt(k,10); } }); return best; }
+function barChartSVG(series,opt){
+  const n=series.length; if(!n) return '';
+  const barW=36, gap=12, left=42, right=10, top=26, plotH=150, bot=42;
+  const W=left+right+n*(barW+gap)-gap, H=top+plotH+bot;
+  const vals=series.map(opt.getV);
+  let maxV=opt.maxV||Math.max.apply(null, vals.concat([1]));
+  if(opt.refY) maxV=Math.max(maxV, opt.refY*1.2);
+  const y=v=> top+plotH-(v/maxV)*plotH;
+  let g='';
+  [0,0.5,1].forEach(f=>{ const gy=top+plotH*(1-f); const gv=maxV*f;
+    g+='<line x1="'+left+'" y1="'+gy+'" x2="'+(W-right)+'" y2="'+gy+'" stroke="#e2e8f0"/><text x="'+(left-4)+'" y="'+(gy+4)+'" font-size="10" text-anchor="end" fill="#64748b">'+Math.round(gv)+(opt.suffix||'')+'</text>'; });
+  if(opt.refY){ const ry=y(opt.refY);
+    g+='<line x1="'+left+'" y1="'+ry+'" x2="'+(W-right)+'" y2="'+ry+'" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="6 4"/><text x="'+(W-right)+'" y="'+(ry-5)+'" font-size="10.5" text-anchor="end" fill="#e11d48" font-weight="bold">'+esc(opt.refLabel||'')+'</text>'; }
+  series.forEach((it,i)=>{ const v=opt.getV(it); const x=left+i*(barW+gap); const h=Math.max(2,(v/maxV)*plotH);
+    g+='<rect x="'+x+'" y="'+(top+plotH-h)+'" width="'+barW+'" height="'+h+'" rx="3" fill="'+(opt.color? opt.color(v,it):'#0f766e')+'"><title>'+fmtVN(it.date)+': '+(opt.fmtV? opt.fmtV(v):Math.round(v))+'</title></rect>';
+    g+='<text x="'+(x+barW/2)+'" y="'+(top+plotH-h-5)+'" font-size="11" font-weight="bold" text-anchor="middle" fill="#0f172a">'+(opt.fmtV? opt.fmtV(v):Math.round(v))+'</text>';
+    g+='<text x="'+(x+barW/2)+'" y="'+(top+plotH+15)+'" font-size="10" text-anchor="middle" fill="#334155">'+it.date.slice(8,10)+'/'+it.date.slice(5,7)+'</text>';
+    g+='<text x="'+(x+barW/2)+'" y="'+(top+plotH+29)+'" font-size="9.5" text-anchor="middle" fill="#94a3b8">n='+it.n+'</text>'; });
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;max-width:'+Math.min(W,880)+'px;height:auto;display:block;margin:0 auto" role="img" aria-label="'+esc(opt.label||'')+'">'+g+'</svg>';
+}
+function riskTransitions(students){
+  const M=[[0,0,0],[0,0,0],[0,0,0]]; const improved=[], worsened=[]; let counted=0;
+  students.forEach(s=>{
+    const dates=[...new Set(myLogs(s.anon).map(l=>l.date))].sort(); if(!dates.length) return;
+    const w1=weekOf(dates[0]), w2=weekOf(dates[dates.length-1]); if(w1.start===w2.start) return;
+    const r1=riskOf(studentWindow(s.anon,w1.start,w1.end),7);
+    const r2=riskOf(studentWindow(s.anon,w2.start,w2.end),7);
+    if(!r1||!r2) return;
+    M[r1.level][r2.level]++; counted++;
+    if(r2.level<r1.level) improved.push(s.name+' ('+s.anon+')');
+    else if(r2.level>r1.level) worsened.push(s.name+' ('+s.anon+')');
+  });
+  return { M, improved, worsened, same: counted-improved.length-worsened.length, counted };
+}
+function renderStageDist(students){
+  const counts=[0,0,0,0,0,0];
+  students.forEach(s=>{ counts[stageIdx(s.treeScore||0)]++; });
+  const maxC=Math.max.apply(null, counts.concat([1]));
+  let improved=0, withHist=0;
+  students.forEach(s=>{ const h=s.treeHistory||[]; if(h.length){ withHist++; if(stageIdx(s.treeScore||0)>stageIdx(h[0].total)) improved++; } });
+  const bars=STAGE_NAMES.map((nm,i)=>'<div style="display:flex;align-items:center;gap:8px;margin:4px 0"><span style="width:150px;font-size:13px">'+STAGE_EMOJI[i]+' '+nm+'</span><div style="flex:1;background:#f1f5f9;border-radius:6px"><div style="width:'+Math.round(counts[i]/maxC*100)+'%;'+(counts[i]?'min-width:30px;':'width:0;')+'background:#0d7a69;color:#fff;border-radius:6px;padding:3px 8px;font-size:12.5px;text-align:right;box-sizing:border-box">'+(counts[i]||'')+'</div></div><span class="mut" style="width:56px">'+counts[i]+' em</span></div>').join('');
+  return '<div class="card" style="margin-top:14px"><h3>🌳 Phân bố giai đoạn Cây Hạnh Phúc hiện tại</h3>'+bars+
+    '<p class="mut">Theo điểm Cây Hạnh Phúc hiện tại (treeScore) của học sinh trong nhóm đã chọn — số liệu hiện tại, không phụ thuộc khoảng ngày. '+(withHist? ('Đã có <b>'+improved+' em</b> tăng giai đoạn so với đợt chấm đầu tiên, trong '+withHist+' em đã được chấm ít nhất 1 đợt.') : 'Chưa có dữ liệu tăng giai đoạn: chưa học sinh nào trong nhóm này có đợt chấm Cây Hạnh Phúc trong lịch sử.')+'</p></div>';
+}
+function renderMatrix(students){
+  const t=riskTransitions(students);
+  if(!t.counted) return '<div class="card" style="margin-top:14px"><h3>🔀 Sự dịch chuyển mức rủi ro</h3><p class="mut">Chưa đủ dữ liệu để so sánh dịch chuyển: cần học sinh có nhật ký ở ít nhất 2 tuần khác nhau, mỗi tuần ghi từ 3 ngày trở lên. Hiện chưa có em nào trong nhóm đã chọn đạt điều kiện này — khi các em ghi đều qua vài tuần, ma trận sẽ tự hiện ở đây.</p></div>';
+  const head=RISK_LEVELS.map(l=>'<th style="text-align:center">'+l+'<br><span style="font-weight:normal">(tuần gần nhất)</span></th>').join('');
+  const body=RISK_LEVELS.map((l,i)=>'<tr><th style="text-align:left">'+l+'<br><span style="font-weight:normal">(tuần đầu)</span></th>'+t.M[i].map((v,j)=>'<td style="text-align:center;'+(i===j?'background:#f0fdfa;font-weight:bold':'')+'">'+v+'</td>').join('')+'</tr>').join('');
+  return '<div class="card" style="margin-top:14px"><h3>🔀 Sự dịch chuyển mức rủi ro (tuần đầu → tuần gần nhất)</h3>'+
+    '<div class="tblwrap"><table><thead><tr><th></th>'+head+'</tr></thead><tbody>'+body+'</tbody></table></div>'+
+    '<p style="margin:8px 0">✅ <b>Cải thiện:</b> '+t.improved.length+' em'+(t.improved.length? ' — '+t.improved.map(esc).join(', ') : '')+'<br>➡️ <b>Giữ nguyên:</b> '+t.same+' em<br>⚠️ <b>Xấu đi:</b> '+t.worsened.length+' em'+(t.worsened.length? ' — '+t.worsened.map(esc).join(', ') : '')+'</p>'+
+    '<p class="mut">Tính trên toàn bộ lịch sử nhật ký của từng học sinh (không cắt theo khoảng ngày phía trên, để thấy cả hành trình): hàng là mức rủi ro của tuần đầu tiên có dữ liệu, cột là mức của tuần gần nhất; mỗi tuần phải có từ 3 ngày ghi mới được xếp loại. Có '+t.counted+' em đủ điều kiện so sánh.</p></div>';
+}
+/* --- Phân cụm DBSCAN (khám phá hành vi xem theo mật độ) --- */
+/* DBSCAN thuần: points là mảng [x,y] ĐÃ chuẩn hoá; trả nhãn cụm 0..k-1, điểm nhiễu = -1. */
+function dbscan(points, eps, minPts){
+  const n=points.length, labels=new Array(n).fill(undefined);
+  function regionQuery(i){ const out=[];
+    for(let j=0;j<n;j++){ const dx=points[i][0]-points[j][0], dy=points[i][1]-points[j][1];
+      if(Math.sqrt(dx*dx+dy*dy)<=eps) out.push(j); }
+    return out; }
+  let cid=0;
+  for(let i=0;i<n;i++){
+    if(labels[i]!==undefined) continue;
+    const neigh=regionQuery(i);
+    if(neigh.length<minPts){ labels[i]=-1; continue; }
+    labels[i]=cid;
+    const seeds=neigh.slice();
+    for(let k=0;k<seeds.length;k++){
+      const j=seeds[k];
+      if(labels[j]===-1) labels[j]=cid;
+      if(labels[j]!==undefined) continue;
+      labels[j]=cid;
+      const nj=regionQuery(j);
+      if(nj.length>=minPts){ for(let m=0;m<nj.length;m++){ if(seeds.indexOf(nj[m])===-1) seeds.push(nj[m]); } }
+    }
+    cid++;
+  }
+  return labels.map(l=>l===undefined? -1 : l);
+}
+const CLUSTER_COLORS=['#2563eb','#ea580c','#16a34a','#7c3aed','#db2777','#0891b2','#ca8a04','#4f46e5','#65a30d','#0d9488'];
+function clusterLabel(cx, cy, mx, my){
+  const xl=cx<mx, yl=cy<my;
+  if(xl&&yl) return 'Xem ít, hiếm khi vượt giới hạn';
+  if(!xl&&!yl) return 'Xem nhiều và thường vượt giới hạn';
+  if(xl&&!yl) return 'Xem ít nhưng hay vượt giới hạn của mình';
+  return 'Xem nhiều nhưng ít khi vượt giới hạn';
+}
+function renderClusters(students, rng, wins){
+  const head='<div class="card" style="margin-top:14px"><h3>🧩 Phân cụm hành vi xem — DBSCAN</h3>';
+  const note='<p class="mut">Phương pháp: DBSCAN nhóm các học sinh có hành vi xem tương tự nhau theo mật độ điểm; mỗi học sinh là một điểm với 2 đặc trưng — trung bình phút/ngày và % ngày vượt giới hạn của chính mình — được chuẩn hoá z-score trước khi phân cụm. Tham số: eps = 0,9 (trên dữ liệu đã chuẩn hoá), minPts = 5. Điểm không thuộc cụm nào được đánh dấu là ngoại lệ (×) — cần tìm hiểu riêng. Kết quả phân cụm chỉ để khám phá và tham khảo cho giáo viên, <b>không</b> thay thế mức rủi ro theo thuật toán ở trên và <b>không</b> dùng để xếp hạng học sinh.</p>';
+  if(!rng) return head+'<p class="mut">Chưa đủ dữ liệu để phân cụm (cần tối thiểu 10 học sinh có từ 3 ngày ghi).</p>'+note+'</div>';
+  const ws=wins || students.map(s=>studentWindow(s.anon,rng.start,rng.end));
+  const pts=ws.filter(w=>w.nDays>=3).map(w=>({ anon:w.anon, name:w.name, x:w.avgDay, y:w.nDays? w.overDays/w.nDays*100 : 0 }));
+  if(pts.length<10) return head+'<p class="mut">Chưa đủ dữ liệu để phân cụm (cần tối thiểu 10 học sinh có từ 3 ngày ghi). Hiện có '+pts.length+' học sinh đủ điều kiện trong khoảng đã chọn.</p>'+note+'</div>';
+  const mx=mean(pts.map(q=>q.x)), sx=sd(pts.map(q=>q.x))||1, my=mean(pts.map(q=>q.y)), sy=sd(pts.map(q=>q.y))||1;
+  const labels=dbscan(pts.map(q=>[(q.x-mx)/sx,(q.y-my)/sy]), 0.9, 5);
+  const clusterIds=[...new Set(labels.filter(l=>l>=0))].sort((a,b)=>a-b);
+  /* Biểu đồ tán xạ trên đơn vị gốc */
+  const maxX=Math.max.apply(null, pts.map(q=>q.x).concat([10]))*1.15;
+  const maxY=108;
+  const L=52, R=14, T=14, PH=300, PW=760, W=L+R+PW, H=T+PH+46;
+  const X=v=>L+(v/maxX)*PW, Y=v=>T+PH-(v/maxY)*PH;
+  let g='';
+  [0,0.5,1].forEach(f=>{ const gy=T+PH*(1-f);
+    g+='<line x1="'+L+'" y1="'+gy+'" x2="'+(L+PW)+'" y2="'+gy+'" stroke="#e2e8f0"/><text x="'+(L-5)+'" y="'+(gy+4)+'" font-size="11" text-anchor="end" fill="#64748b">'+Math.round(maxY*f)+'%</text>'; });
+  [0,0.5,1].forEach(f=>{ const gx=L+PW*f;
+    g+='<text x="'+gx+'" y="'+(T+PH+16)+'" font-size="11" text-anchor="middle" fill="#64748b">'+Math.round(maxX*f)+' ph</text>'; });
+  g+='<line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(T+PH)+'" stroke="#cbd5e1"/><line x1="'+L+'" y1="'+(T+PH)+'" x2="'+(L+PW)+'" y2="'+(T+PH)+'" stroke="#cbd5e1"/>';
+  g+='<text x="'+(L+PW/2)+'" y="'+(H-4)+'" font-size="12" text-anchor="middle" fill="#334155">Trung bình phút xem / ngày</text>';
+  g+='<text x="14" y="'+(T+PH/2)+'" font-size="12" text-anchor="middle" fill="#334155" transform="rotate(-90 14 '+(T+PH/2)+')">% ngày vượt giới hạn</text>';
+  pts.forEach((q,i)=>{ const lb=labels[i], cx=X(q.x), cy=Y(q.y);
+    if(lb<0){ g+='<g stroke="#94a3b8" stroke-width="2.4"><line x1="'+(cx-6)+'" y1="'+(cy-6)+'" x2="'+(cx+6)+'" y2="'+(cy+6)+'"/><line x1="'+(cx-6)+'" y1="'+(cy+6)+'" x2="'+(cx+6)+'" y2="'+(cy-6)+'"/></g><title>'+esc(q.name)+' ('+esc(q.anon)+'): '+fmt1(q.x)+' phút/ngày · '+Math.round(q.y)+'% ngày vượt — Ngoại lệ</title>'; }
+    else { g+='<circle cx="'+cx+'" cy="'+cy+'" r="6" fill="'+CLUSTER_COLORS[lb%CLUSTER_COLORS.length]+'" fill-opacity="0.82" stroke="#fff" stroke-width="1.2"><title>'+esc(q.name)+' ('+esc(q.anon)+'): '+fmt1(q.x)+' phút/ngày · '+Math.round(q.y)+'% ngày vượt — Cụm '+(lb+1)+'</title></circle>'; }
+  });
+  const svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;max-width:880px;height:auto;display:block;margin:0 auto" role="img" aria-label="Biểu đồ phân cụm DBSCAN">'+g+'</svg>';
+  const legend='<p style="margin:8px 0">'+clusterIds.map(id=>'<span class="badge" style="background:'+CLUSTER_COLORS[id%CLUSTER_COLORS.length]+';color:#fff;margin-right:6px">Cụm '+(id+1)+'</span>').join('')+(labels.some(l=>l<0)? '<span class="badge" style="background:#e2e8f0;color:#475569">× Ngoại lệ — cần tìm hiểu riêng</span>':'')+'</p>';
+  const sumRows=clusterIds.map(id=>{
+    const mem=pts.filter((q,i)=>labels[i]===id);
+    const cx=mean(mem.map(q=>q.x)), cy=mean(mem.map(q=>q.y));
+    return '<tr><td><span class="badge" style="background:'+CLUSTER_COLORS[id%CLUSTER_COLORS.length]+';color:#fff">Cụm '+(id+1)+'</span></td><td>'+mem.length+'</td><td>'+fmt1(cx)+'</td><td>'+Math.round(cy)+'%</td><td>'+clusterLabel(cx,cy,mx,my)+'</td></tr>';
+  }).join('');
+  const noiseN=labels.filter(l=>l<0).length;
+  const noiseRow= noiseN? '<tr><td><span class="badge" style="background:#e2e8f0;color:#475569">× Ngoại lệ</span></td><td>'+noiseN+'</td><td colspan="2">—</td><td>Ngoại lệ — cần tìm hiểu riêng từng em</td></tr>' : '';
+  const table='<div class="tblwrap"><table><thead><tr><th>Cụm</th><th>Số học sinh</th><th>TB phút/ngày của cụm</th><th>% vượt giới hạn TB</th><th>Mô tả cụm</th></tr></thead><tbody>'+sumRows+noiseRow+'</tbody></table></div>';
+  return head+svg+legend+table+
+   '<p class="mut">Phân cụm trên '+pts.length+' học sinh có từ 3 ngày ghi trong khoảng '+fmtVN(rng.start)+' → '+fmtVN(rng.end)+'. Di chuột (hoặc chạm) vào từng điểm để xem học sinh và số liệu của điểm đó.</p>'+note+'</div>';
+}
+function renderStats(){
+  fillStatsClass();
+  const box=document.getElementById('statsBox'); if(!box) return;
+  const cls=document.getElementById('statsClass').value;
+  const students=DB.students.filter(s=>!cls||s.className===cls);
+  const stageHtml=renderStageDist(students);
+  const rng=statsRangeDates();
+  const anonSet=new Set(students.map(s=>s.anon));
+  const logsInRange= rng? DB.logs.filter(l=>l.date>=rng.start&&l.date<=rng.end&&anonSet.has(l.anon)) : [];
+  if(!rng || !logsInRange.length){
+    box.innerHTML='<div class="card" style="margin-top:14px"><h3>📭 Chưa có dữ liệu nhật ký trong khoảng đã chọn</h3>'+
+      '<p class="mut">Biểu đồ theo ngày, điểm rủi ro và các số liệu thống kê cần học sinh đã ghi nhật ký xem video trong khoảng này. Gợi ý: thử chọn khoảng “Toàn bộ thời gian”, hoặc chờ học sinh ghi nhật ký trong các ngày tới rồi quay lại xem — số liệu sẽ tự cập nhật, không cần thao tác gì thêm.</p></div>'+renderClusters(students,rng,null)+stageHtml;
+    return;
+  }
+  const wins=students.map(s=>studentWindow(s.anon,rng.start,rng.end));
+  const withData=wins.filter(w=>w.nDays>0);
+  const series=dailySeries(students,rng.start,rng.end);
+  const refLim=modeLimit(students);
+  const avgList=withData.map(w=>w.avgDay);
+  const mAvg=mean(avgList), sAvg=avgList.length>1? sd(avgList):0, med=medianOf(avgList);
+  const totDays=withData.reduce((a,w)=>a+w.nDays,0), okDays=withData.reduce((a,w)=>a+w.okDays,0);
+  const pctOkAll= totDays? okDays/totDays*100 : 0;
+  const slope=linSlope(series.map(it=>({ x:daysInRange(series[0].date,it.date)-1, y:it.avg })));
+  let trendTxt='Chưa đủ số ngày có dữ liệu để tính xu hướng (cần ít nhất 2 ngày).';
+  if(slope!==null){ trendTxt= slope<=-0.05? ('Đang giảm khoảng '+fmt1(Math.abs(slope))+' phút mỗi ngày — tín hiệu tích cực, thời gian xem của lớp đang đi xuống.') : slope>=0.05? ('Đang tăng khoảng '+fmt1(slope)+' phút mỗi ngày — cần chú ý nhắc nhở thêm.') : ('Gần như đi ngang ('+fmt1(slope)+' phút/ngày) — thời gian xem đang ổn định.'); }
+  const wFirst=series.filter(it=>it.date<=addDays(rng.start,6));
+  const wLast=series.filter(it=>it.date>=addDays(rng.end,-6));
+  let chgHtml='<b>—</b>';
+  if(wFirst.length&&wLast.length){ const a=mean(wFirst.map(i=>i.avg)), b=mean(wLast.map(i=>i.avg));
+    if(a>0){ const pct=(b-a)/a*100; chgHtml='<b>'+(pct>=0?'+':'')+fmt1(pct)+'%</b><span>Thay đổi TB phút/ngày: 7 ngày đầu ('+fmt1(a)+') → 7 ngày cuối ('+fmt1(b)+')</span>'; } }
+  const kpi='<p class="mut">Đang xét: <b>'+(cls||'Tất cả các lớp')+'</b> · '+fmtVN(rng.start)+' → '+fmtVN(rng.end)+' ('+rng.days+' ngày) · Giới hạn tham chiếu: '+refLim+' phút/ngày (giới hạn phổ biến nhất của nhóm).</p>'+
+    '<div class="grid">'+
+    '<div class="stat"><b>'+withData.length+'</b><span>Học sinh có dữ liệu (trên '+students.length+' em của nhóm)</span></div>'+
+    '<div class="stat"><b>'+fmt1(mAvg)+' ± '+fmt1(sAvg)+'</b><span>TB phút/ngày của nhóm (trung bình ± độ lệch chuẩn, tính theo học sinh)</span></div>'+
+    '<div class="stat"><b>'+fmt1(med)+'</b><span>Trung vị phút/ngày của học sinh</span></div>'+
+    '<div class="stat"><b>'+Math.round(pctOkAll)+'%</b><span>Tỷ lệ ngày đạt giới hạn (trên tổng số ngày đã ghi)</span></div>'+
+    '<div class="stat"><b>'+(slope===null?'—':(slope>0?'+':'')+fmt1(slope))+'</b><span>Hệ số xu hướng (phút/ngày)</span></div>'+
+    '<div class="stat">'+chgHtml+'</div>'+
+    '</div><p class="mut">Diễn giải xu hướng: '+trendTxt+'</p>';
+  const chart1='<div class="card" style="margin-top:14px"><h3>📊 Trung bình phút xem mỗi ngày</h3>'+
+    barChartSVG(series,{ getV:it=>it.avg, label:'Trung bình phút xem mỗi ngày', refY:refLim, refLabel:'Giới hạn '+refLim+' phút', color:(v,it)=> v>refLim? '#dc2626':'#0d7a69', fmtV:v=>Math.round(v)+'' })+
+    '<p class="mut">Mỗi cột là trung bình cộng phút xem của các học sinh có ghi nhật ký trong ngày đó (n = số em có ghi, hiện dưới mỗi cột). Cột đỏ là ngày trung bình vượt giới hạn; đường đứt nét đỏ là mức giới hạn tham chiếu.</p></div>';
+  const chart2='<div class="card" style="margin-top:14px"><h3>✅ Tỷ lệ ngày đạt giới hạn theo ngày</h3>'+
+    barChartSVG(series,{ getV:it=>it.pctOk, label:'Tỷ lệ ngày đạt giới hạn theo ngày', maxV:100, suffix:'%', color:v=> v>=80? '#0d7a69' : (v>=50? '#d97706':'#dc2626'), fmtV:v=>Math.round(v)+'%' })+
+    '<p class="mut">Mỗi cột là % học sinh (trong số em có ghi nhật ký ngày đó) xem không vượt giới hạn của chính mình trong ngày.</p></div>';
+  const rows=wins.map(w=>({ w, r:riskOf(w,rng.days) })).sort((a,b)=>{ const sa=a.r? a.r.score:-1, sb=b.r? b.r.score:-1; return sb-sa; });
+  const riskTable='<div class="card" style="margin-top:14px"><h3>⚠️ Bảng đánh giá mức rủi ro theo học sinh</h3>'+
+    '<div class="tblwrap"><table><thead><tr><th>Họ tên</th><th>Mã ẩn danh</th>'+(cls?'':'<th>Lớp</th>')+'<th>Số ngày ghi</th><th>TB phút/ngày</th><th>% ngày đạt</th><th>Điểm rủi ro</th><th>Mức</th><th>Lý do chính</th></tr></thead><tbody>'+
+    rows.map(x=>{ const w=x.w, r=x.r;
+      return '<tr><td>'+esc(w.name)+'</td><td><b>'+esc(w.anon)+'</b></td>'+(cls?'':'<td>'+esc(w.className)+'</td>')+'<td>'+w.nDays+'</td><td>'+(w.nDays? fmt1(w.avgDay):'—')+'</td><td>'+(w.nDays? Math.round(w.pctOk)+'%':'—')+'</td>'+
+      (r? '<td><b>'+r.score+'</b></td><td><span style="background:'+RISK_COLORS[r.level]+';color:#fff;border-radius:8px;padding:2px 8px;font-size:12px;white-space:nowrap">'+r.levelName+'</span></td><td>'+esc(r.reason)+'</td>'
+         : '<td>—</td><td><span class="mut">Chưa đủ dữ liệu</span></td><td class="mut">Cần ít nhất 3 ngày ghi nhật ký trong khoảng xét</td>')+'</tr>'; }).join('')+
+    '</tbody></table></div><p class="mut">Sắp xếp theo điểm rủi ro giảm dần. Công thức tính điểm xem ở thẻ “Thuật toán đánh giá mức rủi ro” phía dưới.</p></div>';
+  box.innerHTML=kpi+chart1+chart2+riskTable+renderMatrix(students)+renderClusters(students,rng,wins)+stageHtml;
+}
+</script>
+</body>
+</html>
