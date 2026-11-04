@@ -71,42 +71,67 @@ th{background:var(--teal-d);color:#fff}tbody tr:nth-child(even){background:#f2fb
 .hero .progress div{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
 .congrats{background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 8px 22px rgba(234,88,12,.38);font-size:15px;line-height:1.5}
 .starcard{background:linear-gradient(180deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.cover{text-align:center;padding:28px 18px 22px}
+.cover-badge{display:inline-block;background:rgba(0,0,0,.25);color:#fde68a;font-weight:700;font-size:12.5px;padding:6px 14px;border-radius:99px;letter-spacing:.3px}
+.cover .cover-title{font-size:28px;margin:13px 0 7px;color:#fff}
+.cover-sub{color:rgba(255,255,255,.93);font-size:14.5px;line-height:1.55;max-width:580px;margin:0 auto 18px}
+.featgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;text-align:left}
+.feat{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:13px 14px}
+.feat-t{font-weight:800;color:#fde68a;margin-bottom:5px;font-size:14.5px}
+.feat p{margin:0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.93)}
+.rolewrap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rolebtn{padding:13px 10px;font-size:15px;border-radius:12px;opacity:.78}
+.rolebtn.ghostrole{background:#fff;color:var(--teal);border:1.5px solid var(--teal);box-shadow:none}
+.rolebtn.on{opacity:1;outline:3px solid rgba(245,158,11,.9);outline-offset:1px}
+button.bigbtn{width:100%;padding:13px;font-size:15.5px}
+@media(max-width:560px){.rolewrap{grid-template-columns:1fr}.cover .cover-title{font-size:22px}}
 </style>
 </head>
 <body>
 <header>
   <h1>🌱 MINDFUL SCREEN — Quản lý xem video ngắn</h1>
-  <p>Dừng 10 giây · Đổi 15 phút · Cây Hạnh Phúc — Tự chủ là sức mạnh · <b>BẢN MỚI ✅ Bộ B = Đánh giá HIỆU QUẢ đạt được</b></p>
+  <p>Dừng 10 giây · Đổi 15 phút · Cây Hạnh Phúc — Tự chủ là sức mạnh · 
 </header>
 <div class="wrap">
 
 <!-- ============ CỔNG VÀO ============ -->
 <div id="gate">
-  <div class="card">
-    <h2>Bạn là ai?</h2>
-    <div class="rowflex">
-      <button onclick="gateRole('student')">🎒 Tôi là học sinh</button>
-      <button class="ghost" onclick="gateRole('teacher')">👩‍🏫 Nhóm nghiên cứu</button>
+  <div class="card hero cover">
+    <div class="cover-badge">✨ Rèn luyện Tự Chủ &amp; Tỉnh Tâm Học Đường</div>
+    <h2 class="cover-title">Chào mừng bạn đến với Mindful Screen</h2>
+    <p class="cover-sub">Ứng dụng giúp học sinh làm chủ thời gian, ngắt cơn lướt vô thức và vun trồng Cây Hạnh Phúc mỗi ngày.</p>
+    <div class="featgrid">
+      <div class="feat"><div class="feat-t">⏱️ Dừng 10 giây</div><p>Hít thở chậm trước khi mở video để ngắt quán tính tự động.</p></div>
+      <div class="feat"><div class="feat-t">📖 Đổi 15 phút</div><p>Thay video ngắn bằng đọc sách, dạo bộ, vẽ tranh lành mạnh.</p></div>
+      <div class="feat"><div class="feat-t">💚 Cây Hạnh Phúc</div><p>Tích lũy điểm tự chủ và theo dõi cây lớn lên từng ngày.</p></div>
     </div>
   </div>
-  <div class="card hidden" id="gateStudent">
-    <h2>Vào bằng tài khoản học sinh</h2>
-    <label>Chọn lớp</label>
-    <select id="gClass" onchange="fillStudentSelect()"><option value="">— Chọn lớp —</option></select>
-    <label>Chọn tên của em</label>
-    <select id="gStudent"><option value="">— Chọn tên —</option></select>
-    <label>Mã PIN (4 số, giáo viên đã phát)</label>
-    <input id="gPin" type="password" inputmode="numeric" maxlength="4" placeholder="••••">
+  <div class="card">
+    <div class="rolewrap">
+      <button class="rolebtn on" data-role="student" onclick="gateRole('student')">🎒 Tôi là Học Sinh</button>
+      <button class="rolebtn ghostrole" data-role="teacher" onclick="gateRole('teacher')">🔬 Tôi là Nhóm Nghiên Cứu</button>
+    </div>
+  </div>
+  <div class="card" id="gateStudent">
+    <h2>🎒 Đăng nhập dành cho Học sinh</h2>
+    <p class="mut" style="margin-top:-4px">Chọn lớp, tên của em và nhập mã PIN 4 số do Nhóm nghiên cứu cung cấp.</p>
+    <label>1. Chọn lớp học của em:</label>
+    <select id="gClass" onchange="fillStudentSelect()"><option value="">— Nhấn để chọn lớp —</option></select>
+    <label>2. Chọn họ và tên của em:</label>
+    <select id="gStudent"><option value="">— Nhấn để chọn tên —</option></select>
+    <label>3. Mã PIN bảo mật (4 chữ số):</label>
+    <input id="gPin" type="password" inputmode="numeric" maxlength="4" placeholder="••••" style="text-align:center;letter-spacing:6px">
     <p class="err" id="gErr"></p>
-    <button onclick="studentLogin()">Vào app →</button>
+    <button class="bigbtn" onclick="studentLogin()">Vào ứng dụng →</button>
   </div>
   <div class="card hidden" id="gateTeacher">
-    <h2>Giáo viên đăng nhập</h2>
-    <label>Mật khẩu giáo viên</label>
-    <input id="gPass" type="password" placeholder="Mật khẩu">
+    <h2>🔬 Đăng nhập dành cho Nhóm Nghiên Cứu</h2>
+    <p class="mut" style="margin-top:-4px">Khu vực quản lý dữ liệu, chấm điểm Cây Hạnh Phúc và theo dõi hiệu quả can thiệp của Nhóm nghiên cứu.</p>
+    <label>Mật khẩu Nhóm nghiên cứu:</label>
+    <input id="gPass" type="password" placeholder="Nhập mật khẩu Nhóm nghiên cứu">
     <p class="err" id="gPassErr"></p>
-    <button onclick="teacherLogin()">Vào trang giáo viên →</button>
-    <p class="mut">Mật khẩu mặc định lần đầu: 123456 — hãy đổi ngay trong mục Cài đặt sau khi vào.</p>
+    <button class="bigbtn" onclick="teacherLogin()">Vào trang Nhóm nghiên cứu →</button>
+    <p class="mut">Mật khẩu mặc định lần đầu: 123456 — Nhóm nghiên cứu hãy đổi ngay trong mục Cài đặt sau khi vào.</p>
   </div>
 </div>
 
@@ -253,7 +278,7 @@ th{background:var(--teal-d);color:#fff}tbody tr:nth-child(even){background:#f2fb
       <div id="progressSelfBox" style="margin-top:12px"></div>
       <div id="progressSelfHistory"></div>
     </div>
-    <div class="card"><h2>🎬 Tình huống tương tác</h2>
+        <div class="card"><h2>🎬 Tình huống tương tác</h2>
       <p class="mut">3 tình huống ngắn — chọn cách xử lý em thấy hợp lý nhất và đọc phản hồi. Không tính điểm, không xếp hạng.</p>
       <div id="scenarioBox"></div>
       <h3>🎬 Tình huống NÂNG CAO — Sau can thiệp (4 tình huống)</h3>
@@ -261,7 +286,7 @@ th{background:var(--teal-d);color:#fff}tbody tr:nth-child(even){background:#f2fb
       <div id="scenarioPostBox"></div>
     </div>
   </div>
-<div id="s-reflect" class="hidden">
+  <div id="s-reflect" class="hidden">
     <div class="card"><h2>🌙 Phản hồi cuối ngày</h2>
       <label>Cảm xúc nổi bật hôm nay</label><input id="rEmo" placeholder="Ví dụ: nhẹ nhõm, hơi tiếc thời gian...">
       <label>Mức độ thời gian xem Video ngắn có giảm hơn so với hôm qua? </label>
@@ -272,7 +297,7 @@ th{background:var(--teal-d);color:#fff}tbody tr:nth-child(even){background:#f2fb
       <div id="reflectList" style="margin-top:10px"></div>
     </div>
   </div>
-   <div id="s-report" class="hidden">
+  <div id="s-report" class="hidden">
     <div class="card"><h2>📤 Gửi báo cáo tuần cho giáo viên</h2>
       <p class="mut">Báo cáo chỉ gồm MÃ ẨN DANH và lớp của em — không kèm họ tên, không kèm ghi chú nhật ký cá nhân. Sau khi gửi, số liệu được đóng băng; gửi lại cùng tuần sẽ tạo phiên bản mới và giữ nguyên bản cũ.</p>
       <label>Chọn một ngày trong tuần muốn gửi</label>
@@ -288,7 +313,7 @@ th{background:var(--teal-d);color:#fff}tbody tr:nth-child(even){background:#f2fb
 <!-- ============ KHUNG GIÁO VIÊN ============ -->
 <div id="teacherApp" class="hidden">
   <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-    <div><b>👩‍🏫 Góc giáo viên</b><div class="mut" id="tSub"></div></div>
+    <div><b>🔬 Nhóm nghiên cứu</b><div class="mut" id="tSub"></div></div>
     <button class="ghost small" onclick="logout()">Thoát</button>
   </div>
   <div class="tabs" id="tTabs">
@@ -433,7 +458,7 @@ th{background:var(--teal-d);color:#fff}tbody tr:nth-child(even){background:#f2fb
   </div>
 
   <div id="t-settings" class="hidden">
-    <div class="card"><h2>⚙️ Cài đặt giáo viên</h2>
+    <div class="card"><h2>⚙️ Cài đặt Nhóm nghiên cứu</h2>
       <label>Link / ID Google Sheet của giáo viên</label><input id="setSheet">
       <label>Apps Script Web App URL (đồng bộ tự động báo cáo lên Sheet)</label><input id="setScriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
       <p class="mut" style="margin:4px 0 0">Đã gắn sẵn địa chỉ kết nối Sheet đang hoạt động — chỉ thay khi triển khai lại Apps Script.</p>
@@ -446,7 +471,7 @@ th{background:var(--teal-d);color:#fff}tbody tr:nth-child(even){background:#f2fb
       <label><input type="checkbox" id="setPost" style="width:auto"> Mở mốc trắc nghiệm SAU</label><br>
       <p class="mut">Lưu ý: ở bản này, mốc <b>Sau can thiệp — Bộ B riêng</b> luôn chọn được ngay trong tab Trắc nghiệm của học sinh (không cần tick ô này học sinh mới làm được); hai ô tick trên chỉ còn dùng để ghi nhận giai đoạn nghiên cứu.</p>
       <button onclick="saveSettings()">Lưu cài đặt</button>
-      <h3>Đổi mật khẩu giáo viên</h3>
+      <h3>Đổi mật khẩu Nhóm nghiên cứu</h3>
       <label>Mật khẩu mới (ít nhất 6 ký tự)</label><input id="setPass" type="password">
       <p class="err" id="setPassErr"></p>
       <button class="ghost" onclick="changePass()">Đổi mật khẩu</button>
@@ -507,6 +532,7 @@ function stageOf(pts){ let curS=STAGES[0], next=null; for(let i=0;i<STAGES.lengt
 function gateRole(r){
   document.getElementById('gateStudent').classList.toggle('hidden', r!=='student');
   document.getElementById('gateTeacher').classList.toggle('hidden', r!=='teacher');
+  document.querySelectorAll('.rolebtn').forEach(b=>b.classList.toggle('on', b.dataset.role===r));
   if(r==='student'){ const sel=document.getElementById('gClass'); sel.innerHTML='<option value="">— Chọn lớp —</option>'+classes().map(c=>`<option>${esc(c)}</option>`).join(''); }
 }
 function fillStudentSelect(){
@@ -533,7 +559,7 @@ function studentLogin(){
 function teacherLogin(){
   const p=document.getElementById('gPass').value;
   const err=document.getElementById('gPassErr'); err.textContent='';
-  if(p!==DB.settings.teacherPass){ err.textContent='Sai mật khẩu giáo viên.'; return; }
+  if(p!==DB.settings.teacherPass){ err.textContent='Sai mật khẩu Nhóm nghiên cứu.'; return; }
   document.getElementById('gate').classList.add('hidden');
   document.getElementById('studentApp').classList.add('hidden');
   document.getElementById('teacherApp').classList.remove('hidden');
@@ -1150,7 +1176,7 @@ function sheetInboxCell(r){
 }
 function pushFromInbox(id){
   const r=DB.reports.find(x=>x.id===id); if(!r) return;
-  if(!sheetUrl()){ toast('Chưa cài Apps Script Web App URL trong Cài đặt giáo viên.'); return; }
+  if(!sheetUrl()){ toast('Chưa cài Apps Script Web App URL trong Cài đặt Nhóm nghiên cứu.'); return; }
   toast('Đang đẩy báo cáo '+r.code+' lên Google Sheet…');
   pushReportToSheet(r).then(st=>{ renderInbox(); if(cur) renderMyReports();
     if(st==='synced') toast('Đã đồng bộ '+r.code+' lên Google Sheet ✓');
@@ -1672,7 +1698,7 @@ function changePass(){
   const p=document.getElementById('setPass').value;
   if(p.length<6){ err.textContent='Mật khẩu mới cần ít nhất 6 ký tự.'; return; }
   DB.settings.teacherPass=p; save(); document.getElementById('setPass').value='';
-  toast('Đã đổi mật khẩu giáo viên 🔐');
+  toast('Đã đổi mật khẩu Nhóm nghiên cứu 🔐');
 }
 /* Khởi tạo */
 (function(){ const sel=document.getElementById('gClass'); sel.innerHTML='<option value="">— Chọn lớp —</option>'+classes().map(c=>`<option>${esc(c)}</option>`).join(''); })();
