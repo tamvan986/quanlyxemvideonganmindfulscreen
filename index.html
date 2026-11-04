@@ -40,6 +40,11 @@ table{width:100%;border-collapse:collapse;font-size:13px}th,td{border:1px solid 
 th{background:var(--teal-d);color:#fff}tbody tr:nth-child(even){background:#f2fbf8}.tblwrap{overflow-x:auto}
 .badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11.5px;font-weight:700}
 .b-safe{background:#bbf7d0;color:#14532d}.b-warn{background:#fde68a;color:#92400e}.b-risk{background:#fecaca;color:#991b1b}
+.lwarn{border-radius:14px;padding:11px 13px;margin:10px 0;border:1.5px solid;line-height:1.55}
+.lwarn.idle{background:#f8fafc;border-color:#cbd5e1;color:#475569}
+.lwarn.ok{background:#ecfdf5;border-color:#6ee7b7;color:#065f46}
+.lwarn.mid{background:#fffbeb;border-color:#fcd34d;color:#92400e}
+.lwarn.max{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#065f46,#0d7a69);color:#fff;padding:11px 18px;border-radius:99px;font-size:14px;display:none;z-index:99;max-width:92vw;text-align:center;box-shadow:0 6px 18px rgba(6,95,70,.4)}
 .bars{display:flex;align-items:flex-end;gap:6px;height:120px;padding-top:8px}
 .bar{flex:1;background:linear-gradient(180deg,#2dd4bf,#0d7a69);border-radius:6px 6px 0 0;min-height:3px;position:relative}
@@ -90,7 +95,7 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
 <body>
 <header>
   <h1>🌱 MINDFUL SCREEN — Quản lý xem video ngắn</h1>
-  <p>Dừng 10 giây · Đổi 15 phút · Cây Hạnh Phúc — Tự chủ là sức mạnh · 
+  <p>Dừng 10 giây · Đổi 15 phút · Cây Hạnh Phúc — Tự chủ là sức mạnh · <b>BẢN MỚI ✅ Nhật ký có cảnh báo trực tiếp + Bảng thống kê theo ngày</b></p>
 </header>
 <div class="wrap">
 
@@ -182,19 +187,19 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
 
   <div id="s-log" class="hidden">
     <div class="card"><h2>📝 Ghi một lần xem</h2>
-      <label>Ngày</label><input type="date" id="lDate">
+      <label>Ngày</label><input type="date" id="lDate" onchange="updLogWarn()">
       <div class="grid">
-        <div><label>Số phút đã xem</label><input type="number" id="lMin" min="1" max="1440" placeholder="Ví dụ: 30"></div>
+        <div><label>Số phút đã xem</label><input type="number" id="lMin" min="1" max="1440" placeholder="Ví dụ: 30" oninput="updLogWarn()"></div>
         <div><label>Nền tảng</label><select id="lPlat"><option>TikTok</option><option>YouTube Shorts</option><option>Facebook Reels</option><option>Instagram Reels</option><option>Khác</option></select></div>
-        <div><label>Khung giờ</label><select id="lSlot"><option>Sáng</option><option>Trưa</option><option>Chiều</option><option selected>Tối</option><option>Sau giờ đi ngủ</option></select></div>
+        <div><label>Khung giờ</label><select id="lSlot" onchange="updLogWarn()"><option>Sáng</option><option>Trưa</option><option>Chiều</option><option selected>Tối</option><option>Sau giờ đi ngủ</option></select></div>
         <div><label>Vì sao em mở xem?</label><select id="lTrig"><option>Buồn chán</option><option>Căng thẳng / mệt</option><option>Thói quen, tay tự mở</option><option>Bạn bè gửi link</option><option>Chờ đợi / rảnh tay</option><option>Khó ngủ</option></select></div>
         <div><label>Cảm xúc lúc đó</label><select id="lMood"><option>Vui</option><option selected>Bình thường</option><option>Mệt</option><option>Buồn</option><option>Lo lắng</option><option>Hào hứng</option></select></div>
       </div>
-      <label><input type="checkbox" id="lStop" style="width:auto"> Em đã dừng đúng lúc mình định</label>
-      <label>Ghi chú (không bắt buộc)</label><input id="lNote" placeholder="Ví dụ: xem trong lúc chờ xe buýt">
+      <div id="logWarn"></div>
       <p class="err" id="lErr"></p>
       <button onclick="addLog()">Lưu nhật ký</button>
     </div>
+    <div class="card"><h2>📊 Thống kê theo ngày — 14 ngày gần nhất</h2><div id="dayStatsBox"></div></div>
     <div class="card"><h2>Nhật ký gần đây</h2><div id="logList"></div></div>
   </div>
 
@@ -509,7 +514,7 @@ function loadDB(){
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify(DB)); }
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; clearTimeout(t._h); t._h=setTimeout(()=>t.style.display='none',2600); }
 function esc(s){ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function todayStr(d=new Date()){ return d.toISOString().slice(0,10); }
+function todayStr(d=new Date()){ const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
 function addDays(ds,n){ const d=new Date(ds+'T00:00:00'); d.setDate(d.getDate()+n); return todayStr(d); }
 function weekOf(ds){ const d=new Date(ds+'T00:00:00'); const dow=(d.getDay()+6)%7; const start=addDays(ds,-dow); return {start, end:addDays(start,6)}; }
 function fmtVN(ds){ if(!ds) return ''; const p=ds.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
@@ -634,6 +639,87 @@ function renderHome(){
     return `<div class="bar ${v>s.limit?'over':''}" style="height:${h}%"><span>${v||''}</span><em>${dow}</em></div>`; }).join('');
   renderMyTreeScore();
 }
+
+/* ===== CẢNH BÁO TRONG NHẬT KÝ + BẢNG THỐNG KÊ THEO NGÀY (thay mục "dừng đúng lúc/ghi chú") ===== */
+function updLogWarn(){
+  const box=document.getElementById('logWarn'); if(!box||!cur) return;
+  const s=stu(cur.anon);
+  const date=document.getElementById('lDate').value;
+  const mins=parseInt(document.getElementById('lMin').value,10);
+  const slotEl=document.getElementById('lSlot'); const slot=slotEl? slotEl.value : '';
+  if(!date || !mins || mins<1){
+    box.className='lwarn idle';
+    box.innerHTML='💡 <b>Cảnh báo tự động:</b> hãy nhập ngày và số phút đã xem — app sẽ đối chiếu ngay với giới hạn <b>'+s.limit+' phút/ngày</b> của em và cảnh báo kịp thời nếu em xem quá nhiều.';
+    return;
+  }
+  const already=dayTotal(cur.anon,date);
+  const total=already+mins, over=total-s.limit, late=(slot==='Sau giờ đi ngủ');
+  let streak=0; { let d=addDays(date,-1), guard=0; while(dayTotal(cur.anon,d)>s.limit && guard<31){ streak++; d=addDays(d,-1); guard++; } }
+  let cls, head, body;
+  if(over<=0){
+    cls='ok'; head='✅ Vẫn trong giới hạn — tốt!';
+    body='Nếu ghi thêm '+mins+' phút, tổng ngày '+fmtVN(date)+' của em là <b>'+total+'/'+s.limit+' phút</b> — vẫn trong giới hạn em đã đặt. Giữ nhịp chủ động này nhé!';
+  } else if(total<=s.limit*1.5){
+    cls='mid'; head='⚠️ CẢNH BÁO — VƯỢT GIỚI HẠN';
+    body='Cộng lần này, tổng ngày '+fmtVN(date)+' sẽ là <b>'+total+' phút</b> — <b>vượt giới hạn '+s.limit+' phút của em '+over+' phút</b>. Xem quá giới hạn thường kéo theo cảm giác mất kiểm soát và dễ lướt vô thức tiếp. '+(date===todayStr()? 'Nếu em CHƯA xem: hãy làm <b>Dừng 10 giây</b> trước khi mở. Nếu ĐÃ xem rồi: cứ ghi trung thực, rồi chốt một hoạt động thay thế cho lần thèm tiếp theo.' : 'Hãy ghi trung thực — số liệu thật mới giúp em tự điều chỉnh được.');
+  } else {
+    cls='max'; head='🔴 CẢNH BÁO MẠNH — XEM QUÁ NHIỀU';
+    body='Tổng ngày '+fmtVN(date)+' sẽ là <b>'+total+' phút</b> — gấp khoảng <b>'+(Math.round(total/s.limit*10)/10).toString().replace('.',',')+' lần</b> giới hạn '+s.limit+' phút của em. Xem video ngắn quá nhiều trong một ngày làm giảm khả năng tập trung học tập, rối loạn giấc ngủ và càng xem càng thèm. Hãy dừng ở đây hôm nay, làm một lần <b>Đổi 15 phút</b>; nếu tình trạng này lặp lại nhiều ngày, hãy chia sẻ với Nhóm nghiên cứu hoặc người thân để được hỗ trợ.';
+  }
+  let extra='';
+  if(late) extra+='<br>🌙 <b>Cảnh báo giấc ngủ:</b> em đang chọn khung giờ "Sau giờ đi ngủ" — xem khuya là yếu tố bào mòn giấc ngủ và buổi học sáng mai mạnh nhất. Hãy kết thúc lần xem này thật nhanh và để điện thoại xa giường.';
+  if(over>0 && streak>=2) extra+='<br>📈 <b>Chuỗi trượt dốc:</b> trước ngày này em đã vượt giới hạn <b>'+streak+' ngày liên tiếp</b> — thêm hôm nay là '+(streak+1)+' ngày. Chuỗi ngày xem nhiều liên tiếp là lúc thói quen xấu "đóng băng", cần chặn lại ngay hôm nay.';
+  if(already>0) extra+='<br><span style="opacity:.85">Ngày này em đã ghi '+already+' phút trước đó — app cộng dồn cả ngày để đối chiếu, không tính riêng từng lần.</span>';
+  box.className='lwarn '+cls;
+  box.innerHTML='<b>'+head+'</b><br>'+body+extra;
+}
+function renderDayStats(){
+  const box=document.getElementById('dayStatsBox'); if(!box||!cur) return;
+  const s=stu(cur.anon);
+  const days=[]; for(let i=13;i>=0;i--) days.push(addDays(todayStr(),-i));
+  let totalAll=0, overDays=0, lateDays=0, maxDay={v:0,ds:null}, curStreak=0, bestStreak=0;
+  const infos=days.map(ds=>{
+    const logs=myLogs(cur.anon).filter(l=>l.date===ds);
+    const tot=logs.reduce((a,l)=>a+l.minutes,0);
+    return { ds, tot, n:logs.length, late:logs.some(l=>l.slot==='Sau giờ đi ngủ'), has:logs.length>0, streak:0 };
+  });
+  infos.forEach(it=>{
+    totalAll+=it.tot;
+    if(it.has && it.tot>s.limit){ overDays++; curStreak++; bestStreak=Math.max(bestStreak,curStreak); it.streak=curStreak; }
+    else curStreak=0;
+    if(it.late) lateDays++;
+    if(it.tot>maxDay.v) maxDay={v:it.tot, ds:it.ds};
+  });
+  const loggedDays=infos.filter(i=>i.has).length;
+  const avgLogged= loggedDays? totalAll/loggedDays : 0;
+  const badgeFor=it=>{
+    if(!it.has) return '<span class="badge" style="background:#e2e8f0;color:#475569">Chưa ghi</span>';
+    if(it.tot>s.limit*1.5) return '<span class="badge b-risk">🔴 Vượt nhiều</span>';
+    if(it.tot>s.limit) return '<span class="badge b-warn">⚠️ Vượt giới hạn</span>';
+    return '<span class="badge b-safe">✅ Trong giới hạn</span>';
+  };
+  const noteFor=it=>{
+    if(!it.has) return 'Chưa ghi nhật ký — không có số liệu thì không tự kiểm soát được. Nếu hôm đó em có xem, hãy ghi bổ sung ngay.';
+    const notes=[];
+    if(it.tot>s.limit*2) notes.push('🔴 <b>Xem gấp hơn 2 lần giới hạn</b> — mức xem quá nhiều, ảnh hưởng rõ đến giấc ngủ, mắt và thời gian học. Cần kế hoạch giảm dần ngay.');
+    else if(it.tot>s.limit*1.5) notes.push('🔴 Vượt xa giới hạn '+(it.tot-s.limit)+' phút — xem video ngắn quá nhiều trong ngày dễ gây mất tập trung và càng xem càng thèm.');
+    else if(it.tot>s.limit) notes.push('⚠️ Vượt giới hạn '+(it.tot-s.limit)+' phút — hãy nhớ lại điều gì đã kích hoạt em hôm đó để chặn từ đầu lần sau.');
+    if(it.late) notes.push('🌙 Có phiên xem sau giờ ngủ — xem khuya hại giấc ngủ nhất, hãy ưu tiên sửa điểm này trước.');
+    if(it.streak>=3) notes.push('📈 Ngày vượt thứ '+it.streak+' liên tiếp — chuỗi ngày xem nhiều đang hình thành thói quen khó bỏ, cần chặn lại ngay.');
+    if(it.tot<=s.limit) notes.push('✅ Ngày tốt — giữ được giới hạn, đáng khen. Hãy ghi nhớ cảm giác chủ động này.');
+    return notes.join('<br>');
+  };
+  const overall= !loggedDays? '' :
+    (avgLogged>s.limit? '<div class="lwarn max"><b>🔴 TỔNG CẢNH BÁO 14 NGÀY:</b> trung bình một ngày có ghi của em là <b>'+fmt1(avgLogged)+' phút</b> — cao hơn giới hạn '+s.limit+' phút. Đây là tình trạng xem video ngắn quá nhiều kéo dài: hãy bắt đầu kế hoạch giảm dần ngay hôm nay (mỗi tuần hạ mức trần xuống một ít) và chia sẻ với Nhóm nghiên cứu nếu em thấy khó tự dừng.</div>'
+    : overDays>=4? '<div class="lwarn mid"><b>⚠️ TỔNG CẢNH BÁO 14 NGÀY:</b> em đã vượt giới hạn <b>'+overDays+' ngày</b> trong 14 ngày qua. Vượt rải rác nhưng thường xuyên vẫn tích lũy thành thói quen — hãy chọn sửa một yếu tố kích hoạt hay gặp nhất trước.</div>'
+    : '<div class="lwarn ok"><b>✅ 14 ngày qua đang trong tầm kiểm soát.</b> Hãy giữ nhịp ghi nhật ký đều đặn và giữ giới hạn như hiện tại — đó chính là tự chủ.</div>');
+  box.innerHTML= overall +
+   '<div class="grid"><div class="stat"><b>'+totalAll+'</b><span>tổng phút 14 ngày</span></div><div class="stat"><b>'+(loggedDays? fmt1(avgLogged) : '—')+'</b><span>TB phút/ngày có ghi</span></div><div class="stat"><b>'+overDays+'</b><span>ngày vượt giới hạn</span></div><div class="stat"><b>'+lateDays+'</b><span>ngày có xem khuya</span></div><div class="stat"><b>'+(maxDay.v||'—')+'</b><span>ngày xem nhiều nhất (phút)</span></div><div class="stat"><b>'+bestStreak+'</b><span>chuỗi ngày vượt dài nhất</span></div></div>'+
+   '<div class="tblwrap"><table><thead><tr><th>Ngày</th><th>Tổng phút</th><th>So với giới hạn '+s.limit+'p</th><th>Số phiên</th><th>Trạng thái</th><th>Cảnh báo / ghi chú</th></tr></thead><tbody>'+
+   infos.slice().reverse().map(it=>'<tr><td style="white-space:nowrap">'+fmtVN(it.ds)+(it.ds===todayStr()? ' <b>(hôm nay)</b>' : '')+'</td><td><b>'+(it.has? it.tot : '—')+'</b></td><td>'+(it.has? (it.tot>s.limit? '+'+(it.tot-s.limit)+' phút' : 'dưới '+(s.limit-it.tot)+' phút') : '—')+'</td><td>'+(it.has? it.n : '—')+'</td><td>'+badgeFor(it)+'</td><td style="min-width:230px">'+noteFor(it)+'</td></tr>').join('')+
+   '</tbody></table></div>'+
+   '<p class="mut">Bảng này là tấm gương theo ngày của chính em: <b>ngày đỏ</b> là ngày cần nhìn lại nguyên nhân kích hoạt, <b>ngày xanh</b> là bằng chứng em hoàn toàn làm chủ được. Mục tiêu không phải ngày nào cũng hoàn hảo — mà là số ngày đỏ ít dần đi theo từng tuần.</p>';
+}
 function addLog(){
   const err=document.getElementById('lErr'); err.textContent='';
   const date=document.getElementById('lDate').value, minutes=parseInt(document.getElementById('lMin').value,10);
@@ -642,11 +728,12 @@ function addLog(){
   DB.logs.push({ id:Date.now(), anon:cur.anon, date, minutes,
     platform:document.getElementById('lPlat').value, slot:document.getElementById('lSlot').value,
     trigger:document.getElementById('lTrig').value, mood:document.getElementById('lMood').value,
-    stopped:document.getElementById('lStop').checked, note:document.getElementById('lNote').value.trim() });
-  save(); document.getElementById('lMin').value=''; document.getElementById('lNote').value='';
+    stopped:false, note:'' });
+  save(); document.getElementById('lMin').value='';
   toast('Đã ghi nhật ký xem ✅'); renderLogs(); renderHome();
 }
 function renderLogs(){
+  renderDayStats(); updLogWarn();
   const list=myLogs(cur.anon).slice().sort((a,b)=>b.id-a.id).slice(0,15);
   document.getElementById('logList').innerHTML=list.length? list.map(l=>
     `<p style="margin:6px 0">📅 ${fmtVN(l.date)} — <b>${l.minutes} phút</b> · ${esc(l.platform)} · ${esc(l.slot)} · Kích hoạt: ${esc(l.trigger)} · ${esc(l.mood)}${l.stopped?' · ✅ dừng đúng giờ':''} <button class="ghost small" onclick="delLog(${l.id})">Xoá</button></p>`).join('')
