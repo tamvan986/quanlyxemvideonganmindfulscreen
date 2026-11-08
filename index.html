@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mindful Screen — Quản lý xem video ngắn</title>
+
 <style>
 :root{--teal:#0d7a69;--teal-d:#065f46;--teal2:#14b8a6;--emerald:#059669;--amber:#f59e0b;--amber2:#fbbf24;--orange:#ea580c;--coral:#dc2626;--violet:#7c3aed;--blue:#2563eb;--pink:#db2777;--bg:#f2fbf8;--card:#fff;--ink:#0b3d34;--mut:#64748b;--rose:#dc2626;--line:#bfe8dd}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(180deg,#d9f7ec 0%,#f2fbf8 260px,#f2fbf8 100%);color:#1e293b}
@@ -90,12 +90,14 @@ th{background:var(--teal-d);color:#fff}tbody tr:nth-child(even){background:#f2fb
 .rolebtn.on{opacity:1;outline:3px solid rgba(245,158,11,.9);outline-offset:1px}
 button.bigbtn{width:100%;padding:13px;font-size:15.5px}
 @media(max-width:560px){.rolewrap{grid-template-columns:1fr}.cover .cover-title{font-size:22px}}
+#demoBanner{position:sticky;top:0;z-index:200;background:#b91c1c;color:#fff;font-weight:800;text-align:center;padding:10px 12px;font-size:14.5px;line-height:1.45;box-shadow:0 2px 10px rgba(0,0,0,.25)}
 </style>
 </head>
 <body>
+
 <header>
   <h1>🌱 MINDFUL SCREEN — Quản lý xem video ngắn</h1>
-  <p>Dừng 10 giây · Đổi 15 phút · Cây Hạnh Phúc — Tự chủ là sức mạnh </b></p>
+  <p>Dừng 10 giây · Đổi 15 phút · Cây Hạnh Phúc — Tự chủ là sức mạnh · 
 </header>
 <div class="wrap">
 
@@ -166,7 +168,7 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
       <p class="mut" id="treeNext" style="text-align:center"></p>
       <p class="mut">Cách kiếm điểm: Dừng 10 giây +10 · Đổi 15 phút +15 · Mỗi ngày xem không vượt giới hạn +5.</p>
     </div>
-    <div class="card"><h2>🏅 Điểm Cây Hạnh Phúc — giáo viên chấm theo tiêu chí</h2>
+    <div class="card"><h2>🏅 Điểm Cây Hạnh Phúc — nhóm nghiên cứu chấm theo tiêu chí</h2>
       <div id="myTreeScore"></div>
     </div>
     <div class="card"><h2>📊 7 ngày gần nhất của em</h2>
@@ -199,7 +201,7 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
       <p class="err" id="lErr"></p>
       <button onclick="addLog()">Lưu nhật ký</button>
     </div>
-    <div class="card"><h2>📊 Thống kê theo ngày — 14 ngày gần nhất</h2><div id="dayStatsBox"></div></div>
+    <div class="card"><h2>📊 Thống kê theo ngày — thời gian can thiệp</h2><div id="dayStatsBox"></div></div>
     <div class="card"><h2>Nhật ký gần đây</h2><div id="logList"></div></div>
   </div>
 
@@ -490,7 +492,7 @@ button.bigbtn{width:100%;padding:13px;font-size:15.5px}
 <script>
 /* ================= DỮ LIỆU ================= */
 const SEED_STUDENTS = [{"anon": "HS04", "name": "Nguyễn Ngọc Ánh", "class": "10A3", "pin": "4425", "limit": 45, "bedtime": "22:00"}, {"anon": "HS05", "name": "Bùi Thái Ân", "class": "10A3", "pin": "6291", "limit": 45, "bedtime": "22:00"}, {"anon": "HS06", "name": "Đào Thiện Bảo", "class": "10A3", "pin": "7075", "limit": 45, "bedtime": "22:00"}, {"anon": "HS07", "name": "Hồ Ngô Gia Bảo", "class": "10A3", "pin": "9171", "limit": 45, "bedtime": "22:00"}, {"anon": "HS08", "name": "Phùng Ngọc Diệp", "class": "10A3", "pin": "1331", "limit": 45, "bedtime": "22:00"}, {"anon": "HS09", "name": "Nguyễn Hoàng Duy", "class": "10A3", "pin": "4736", "limit": 45, "bedtime": "22:00"}, {"anon": "HS10", "name": "Nguyễn Đức Đảm", "class": "10A3", "pin": "7346", "limit": 45, "bedtime": "22:00"}, {"anon": "HS11", "name": "Lê Phan Linh Đan", "class": "10A3", "pin": "1106", "limit": 45, "bedtime": "22:00"}, {"anon": "HS12", "name": "Đặng Nhựt Đăng", "class": "10A3", "pin": "9872", "limit": 45, "bedtime": "22:00"}, {"anon": "HS13", "name": "Hồ Hoài Đức", "class": "10A3", "pin": "2206", "limit": 45, "bedtime": "22:00"}, {"anon": "HS14", "name": "Tô Khánh Hạ", "class": "10A3", "pin": "8494", "limit": 45, "bedtime": "22:00"}, {"anon": "HS15", "name": "Nguyễn Thị Ngọc Hân", "class": "10A3", "pin": "7154", "limit": 45, "bedtime": "22:00"}, {"anon": "HS16", "name": "Trần Lê Gia Hân", "class": "10A3", "pin": "1464", "limit": 45, "bedtime": "22:00"}, {"anon": "HS17", "name": "Phan Lê Thanh Huyền", "class": "10A3", "pin": "8344", "limit": 45, "bedtime": "22:00"}, {"anon": "HS18", "name": "Nguyễn Trần Việt Hương", "class": "10A3", "pin": "3625", "limit": 45, "bedtime": "22:00"}, {"anon": "HS19", "name": "Lê Minh Khang", "class": "10A3", "pin": "9966", "limit": 45, "bedtime": "22:00"}, {"anon": "HS20", "name": "Lê Thế Khang", "class": "10A3", "pin": "8720", "limit": 45, "bedtime": "22:00"}, {"anon": "HS21", "name": "Nguyễn Bảo Khang", "class": "10A3", "pin": "4920", "limit": 45, "bedtime": "22:00"}, {"anon": "HS22", "name": "Quảng Trọng Khang", "class": "10A3", "pin": "2889", "limit": 45, "bedtime": "22:00"}, {"anon": "HS23", "name": "Lê Minh Khánh", "class": "10A3", "pin": "5681", "limit": 45, "bedtime": "22:00"}, {"anon": "HS24", "name": "Nguyễn Tống Đăng Khoa", "class": "10A3", "pin": "5770", "limit": 45, "bedtime": "22:00"}, {"anon": "HS25", "name": "Trần Ngọc Kim Khoa", "class": "10A3", "pin": "4485", "limit": 45, "bedtime": "22:00"}, {"anon": "HS26", "name": "Nguyễn Minh Khôi", "class": "10A3", "pin": "2820", "limit": 45, "bedtime": "22:00"}, {"anon": "HS27", "name": "Thái Mỹ Kỳ", "class": "10A3", "pin": "6235", "limit": 45, "bedtime": "22:00"}, {"anon": "HS28", "name": "Nguyễn Hoàng Nam", "class": "10A3", "pin": "9254", "limit": 45, "bedtime": "22:00"}, {"anon": "HS29", "name": "Phạm Hoàng Nam", "class": "10A3", "pin": "9158", "limit": 45, "bedtime": "22:00"}, {"anon": "HS30", "name": "Lê Nguyễn Thu Ngân", "class": "10A3", "pin": "9615", "limit": 45, "bedtime": "22:00"}, {"anon": "HS31", "name": "Trần Hồ Bảo Ngân", "class": "10A3", "pin": "9083", "limit": 45, "bedtime": "22:00"}, {"anon": "HS32", "name": "Nguyễn Trần Mộng Nghi", "class": "10A3", "pin": "7317", "limit": 45, "bedtime": "22:00"}, {"anon": "HS33", "name": "Hồ Phan Minh Nhật", "class": "10A3", "pin": "9712", "limit": 45, "bedtime": "22:00"}, {"anon": "HS34", "name": "Nguyễn Trọng Phát", "class": "10A3", "pin": "8403", "limit": 45, "bedtime": "22:00"}, {"anon": "HS35", "name": "Đào Quốc Phú", "class": "10A3", "pin": "6128", "limit": 45, "bedtime": "22:00"}, {"anon": "HS36", "name": "Đặng Thiên Phú", "class": "10A3", "pin": "3972", "limit": 45, "bedtime": "22:00"}, {"anon": "HS37", "name": "Trần Mạnh Phú", "class": "10A3", "pin": "7818", "limit": 45, "bedtime": "22:00"}, {"anon": "HS38", "name": "Lê Hoàng Trúc Quỳnh", "class": "10A3", "pin": "4458", "limit": 45, "bedtime": "22:00"}, {"anon": "HS39", "name": "Mai Huỳnh Chí Tâm", "class": "10A3", "pin": "3512", "limit": 45, "bedtime": "22:00"}, {"anon": "HS40", "name": "Nguyễn Hoàng Thiên", "class": "10A3", "pin": "4610", "limit": 45, "bedtime": "22:00"}, {"anon": "HS41", "name": "Nguyễn Tấn Thiện", "class": "10A3", "pin": "1594", "limit": 45, "bedtime": "22:00"}, {"anon": "HS42", "name": "Nguyễn Hoài Thương", "class": "10A3", "pin": "9726", "limit": 45, "bedtime": "22:00"}, {"anon": "HS43", "name": "Lê Bảo Thy", "class": "10A3", "pin": "6169", "limit": 45, "bedtime": "22:00"}, {"anon": "HS44", "name": "Bùi Giả Minh Toàn", "class": "10A3", "pin": "9064", "limit": 45, "bedtime": "22:00"}, {"anon": "HS45", "name": "Lư Phúc Toàn", "class": "10A3", "pin": "9475", "limit": 45, "bedtime": "22:00"}, {"anon": "HS46", "name": "Lý Nguyễn Ngọc Trâm", "class": "10A3", "pin": "1195", "limit": 45, "bedtime": "22:00"}, {"anon": "HS47", "name": "Tô Huỳnh Quang Tú", "class": "10A3", "pin": "9380", "limit": 45, "bedtime": "22:00"}, {"anon": "HS48", "name": "Trương Trần Anh Tuấn", "class": "10A3", "pin": "6758", "limit": 45, "bedtime": "22:00"}, {"anon": "HS49", "name": "Phan Kiến Văn", "class": "10A3", "pin": "9091", "limit": 45, "bedtime": "22:00"}, {"anon": "HS50", "name": "Võ Bảo Gia Văn", "class": "10A3", "pin": "7241", "limit": 45, "bedtime": "22:00"}, {"anon": "HS51", "name": "Cao Dương Thúy An", "class": "10A5", "pin": "8166", "limit": 45, "bedtime": "22:00"}, {"anon": "HS52", "name": "Lê Nguyễn Nhật An", "class": "10A5", "pin": "4176", "limit": 45, "bedtime": "22:00"}, {"anon": "HS53", "name": "Du Gia Bảo", "class": "10A5", "pin": "5047", "limit": 45, "bedtime": "22:00"}, {"anon": "HS54", "name": "Huỳnh Thị Ý Chị", "class": "10A5", "pin": "9517", "limit": 45, "bedtime": "22:00"}, {"anon": "HS55", "name": "Hồ Nguyễn Nguyên Chương", "class": "10A5", "pin": "1203", "limit": 45, "bedtime": "22:00"}, {"anon": "HS56", "name": "Trần Thị Kim Cương", "class": "10A5", "pin": "9634", "limit": 45, "bedtime": "22:00"}, {"anon": "HS57", "name": "Hồ Ngọc Hân", "class": "10A5", "pin": "8534", "limit": 45, "bedtime": "22:00"}, {"anon": "HS58", "name": "Trần Thị Thu Hiền", "class": "10A5", "pin": "9748", "limit": 45, "bedtime": "22:00"}, {"anon": "HS59", "name": "Đặng Trung Hiếu", "class": "10A5", "pin": "4646", "limit": 45, "bedtime": "22:00"}, {"anon": "HS60", "name": "Bùi Huỳnh Hoa", "class": "10A5", "pin": "6078", "limit": 45, "bedtime": "22:00"}, {"anon": "HS61", "name": "Nguyễn Quốc Huy", "class": "10A5", "pin": "8167", "limit": 45, "bedtime": "22:00"}, {"anon": "HS62", "name": "Bùi Huỳnh Hương", "class": "10A5", "pin": "1654", "limit": 45, "bedtime": "22:00"}, {"anon": "HS63", "name": "Nguyễn Thiên Hương", "class": "10A5", "pin": "2715", "limit": 45, "bedtime": "22:00"}, {"anon": "HS64", "name": "Trần Phúc Khang", "class": "10A5", "pin": "9319", "limit": 45, "bedtime": "22:00"}, {"anon": "HS65", "name": "Hồ Hào Kiệt", "class": "10A5", "pin": "2764", "limit": 45, "bedtime": "22:00"}, {"anon": "HS66", "name": "Nguyễn Thị Thúy Kiều", "class": "10A5", "pin": "6622", "limit": 45, "bedtime": "22:00"}, {"anon": "HS67", "name": "Trần Thị Kiều Lam", "class": "10A5", "pin": "8111", "limit": 45, "bedtime": "22:00"}, {"anon": "HS68", "name": "Phan Võ Duy Long", "class": "10A5", "pin": "3296", "limit": 45, "bedtime": "22:00"}, {"anon": "HS69", "name": "Đoàn Thị Trà My", "class": "10A5", "pin": "9792", "limit": 45, "bedtime": "22:00"}, {"anon": "HS70", "name": "Hồ Hà My", "class": "10A5", "pin": "1080", "limit": 45, "bedtime": "22:00"}, {"anon": "HS71", "name": "Võ Thị Trà My", "class": "10A5", "pin": "5224", "limit": 45, "bedtime": "22:00"}, {"anon": "HS72", "name": "Trần Tuyết Ngân", "class": "10A5", "pin": "7083", "limit": 45, "bedtime": "22:00"}, {"anon": "HS73", "name": "Nguyễn Ngọc Phương Nghi", "class": "10A5", "pin": "2039", "limit": 45, "bedtime": "22:00"}, {"anon": "HS74", "name": "Nguyễn Thị Huệ Ngọc", "class": "10A5", "pin": "3721", "limit": 45, "bedtime": "22:00"}, {"anon": "HS75", "name": "Lưu Minh Nguyệt", "class": "10A5", "pin": "2301", "limit": 45, "bedtime": "22:00"}, {"anon": "HS76", "name": "Nguyễn Phạm Ngọc Nhi", "class": "10A5", "pin": "7020", "limit": 45, "bedtime": "22:00"}, {"anon": "HS77", "name": "Nguyễn Võ Đoan Như", "class": "10A5", "pin": "6100", "limit": 45, "bedtime": "22:00"}, {"anon": "HS78", "name": "Trần Thanh Phi", "class": "10A5", "pin": "7776", "limit": 45, "bedtime": "22:00"}, {"anon": "HS79", "name": "Lê Hoàng Quân", "class": "10A5", "pin": "4941", "limit": 45, "bedtime": "22:00"}, {"anon": "HS80", "name": "Trần Quốc Sỹ", "class": "10A5", "pin": "8305", "limit": 45, "bedtime": "22:00"}, {"anon": "HS81", "name": "Nguyễn Thu Thảo", "class": "10A5", "pin": "4649", "limit": 45, "bedtime": "22:00"}, {"anon": "HS82", "name": "Bùi Anh Thư", "class": "10A5", "pin": "3711", "limit": 45, "bedtime": "22:00"}, {"anon": "HS83", "name": "Trần Hữu Tín", "class": "10A5", "pin": "2670", "limit": 45, "bedtime": "22:00"}, {"anon": "HS84", "name": "Nguyễn Quốc Toàn", "class": "10A5", "pin": "5792", "limit": 45, "bedtime": "22:00"}, {"anon": "HS85", "name": "Lê Thị Uyên Trang", "class": "10A5", "pin": "4618", "limit": 45, "bedtime": "22:00"}, {"anon": "HS86", "name": "Bùi Bảo Trâm", "class": "10A5", "pin": "7237", "limit": 45, "bedtime": "22:00"}, {"anon": "HS87", "name": "Trần Thị Thanh Tuyền", "class": "10A5", "pin": "2491", "limit": 45, "bedtime": "22:00"}, {"anon": "HS88", "name": "Dương Ngọc Cát Tường", "class": "10A5", "pin": "9668", "limit": 45, "bedtime": "22:00"}, {"anon": "HS89", "name": "Lâm Hoàng Khánh Vinh", "class": "10A5", "pin": "3041", "limit": 45, "bedtime": "22:00"}, {"anon": "HS90", "name": "Dương Thị Tường Vy", "class": "10A5", "pin": "9848", "limit": 45, "bedtime": "22:00"}, {"anon": "HS91", "name": "Huỳnh Ngọc Vy", "class": "10A5", "pin": "7325", "limit": 45, "bedtime": "22:00"}, {"anon": "HS92", "name": "Nguyễn Ngọc Tường Vy", "class": "10A5", "pin": "2540", "limit": 45, "bedtime": "22:00"}, {"anon": "HS93", "name": "Phạm Ngọc Thảo Vy", "class": "10A5", "pin": "5156", "limit": 45, "bedtime": "22:00"}, {"anon": "HS94", "name": "Tống Vân An", "class": "11A5", "pin": "2757", "limit": 45, "bedtime": "22:00"}, {"anon": "HS95", "name": "Trần Ngọc Vân Anh", "class": "11A5", "pin": "7684", "limit": 45, "bedtime": "22:00"}, {"anon": "HS96", "name": "Huỳnh Khiết Băng", "class": "11A5", "pin": "4300", "limit": 45, "bedtime": "22:00"}, {"anon": "HS97", "name": "Trần Huỳnh Bích Châu", "class": "11A5", "pin": "6106", "limit": 45, "bedtime": "22:00"}, {"anon": "HS98", "name": "Phạm Tấn Đạt", "class": "11A5", "pin": "4870", "limit": 45, "bedtime": "22:00"}, {"anon": "HS99", "name": "Trần Nguyễn Kim Hân", "class": "11A5", "pin": "5960", "limit": 45, "bedtime": "22:00"}, {"anon": "HS100", "name": "Thái Khải Hoàng", "class": "11A5", "pin": "9876", "limit": 45, "bedtime": "22:00"}, {"anon": "HS101", "name": "Đào Xuân Hương", "class": "11A5", "pin": "4338", "limit": 45, "bedtime": "22:00"}, {"anon": "HS102", "name": "Nguyễn Tuấn Khang", "class": "11A5", "pin": "6160", "limit": 45, "bedtime": "22:00"}, {"anon": "HS103", "name": "Nguyễn Hoàng Tường Lam", "class": "11A5", "pin": "8658", "limit": 45, "bedtime": "22:00"}, {"anon": "HS104", "name": "Trần Thị Trúc Lam", "class": "11A5", "pin": "9524", "limit": 45, "bedtime": "22:00"}, {"anon": "HS105", "name": "Đoàn Thị Kim Ngân", "class": "11A5", "pin": "1519", "limit": 45, "bedtime": "22:00"}, {"anon": "HS106", "name": "Quãng Thảo Nghi", "class": "11A5", "pin": "2423", "limit": 45, "bedtime": "22:00"}, {"anon": "HS107", "name": "Lê Thị Bích Ngọc", "class": "11A5", "pin": "3728", "limit": 45, "bedtime": "22:00"}, {"anon": "HS108", "name": "Trần Bảo Ngọc", "class": "11A5", "pin": "1023", "limit": 45, "bedtime": "22:00"}, {"anon": "HS109", "name": "Phùng Trần Xuân Nguyên", "class": "11A5", "pin": "5959", "limit": 45, "bedtime": "22:00"}, {"anon": "HS110", "name": "Lý Minh Nhân", "class": "11A5", "pin": "1312", "limit": 45, "bedtime": "22:00"}, {"anon": "HS111", "name": "Dương Hoàng Long Nhật", "class": "11A5", "pin": "8968", "limit": 45, "bedtime": "22:00"}, {"anon": "HS112", "name": "Hồ Thị Tâm Như", "class": "11A5", "pin": "3830", "limit": 45, "bedtime": "22:00"}, {"anon": "HS113", "name": "Lê Thị Huỳnh Như", "class": "11A5", "pin": "2953", "limit": 45, "bedtime": "22:00"}, {"anon": "HS114", "name": "Đặng Huỳnh Bảo Ny", "class": "11A5", "pin": "7464", "limit": 45, "bedtime": "22:00"}, {"anon": "HS115", "name": "Võ Thị Kiều Oanh", "class": "11A5", "pin": "5754", "limit": 45, "bedtime": "22:00"}, {"anon": "HS116", "name": "Bùi Thị Như Quỳnh", "class": "11A5", "pin": "6022", "limit": 45, "bedtime": "22:00"}, {"anon": "HS117", "name": "Võ Anh Thơ", "class": "11A5", "pin": "3688", "limit": 45, "bedtime": "22:00"}, {"anon": "HS118", "name": "Lê Bảo Thy", "class": "11A5", "pin": "1168", "limit": 45, "bedtime": "22:00"}, {"anon": "HS119", "name": "Lê Thị Anh Thy", "class": "11A5", "pin": "3233", "limit": 45, "bedtime": "22:00"}, {"anon": "HS120", "name": "Đào Thiên Trang", "class": "11A5", "pin": "5320", "limit": 45, "bedtime": "22:00"}, {"anon": "HS121", "name": "Đặng Khổng Nguyễn Thùy Trâm", "class": "11A5", "pin": "1084", "limit": 45, "bedtime": "22:00"}, {"anon": "HS122", "name": "Nguyễn Huỳnh Bảo Trâm", "class": "11A5", "pin": "1998", "limit": 45, "bedtime": "22:00"}, {"anon": "HS123", "name": "Trần Thị Quỳnh Trâm", "class": "11A5", "pin": "5471", "limit": 45, "bedtime": "22:00"}, {"anon": "HS124", "name": "Lê Đình Trí", "class": "11A5", "pin": "9986", "limit": 45, "bedtime": "22:00"}, {"anon": "HS125", "name": "Đặng Ngọc Trinh", "class": "11A5", "pin": "8357", "limit": 45, "bedtime": "22:00"}, {"anon": "HS126", "name": "Phùng Đào Đức Trung", "class": "11A5", "pin": "8617", "limit": 45, "bedtime": "22:00"}, {"anon": "HS127", "name": "Nguyễn Nhật Trường", "class": "11A5", "pin": "5313", "limit": 45, "bedtime": "22:00"}, {"anon": "HS128", "name": "Trần Tú Uyên", "class": "11A5", "pin": "8740", "limit": 45, "bedtime": "22:00"}, {"anon": "HS129", "name": "Ngô Thị Thanh Vân", "class": "11A5", "pin": "3395", "limit": 45, "bedtime": "22:00"}, {"anon": "HS130", "name": "Đỗ Huỳnh Phương Vy", "class": "11A5", "pin": "2573", "limit": 45, "bedtime": "22:00"}, {"anon": "HS131", "name": "Nguyễn Lan Vy", "class": "11A5", "pin": "8348", "limit": 45, "bedtime": "22:00"}, {"anon": "HS132", "name": "Nguyễn Ngọc Thảo Vy", "class": "11A5", "pin": "7505", "limit": 45, "bedtime": "22:00"}, {"anon": "HS133", "name": "Phạm Phương Vy", "class": "11A5", "pin": "5487", "limit": 45, "bedtime": "22:00"}, {"anon": "HS134", "name": "Trần Ngọc Như Ý", "class": "11A5", "pin": "3819", "limit": 45, "bedtime": "22:00"}, {"anon": "HS135", "name": "Phạm Thanh An", "class": "11B7", "pin": "5757", "limit": 45, "bedtime": "22:00"}, {"anon": "HS136", "name": "Bùi Thùy Vân Anh", "class": "11B7", "pin": "7862", "limit": 45, "bedtime": "22:00"}, {"anon": "HS137", "name": "Tiêu Hồng Anh", "class": "11B7", "pin": "2088", "limit": 45, "bedtime": "22:00"}, {"anon": "HS138", "name": "Trần Nguyễn Ngọc Ân", "class": "11B7", "pin": "1420", "limit": 45, "bedtime": "22:00"}, {"anon": "HS139", "name": "Đặng Võ Ngọc Bích", "class": "11B7", "pin": "5796", "limit": 45, "bedtime": "22:00"}, {"anon": "HS140", "name": "Lê Văn Danh", "class": "11B7", "pin": "4271", "limit": 45, "bedtime": "22:00"}, {"anon": "HS141", "name": "Đào Thị Mỹ Duyên", "class": "11B7", "pin": "6869", "limit": 45, "bedtime": "22:00"}, {"anon": "HS142", "name": "Lâm Thị Kim Duyên", "class": "11B7", "pin": "4188", "limit": 45, "bedtime": "22:00"}, {"anon": "HS143", "name": "Cao Quốc Dự", "class": "11B7", "pin": "5298", "limit": 45, "bedtime": "22:00"}, {"anon": "HS144", "name": "Đặng Hồng Hạnh", "class": "11B7", "pin": "8541", "limit": 45, "bedtime": "22:00"}, {"anon": "HS145", "name": "Lâm Thị Bảo Khanh", "class": "11B7", "pin": "6723", "limit": 45, "bedtime": "22:00"}, {"anon": "HS146", "name": "Võ Quốc Khánh", "class": "11B7", "pin": "4206", "limit": 45, "bedtime": "22:00"}, {"anon": "HS147", "name": "Lữ Trương Anh Kiệt", "class": "11B7", "pin": "4786", "limit": 45, "bedtime": "22:00"}, {"anon": "HS148", "name": "Lê Khánh Lam", "class": "11B7", "pin": "1148", "limit": 45, "bedtime": "22:00"}, {"anon": "HS149", "name": "Lê Trần Bá Long", "class": "11B7", "pin": "1110", "limit": 45, "bedtime": "22:00"}, {"anon": "HS150", "name": "Đinh Thị Tuyết Minh", "class": "11B7", "pin": "6215", "limit": 45, "bedtime": "22:00"}, {"anon": "HS151", "name": "Ngô Đỗ Khai Minh", "class": "11B7", "pin": "6222", "limit": 45, "bedtime": "22:00"}, {"anon": "HS152", "name": "Lê Hoàng My", "class": "11B7", "pin": "6272", "limit": 45, "bedtime": "22:00"}, {"anon": "HS153", "name": "Nguyễn Ngọc Trà My", "class": "11B7", "pin": "1329", "limit": 45, "bedtime": "22:00"}, {"anon": "HS154", "name": "Cao Hoàng Nam", "class": "11B7", "pin": "4115", "limit": 45, "bedtime": "22:00"}, {"anon": "HS155", "name": "Nguyễn Quỳnh Nga", "class": "11B7", "pin": "4225", "limit": 45, "bedtime": "22:00"}, {"anon": "HS156", "name": "Trần Thanh Ngân", "class": "11B7", "pin": "2579", "limit": 45, "bedtime": "22:00"}, {"anon": "HS157", "name": "Võ Phương Ngọc", "class": "11B7", "pin": "4167", "limit": 45, "bedtime": "22:00"}, {"anon": "HS158", "name": "Lâm Thành Nhân", "class": "11B7", "pin": "6556", "limit": 45, "bedtime": "22:00"}, {"anon": "HS159", "name": "Nguyễn Trần Yến Nhi", "class": "11B7", "pin": "5207", "limit": 45, "bedtime": "22:00"}, {"anon": "HS160", "name": "Phạm Thị Huỳnh Như", "class": "11B7", "pin": "8409", "limit": 45, "bedtime": "22:00"}, {"anon": "HS161", "name": "Lê Tràng Mỹ Quyên", "class": "11B7", "pin": "3551", "limit": 45, "bedtime": "22:00"}, {"anon": "HS162", "name": "Võ Cẩm Quyên", "class": "11B7", "pin": "4355", "limit": 45, "bedtime": "22:00"}, {"anon": "HS163", "name": "Nguyễn Thị Hương Quỳnh", "class": "11B7", "pin": "2192", "limit": 45, "bedtime": "22:00"}, {"anon": "HS164", "name": "Đặng Thị Thanh", "class": "11B7", "pin": "8862", "limit": 45, "bedtime": "22:00"}, {"anon": "HS165", "name": "Phan Thị Phương Thảo", "class": "11B7", "pin": "3814", "limit": 45, "bedtime": "22:00"}, {"anon": "HS166", "name": "Khổng Trần Thịnh", "class": "11B7", "pin": "6874", "limit": 45, "bedtime": "22:00"}, {"anon": "HS167", "name": "Huỳnh Hoài Thuận", "class": "11B7", "pin": "8213", "limit": 45, "bedtime": "22:00"}, {"anon": "HS168", "name": "Cao Thái Anh Thư", "class": "11B7", "pin": "7772", "limit": 45, "bedtime": "22:00"}, {"anon": "HS169", "name": "Đặng Mai Thư", "class": "11B7", "pin": "2533", "limit": 45, "bedtime": "22:00"}, {"anon": "HS170", "name": "Nguyễn Ngọc Anh Thư", "class": "11B7", "pin": "9470", "limit": 45, "bedtime": "22:00"}, {"anon": "HS171", "name": "Lê Hồ Ngọc Trâm", "class": "11B7", "pin": "6541", "limit": 45, "bedtime": "22:00"}, {"anon": "HS172", "name": "Nguyễn Huỳnh Trân", "class": "11B7", "pin": "4929", "limit": 45, "bedtime": "22:00"}, {"anon": "HS173", "name": "Trương Thanh Trúc", "class": "11B7", "pin": "7566", "limit": 45, "bedtime": "22:00"}, {"anon": "HS174", "name": "Lê Giang Cẩm Tú", "class": "11B7", "pin": "4173", "limit": 45, "bedtime": "22:00"}, {"anon": "HS175", "name": "Nguyễn Trần Phi Vương", "class": "11B7", "pin": "2104", "limit": 45, "bedtime": "22:00"}, {"anon": "HS176", "name": "Bùi Ngọc Khánh Vy", "class": "11B7", "pin": "4299", "limit": 45, "bedtime": "22:00"}, {"anon": "HS177", "name": "Võ Thị Tường Vy", "class": "11B7", "pin": "3545", "limit": 45, "bedtime": "22:00"}, {"anon": "HS178", "name": "Võ Thị Tường Vy", "class": "11B7", "pin": "5040", "limit": 45, "bedtime": "22:00"}, {"anon": "HS179", "name": "Huỳnh Nguyễn Bảo An", "class": "12A1", "pin": "1978", "limit": 45, "bedtime": "22:00"}, {"anon": "HS180", "name": "Lê Nguyễn Thúy An", "class": "12A1", "pin": "9150", "limit": 45, "bedtime": "22:00"}, {"anon": "HS181", "name": "Trần Phúc An", "class": "12A1", "pin": "1124", "limit": 45, "bedtime": "22:00"}, {"anon": "HS182", "name": "Hồ Đức Anh", "class": "12A1", "pin": "3470", "limit": 45, "bedtime": "22:00"}, {"anon": "HS183", "name": "Hồ Quỳnh Anh", "class": "12A1", "pin": "1457", "limit": 45, "bedtime": "22:00"}, {"anon": "HS184", "name": "Lâm Hoài Anh", "class": "12A1", "pin": "4010", "limit": 45, "bedtime": "22:00"}, {"anon": "HS185", "name": "Lê Quang Bình Anh", "class": "12A1", "pin": "5122", "limit": 45, "bedtime": "22:00"}, {"anon": "HS186", "name": "Châu Văn Gia Bảo", "class": "12A1", "pin": "6198", "limit": 45, "bedtime": "22:00"}, {"anon": "HS187", "name": "Phạm Gia Bảo", "class": "12A1", "pin": "5738", "limit": 45, "bedtime": "22:00"}, {"anon": "HS188", "name": "Võ Trần Nhật Duy", "class": "12A1", "pin": "7340", "limit": 45, "bedtime": "22:00"}, {"anon": "HS189", "name": "Diếp Thành Đạt", "class": "12A1", "pin": "1170", "limit": 45, "bedtime": "22:00"}, {"anon": "HS190", "name": "Nguyễn Gia Hân", "class": "12A1", "pin": "6664", "limit": 45, "bedtime": "22:00"}, {"anon": "HS191", "name": "Nguyễn Phạm Gia Hân", "class": "12A1", "pin": "3838", "limit": 45, "bedtime": "22:00"}, {"anon": "HS192", "name": "Nguyễn Huỳnh Phúc Hậu", "class": "12A1", "pin": "1447", "limit": 45, "bedtime": "22:00"}, {"anon": "HS193", "name": "Phạm Minh Hiển", "class": "12A1", "pin": "9271", "limit": 45, "bedtime": "22:00"}, {"anon": "HS194", "name": "Hồ Trần Diễm Hương", "class": "12A1", "pin": "3891", "limit": 45, "bedtime": "22:00"}, {"anon": "HS195", "name": "Mai Vĩ Khang", "class": "12A1", "pin": "1280", "limit": 45, "bedtime": "22:00"}, {"anon": "HS196", "name": "Thái Vũ Khang", "class": "12A1", "pin": "3461", "limit": 45, "bedtime": "22:00"}, {"anon": "HS197", "name": "Lương Nhã Lan", "class": "12A1", "pin": "7102", "limit": 45, "bedtime": "22:00"}, {"anon": "HS198", "name": "Dương Thảo Ngân", "class": "12A1", "pin": "5303", "limit": 45, "bedtime": "22:00"}, {"anon": "HS199", "name": "Đặng Chí Nghĩa", "class": "12A1", "pin": "8400", "limit": 45, "bedtime": "22:00"}, {"anon": "HS200", "name": "Hồ Như Ngọc", "class": "12A1", "pin": "1916", "limit": 45, "bedtime": "22:00"}, {"anon": "HS201", "name": "Trần Băng Ngọc", "class": "12A1", "pin": "1934", "limit": 45, "bedtime": "22:00"}, {"anon": "HS202", "name": "Hồ Cao Xuân Nhật", "class": "12A1", "pin": "3715", "limit": 45, "bedtime": "22:00"}, {"anon": "HS203", "name": "Đặng Thị Yến Nhi", "class": "12A1", "pin": "5072", "limit": 45, "bedtime": "22:00"}, {"anon": "HS204", "name": "Nguyễn Thị Hồng Nhung", "class": "12A1", "pin": "3907", "limit": 45, "bedtime": "22:00"}, {"anon": "HS205", "name": "Hồ Quỳnh Như", "class": "12A1", "pin": "8633", "limit": 45, "bedtime": "22:00"}, {"anon": "HS206", "name": "Nguyễn Hồ Quế Như", "class": "12A1", "pin": "1772", "limit": 45, "bedtime": "22:00"}, {"anon": "HS207", "name": "Đào Nguyễn Đức Phát", "class": "12A1", "pin": "6577", "limit": 45, "bedtime": "22:00"}, {"anon": "HS208", "name": "Bùi Nhật Quang", "class": "12A1", "pin": "7499", "limit": 45, "bedtime": "22:00"}, {"anon": "HS209", "name": "Huỳnh Minh Quân", "class": "12A1", "pin": "1005", "limit": 45, "bedtime": "22:00"}, {"anon": "HS210", "name": "Trần Khả Quí", "class": "12A1", "pin": "2179", "limit": 45, "bedtime": "22:00"}, {"anon": "HS211", "name": "Trần Quang Quí", "class": "12A1", "pin": "4696", "limit": 45, "bedtime": "22:00"}, {"anon": "HS212", "name": "Phan Dư Quỳnh", "class": "12A1", "pin": "8808", "limit": 45, "bedtime": "22:00"}, {"anon": "HS213", "name": "Đặng Thành Tài", "class": "12A1", "pin": "5082", "limit": 45, "bedtime": "22:00"}, {"anon": "HS214", "name": "Lê Thị Anh Thư", "class": "12A1", "pin": "5777", "limit": 45, "bedtime": "22:00"}, {"anon": "HS215", "name": "Phạm Anh Thư", "class": "12A1", "pin": "8620", "limit": 45, "bedtime": "22:00"}, {"anon": "HS216", "name": "Ngô Hoàng Tín", "class": "12A1", "pin": "1731", "limit": 45, "bedtime": "22:00"}, {"anon": "HS217", "name": "Nguyễn Thị Mai Trâm", "class": "12A1", "pin": "8935", "limit": 45, "bedtime": "22:00"}, {"anon": "HS218", "name": "Nguyễn Huyền Trân", "class": "12A1", "pin": "7129", "limit": 45, "bedtime": "22:00"}, {"anon": "HS219", "name": "Nguyễn Thị Huyền Trân", "class": "12A1", "pin": "5055", "limit": 45, "bedtime": "22:00"}, {"anon": "HS220", "name": "Nguyễn Ngọc Phương Trinh", "class": "12A1", "pin": "7047", "limit": 45, "bedtime": "22:00"}, {"anon": "HS221", "name": "Trần Hà Trinh", "class": "12A1", "pin": "8196", "limit": 45, "bedtime": "22:00"}, {"anon": "HS222", "name": "Đinh Khả Tú", "class": "12A1", "pin": "7519", "limit": 45, "bedtime": "22:00"}, {"anon": "HS223", "name": "Châu Lê Ngọc Tứ", "class": "12A1", "pin": "8712", "limit": 45, "bedtime": "22:00"}, {"anon": "HS224", "name": "Lê Nguyễn Kim Vy", "class": "12A1", "pin": "1561", "limit": 45, "bedtime": "22:00"}, {"anon": "HS225", "name": "Huỳnh Trần Chi Bảo", "class": "12A2", "pin": "5275", "limit": 45, "bedtime": "22:00"}, {"anon": "HS226", "name": "Nguyễn Võ Thành Chương", "class": "12A2", "pin": "4410", "limit": 45, "bedtime": "22:00"}, {"anon": "HS227", "name": "Trần Kim Cương", "class": "12A2", "pin": "4901", "limit": 45, "bedtime": "22:00"}, {"anon": "HS228", "name": "Mai Phong Duy", "class": "12A2", "pin": "1075", "limit": 45, "bedtime": "22:00"}, {"anon": "HS229", "name": "Châu Thị Ngọc Giàu", "class": "12A2", "pin": "1865", "limit": 45, "bedtime": "22:00"}, {"anon": "HS230", "name": "Huỳnh Gia Hân", "class": "12A2", "pin": "4304", "limit": 45, "bedtime": "22:00"}, {"anon": "HS231", "name": "Nguyễn Phúc Hậu", "class": "12A2", "pin": "1908", "limit": 45, "bedtime": "22:00"}, {"anon": "HS232", "name": "Nguyễn Thanh Hậu", "class": "12A2", "pin": "2724", "limit": 45, "bedtime": "22:00"}, {"anon": "HS233", "name": "Nguyễn Trọng Hậu", "class": "12A2", "pin": "3781", "limit": 45, "bedtime": "22:00"}, {"anon": "HS234", "name": "Hồ Quốc Huy", "class": "12A2", "pin": "2822", "limit": 45, "bedtime": "22:00"}, {"anon": "HS235", "name": "Nguyễn Phương Nhân Huy", "class": "12A2", "pin": "7725", "limit": 45, "bedtime": "22:00"}, {"anon": "HS236", "name": "Nguyễn Quốc Huy", "class": "12A2", "pin": "8091", "limit": 45, "bedtime": "22:00"}, {"anon": "HS237", "name": "Võ Thúy Huỳnh", "class": "12A2", "pin": "1917", "limit": 45, "bedtime": "22:00"}, {"anon": "HS238", "name": "Tạ Gia Khánh", "class": "12A2", "pin": "9943", "limit": 45, "bedtime": "22:00"}, {"anon": "HS239", "name": "Lê Đăng Khoa", "class": "12A2", "pin": "4994", "limit": 45, "bedtime": "22:00"}, {"anon": "HS240", "name": "Lê Minh Khôi", "class": "12A2", "pin": "1059", "limit": 45, "bedtime": "22:00"}, {"anon": "HS241", "name": "Đặng Đăng Khương", "class": "12A2", "pin": "8931", "limit": 45, "bedtime": "22:00"}, {"anon": "HS242", "name": "Phan Trung Kiên", "class": "12A2", "pin": "5378", "limit": 45, "bedtime": "22:00"}, {"anon": "HS243", "name": "Lê Thái Ngân Kỳ", "class": "12A2", "pin": "2559", "limit": 45, "bedtime": "22:00"}, {"anon": "HS244", "name": "Nguyễn Minh Luân", "class": "12A2", "pin": "3519", "limit": 45, "bedtime": "22:00"}, {"anon": "HS245", "name": "Nguyễn Hà Huyền My", "class": "12A2", "pin": "1546", "limit": 45, "bedtime": "22:00"}, {"anon": "HS246", "name": "Phan Đoàn Như Mỹ", "class": "12A2", "pin": "4143", "limit": 45, "bedtime": "22:00"}, {"anon": "HS247", "name": "Nguyễn Thúy Nga", "class": "12A2", "pin": "6701", "limit": 45, "bedtime": "22:00"}, {"anon": "HS248", "name": "Nguyễn Thị Mộng Nghi", "class": "12A2", "pin": "8503", "limit": 45, "bedtime": "22:00"}, {"anon": "HS249", "name": "Trịnh Thị Bảo Ngọc", "class": "12A2", "pin": "3084", "limit": 45, "bedtime": "22:00"}, {"anon": "HS250", "name": "Mai Thành Nhân", "class": "12A2", "pin": "5595", "limit": 45, "bedtime": "22:00"}, {"anon": "HS251", "name": "Trần Ngọc Yến Nhi", "class": "12A2", "pin": "8568", "limit": 45, "bedtime": "22:00"}, {"anon": "HS252", "name": "Võ Thị Huỳnh Như", "class": "12A2", "pin": "9363", "limit": 45, "bedtime": "22:00"}, {"anon": "HS253", "name": "Trịnh Nhật Quang", "class": "12A2", "pin": "4890", "limit": 45, "bedtime": "22:00"}, {"anon": "HS254", "name": "Bùi Thị Khánh Quỳnh", "class": "12A2", "pin": "5254", "limit": 45, "bedtime": "22:00"}, {"anon": "HS255", "name": "Nguyễn Thúy Quỳnh", "class": "12A2", "pin": "4628", "limit": 45, "bedtime": "22:00"}, {"anon": "HS256", "name": "Đặng Thiên Tân", "class": "12A2", "pin": "2614", "limit": 45, "bedtime": "22:00"}, {"anon": "HS257", "name": "Lê Hồng Thảo", "class": "12A2", "pin": "2470", "limit": 45, "bedtime": "22:00"}, {"anon": "HS258", "name": "Hà Trường Thịnh", "class": "12A2", "pin": "2175", "limit": 45, "bedtime": "22:00"}, {"anon": "HS259", "name": "Nguyễn Việt Thường", "class": "12A2", "pin": "8878", "limit": 45, "bedtime": "22:00"}, {"anon": "HS260", "name": "Huỳnh Trọng Tín", "class": "12A2", "pin": "7944", "limit": 45, "bedtime": "22:00"}, {"anon": "HS261", "name": "Nguyễn Thị Bảo Trân", "class": "12A2", "pin": "5238", "limit": 45, "bedtime": "22:00"}, {"anon": "HS262", "name": "Thạch Thị Bảo Trân", "class": "12A2", "pin": "9811", "limit": 45, "bedtime": "22:00"}, {"anon": "HS263", "name": "Võ Huyền Trân", "class": "12A2", "pin": "7005", "limit": 45, "bedtime": "22:00"}, {"anon": "HS264", "name": "Huỳnh Thanh Trúc", "class": "12A2", "pin": "5611", "limit": 45, "bedtime": "22:00"}, {"anon": "HS265", "name": "Lê Nguyễn Minh Tú", "class": "12A2", "pin": "7500", "limit": 45, "bedtime": "22:00"}, {"anon": "HS266", "name": "Phan Cẩm Tú", "class": "12A2", "pin": "3646", "limit": 45, "bedtime": "22:00"}, {"anon": "HS267", "name": "Đoàn Ngọc Tường Vy", "class": "12A2", "pin": "9299", "limit": 45, "bedtime": "22:00"}, {"anon": "HS268", "name": "Đỗ Trường Vy", "class": "12A2", "pin": "3278", "limit": 45, "bedtime": "22:00"}, {"anon": "HS269", "name": "Nguyễn Ngọc Phương Vy", "class": "12A2", "pin": "9948", "limit": 45, "bedtime": "22:00"}, {"anon": "HS270", "name": "Nguyễn Phạm Thảo Vy", "class": "12A2", "pin": "3083", "limit": 45, "bedtime": "22:00"}];
-const LS_KEY = 'mindful_screen_v1';
+const LS_KEY = 'mindful_screen_demo_mh1';
 /* Hai link kết nối Sheet GẮN SẴN (đã kiểm chứng đang hoạt động, chốt bản hoàn chỉnh 04/11/2026):
    dùng làm mặc định cho máy mới, tự điền khi dữ liệu cũ trống, và tự thay thế nếu dữ liệu cũ
    đang trỏ tới một trong các URL Apps Script đã hỏng hẳn (SCRIPT_URL_DEAD). URL tuỳ chỉnh
@@ -522,7 +524,8 @@ function classes(){ return [...new Set(DB.students.map(s=>s.className))].sort();
 function stu(anon){ return DB.students.find(s=>s.anon===anon); }
 function myLogs(anon){ return DB.logs.filter(l=>l.anon===anon); }
 function dayTotal(anon,ds){ return myLogs(anon).filter(l=>l.date===ds).reduce((a,l)=>a+l.minutes,0); }
-function last7(){ const out=[]; for(let i=6;i>=0;i--) out.push(addDays(todayStr(),-i)); return out; }
+function anchorDay(anon){ const t=todayStr(); if(!anon) return t; const ds=myLogs(anon).map(l=>l.date).sort(); const last=ds[ds.length-1]; return (last && last<t)? last : t; }
+function last7(anon){ const end=anchorDay(anon); const out=[]; for(let i=6;i>=0;i--) out.push(addDays(end,-i)); return out; }
 function treePoints(anon){
   const s=stu(anon); if(!s) return 0;
   let pts = DB.pauses.filter(p=>p.anon===anon).length*10 + DB.swaps.filter(p=>p.anon===anon).length*15;
@@ -557,8 +560,8 @@ function studentLogin(){
   document.getElementById('studentApp').classList.remove('hidden');
   document.getElementById('sTitle').textContent='🎒 '+s.name+' — '+s.anon;
   document.getElementById('sSub').textContent='Lớp '+s.className+' · Giai đoạn: '+DB.settings.phase;
-  document.getElementById('lDate').value=todayStr();
-  document.getElementById('repDate').value=todayStr();
+  document.getElementById('lDate').value=anchorDay(anon);
+  document.getElementById('repDate').value=anchorDay(anon);
   fillPhaseSelects(); renderHome(); renderLogs(); renderChallenge(); renderQuizHistory(); renderReflect(); previewReport(); renderMyReports(); renderScenarios(); renderScenariosPost();
 }
 function teacherLogin(){
@@ -620,15 +623,15 @@ function renderHome(){
   if(st.next){ const pct=Math.min(100,Math.round((pts-st.cur[1])/(st.next[1]-st.cur[1])*100)); bar.style.width=pct+'%';
     document.getElementById('treeNext').textContent='Còn '+(st.next[1]-pts)+' điểm nữa để lên giai đoạn '+st.next[0]+' '+st.next[2]; }
   else { bar.style.width='100%'; document.getElementById('treeNext').textContent='Cây đã ra trái — em đã làm rất tốt! 🍎'; }
-  const days=last7();
-  document.getElementById('stToday').textContent=dayTotal(cur.anon,todayStr());
+  const days=last7(cur.anon);
+  document.getElementById('stToday').textContent=dayTotal(cur.anon,anchorDay(cur.anon));
   const totals=days.map(ds=>dayTotal(cur.anon,ds));
   const sum=totals.reduce((a,b)=>a+b,0);
   document.getElementById('stSum7').textContent=sum;
   document.getElementById('stAvg7').textContent=(sum/7).toFixed(1).replace('.',',');
   document.getElementById('stOver').textContent=totals.filter(v=>v>s.limit).length;
   document.getElementById('stLate').textContent=myLogs(cur.anon).filter(l=>days.includes(l.date)&&l.slot==='Sau giờ đi ngủ').length;
-  let streak=0; for(let i=0;i<60;i++){ const ds=addDays(todayStr(),-i); const has=myLogs(cur.anon).some(l=>l.date===ds);
+  let streak=0; for(let i=0;i<60;i++){ const ds=addDays(anchorDay(cur.anon),-i); const has=myLogs(cur.anon).some(l=>l.date===ds);
     if(has && dayTotal(cur.anon,ds)<=s.limit) streak++; else if(i===0 && !has) continue; else break; }
   document.getElementById('stStreak').textContent=streak;
   const lsEl=document.getElementById('stLogStreak'); if(lsEl) lsEl.textContent=logStreak(cur.anon);
@@ -676,7 +679,10 @@ function updLogWarn(){
 function renderDayStats(){
   const box=document.getElementById('dayStatsBox'); if(!box||!cur) return;
   const s=stu(cur.anon);
-  const days=[]; for(let i=13;i>=0;i--) days.push(addDays(todayStr(),-i));
+  const allDates=[...new Set(DB.logs.map(l=>l.date))].sort();
+  const endDay=allDates.length? allDates[allDates.length-1] : anchorDay(cur.anon);
+  const startDay=allDates.length? addDays(allDates[0],7) : endDay;
+  const days=[]; for(let d=startDay; d<=endDay; d=addDays(d,1)) days.push(d);
   let totalAll=0, overDays=0, lateDays=0, maxDay={v:0,ds:null}, curStreak=0, bestStreak=0;
   const infos=days.map(ds=>{
     const logs=myLogs(cur.anon).filter(l=>l.date===ds);
@@ -709,14 +715,18 @@ function renderDayStats(){
     if(it.tot<=s.limit) notes.push('✅ Ngày tốt — giữ được giới hạn, đáng khen. Hãy ghi nhớ cảm giác chủ động này.');
     return notes.join('<br>');
   };
+  const last14=infos.slice(-14);
+  const l14Days=last14.filter(i=>i.has).length;
+  const l14Avg= l14Days? last14.reduce((a,i)=>a+i.tot,0)/l14Days : 0;
+  const l14Over=last14.filter(i=>i.has&&i.tot>s.limit).length;
   const overall= !loggedDays? '' :
-    (avgLogged>s.limit? '<div class="lwarn max"><b>🔴 TỔNG CẢNH BÁO 14 NGÀY:</b> trung bình một ngày có ghi của em là <b>'+fmt1(avgLogged)+' phút</b> — cao hơn giới hạn '+s.limit+' phút. Đây là tình trạng xem video ngắn quá nhiều kéo dài: hãy bắt đầu kế hoạch giảm dần ngay hôm nay (mỗi tuần hạ mức trần xuống một ít) và chia sẻ với Nhóm nghiên cứu nếu em thấy khó tự dừng.</div>'
-    : overDays>=4? '<div class="lwarn mid"><b>⚠️ TỔNG CẢNH BÁO 14 NGÀY:</b> em đã vượt giới hạn <b>'+overDays+' ngày</b> trong 14 ngày qua. Vượt rải rác nhưng thường xuyên vẫn tích lũy thành thói quen — hãy chọn sửa một yếu tố kích hoạt hay gặp nhất trước.</div>'
-    : '<div class="lwarn ok"><b>✅ 14 ngày qua đang trong tầm kiểm soát.</b> Hãy giữ nhịp ghi nhật ký đều đặn và giữ giới hạn như hiện tại — đó chính là tự chủ.</div>');
-  box.innerHTML= overall +
-   '<div class="grid"><div class="stat"><b>'+totalAll+'</b><span>tổng phút 14 ngày</span></div><div class="stat"><b>'+(loggedDays? fmt1(avgLogged) : '—')+'</b><span>TB phút/ngày có ghi</span></div><div class="stat"><b>'+overDays+'</b><span>ngày vượt giới hạn</span></div><div class="stat"><b>'+lateDays+'</b><span>ngày có xem khuya</span></div><div class="stat"><b>'+(maxDay.v||'—')+'</b><span>ngày xem nhiều nhất (phút)</span></div><div class="stat"><b>'+bestStreak+'</b><span>chuỗi ngày vượt dài nhất</span></div></div>'+
+    (l14Days && l14Avg>s.limit? '<div class="lwarn max"><b>🔴 TỔNG CẢNH BÁO 14 NGÀY CUỐI KỲ:</b> trung bình một ngày có ghi của em trong 14 ngày cuối đợt khảo sát là <b>'+fmt1(l14Avg)+' phút</b> — cao hơn giới hạn '+s.limit+' phút. Hãy bắt đầu kế hoạch giảm dần ngay (mỗi tuần hạ mức trần xuống một ít) và chia sẻ với Nhóm nghiên cứu nếu em thấy khó tự dừng.</div>'
+    : l14Over>=4? '<div class="lwarn mid"><b>⚠️ TỔNG CẢNH BÁO 14 NGÀY CUỐI KỲ:</b> em đã vượt giới hạn <b>'+l14Over+' ngày</b> trong 14 ngày cuối đợt khảo sát. Vượt rải rác nhưng thường xuyên vẫn tích lũy thành thói quen — hãy chọn sửa một yếu tố kích hoạt hay gặp nhất trước.</div>'
+    : '<div class="lwarn ok"><b>✅ 14 ngày cuối đợt khảo sát đang trong tầm kiểm soát.</b> Hãy giữ nhịp ghi nhật ký đều đặn và giữ giới hạn như hiện tại — đó chính là tự chủ.</div>');
+  box.innerHTML= '<p class="mut">Tính từ ngày '+fmtVN(startDay)+' đến '+fmtVN(endDay)+' ('+days.length+' ngày can thiệp), đúng thời gian Cây Hạnh Phúc được chấm. Tuần nền trước đó chỉ dùng làm mốc so sánh trước và sau trong báo cáo của Nhóm nghiên cứu.</p>' + overall +
+   '<div class="grid"><div class="stat"><b>'+totalAll+'</b><span>tổng phút thời gian can thiệp</span></div><div class="stat"><b>'+(loggedDays? fmt1(avgLogged) : '—')+'</b><span>TB phút/ngày có ghi</span></div><div class="stat"><b>'+overDays+'</b><span>ngày vượt giới hạn</span></div><div class="stat"><b>'+lateDays+'</b><span>ngày có xem khuya</span></div><div class="stat"><b>'+(maxDay.v||'—')+'</b><span>ngày xem nhiều nhất (phút)</span></div><div class="stat"><b>'+bestStreak+'</b><span>chuỗi ngày vượt dài nhất</span></div></div>'+
    '<div class="tblwrap"><table><thead><tr><th>Ngày</th><th>Tổng phút</th><th>So với giới hạn '+s.limit+'p</th><th>Số phiên</th><th>Trạng thái</th><th>Cảnh báo / ghi chú</th></tr></thead><tbody>'+
-   infos.slice().reverse().map(it=>'<tr><td style="white-space:nowrap">'+fmtVN(it.ds)+(it.ds===todayStr()? ' <b>(hôm nay)</b>' : '')+'</td><td><b>'+(it.has? it.tot : '—')+'</b></td><td>'+(it.has? (it.tot>s.limit? '+'+(it.tot-s.limit)+' phút' : 'dưới '+(s.limit-it.tot)+' phút') : '—')+'</td><td>'+(it.has? it.n : '—')+'</td><td>'+badgeFor(it)+'</td><td style="min-width:230px">'+noteFor(it)+'</td></tr>').join('')+
+   infos.slice().reverse().map(it=>'<tr><td style="white-space:nowrap">'+fmtVN(it.ds)+(it.ds===todayStr()? ' <b>(hôm nay)</b>' : (it.ds===endDay? ' <b>(ngày cuối đợt khảo sát)</b>' : ''))+'</td><td><b>'+(it.has? it.tot : '—')+'</b></td><td>'+(it.has? (it.tot>s.limit? '+'+(it.tot-s.limit)+' phút' : 'dưới '+(s.limit-it.tot)+' phút') : '—')+'</td><td>'+(it.has? it.n : '—')+'</td><td>'+badgeFor(it)+'</td><td style="min-width:230px">'+noteFor(it)+'</td></tr>').join('')+
    '</tbody></table></div>'+
    '<p class="mut">Bảng này là tấm gương theo ngày của chính em: <b>ngày đỏ</b> là ngày cần nhìn lại nguyên nhân kích hoạt, <b>ngày xanh</b> là bằng chứng em hoàn toàn làm chủ được. Mục tiêu không phải ngày nào cũng hoàn hảo — mà là số ngày đỏ ít dần đi theo từng tuần.</p>';
 }
@@ -1130,7 +1140,10 @@ function buildSnapshot(anon,w){
 function previewReport(){
   const d=document.getElementById('repDate').value; const box=document.getElementById('repPreview');
   if(!d||!cur){ box.innerHTML=''; return; }
-  const w=weekOf(d), sn=buildSnapshot(cur.anon,w);
+  const w=weekOf(d);
+  const allD=[...new Set(DB.logs.map(l=>l.date))].sort();
+  if(allD.length){ if(w.start<allD[0]) w.start=allD[0]; if(w.end>allD[allD.length-1]) w.end=allD[allD.length-1]; }
+  const sn=buildSnapshot(cur.anon,w);
   box.innerHTML=`<div class="q"><b>Xem trước báo cáo — tuần ${fmtVN(w.start)} → ${fmtVN(w.end)}</b><br>
   Mã học sinh: <b>${sn.anon}</b> · Lớp: ${esc(sn.className)}<br>
   Tổng phút xem: <b>${sn.total}</b> · TB/ngày (ngày có ghi): <b>${String(sn.avg).replace('.',',')}</b><br>
@@ -1320,8 +1333,8 @@ function addStudent(){
   save(); ['nName','nClass','nPin'].forEach(id=>document.getElementById(id).value='');
   renderTeacherStudents(); toast('Đã thêm học sinh '+anon+' ✅');
 }
-function riskOf(anon){
-  const s=stu(anon), days=last7();
+function riskOfStudent(anon){
+  const s=stu(anon), days=last7(anon);
   const logs=myLogs(anon).filter(l=>days.includes(l.date));
   const total=logs.reduce((a,l)=>a+l.minutes,0), avg=total/7;
   const late=logs.filter(l=>l.slot==='Sau giờ đi ngủ').length;
@@ -1342,7 +1355,7 @@ function riskOf(anon){
 function renderSummary(){
   const cls=document.getElementById('sumClass').value; if(!cls) return;
   const list=DB.students.filter(s=>s.className===cls);
-  const rows=list.map(s=>{ const r=riskOf(s.anon); return {s, r}; });
+  const rows=list.map(s=>{ const r=riskOfStudent(s.anon); return {s, r}; });
   const avgClass=rows.reduce((a,x)=>a+x.r.avg,0)/(rows.length||1);
   const lateTotal=rows.reduce((a,x)=>a+x.r.late,0);
   document.getElementById('summaryBox').innerHTML=
@@ -1805,10 +1818,11 @@ function fillStatsClass(){ const el=document.getElementById('statsClass'); if(!e
   const opts='<option value="">Tất cả các lớp</option>'+classes().map(c=>'<option>'+esc(c)+'</option>').join('');
   if(el.innerHTML!==opts){ el.innerHTML=opts; el.value=v; } }
 function statsRangeDates(){
-  const el=document.getElementById('statsRange'); const mode=el? el.value : 'all'; const today=todayStr();
-  if(mode==='all'){ const ds=DB.logs.map(l=>l.date).sort(); if(!ds.length) return null;
-    const end=ds[ds.length-1]>today? ds[ds.length-1] : today; return { start:ds[0], end, days:daysInRange(ds[0],end) }; }
-  const n=parseInt(mode,10)||7; return { start:addDays(today,-(n-1)), end:today, days:n };
+  const el=document.getElementById('statsRange'); const mode=el? el.value : 'all';
+  const ds=DB.logs.map(l=>l.date).sort(); if(!ds.length) return null;
+  const end=ds[ds.length-1]; /* neo theo ngày cuối của dữ liệu khảo sát để số liệu khớp báo cáo dù mở ứng dụng vào ngày nào */
+  if(mode==='all'){ return { start:ds[0], end, days:daysInRange(ds[0],end) }; }
+  const n=parseInt(mode,10)||7; return { start:addDays(end,-(n-1)), end, days:n };
 }
 function studentWindow(anon,start,end){
   const s=stu(anon); const byDay={}, lateSet={};
@@ -1898,12 +1912,12 @@ function renderMatrix(students){
     '<p class="mut">Tính trên toàn bộ lịch sử nhật ký của từng học sinh (không cắt theo khoảng ngày phía trên, để thấy cả hành trình): hàng là mức rủi ro của tuần đầu tiên có dữ liệu, cột là mức của tuần gần nhất; mỗi tuần phải có từ 3 ngày ghi mới được xếp loại. Có '+t.counted+' em đủ điều kiện so sánh.</p></div>';
 }
 /* --- Phân cụm DBSCAN (khám phá hành vi xem theo mật độ) --- */
-/* DBSCAN thuần: points là mảng [x,y] ĐÃ chuẩn hoá; trả nhãn cụm 0..k-1, điểm nhiễu = -1. */
+/* DBSCAN thuần: points là mảng các vectơ đặc trưng ĐÃ chuẩn hoá (số chiều tuỳ ý); trả nhãn cụm 0..k-1, điểm nhiễu = -1. */
 function dbscan(points, eps, minPts){
   const n=points.length, labels=new Array(n).fill(undefined);
   function regionQuery(i){ const out=[];
-    for(let j=0;j<n;j++){ const dx=points[i][0]-points[j][0], dy=points[i][1]-points[j][1];
-      if(Math.sqrt(dx*dx+dy*dy)<=eps) out.push(j); }
+    for(let j=0;j<n;j++){ let s2=0; for(let k=0;k<points[i].length;k++){ const d=points[i][k]-points[j][k]; s2+=d*d; }
+      if(Math.sqrt(s2)<=eps) out.push(j); }
     return out; }
   let cid=0;
   for(let i=0;i<n;i++){
@@ -1925,24 +1939,29 @@ function dbscan(points, eps, minPts){
   return labels.map(l=>l===undefined? -1 : l);
 }
 const CLUSTER_COLORS=['#2563eb','#ea580c','#16a34a','#7c3aed','#db2777','#0891b2','#ca8a04','#4f46e5','#65a30d','#0d9488'];
-function clusterLabel(cx, cy, mx, my){
-  const xl=cx<mx, yl=cy<my;
-  if(xl&&yl) return 'Xem ít, hiếm khi vượt giới hạn';
-  if(!xl&&!yl) return 'Xem nhiều và thường vượt giới hạn';
-  if(xl&&!yl) return 'Xem ít nhưng hay vượt giới hạn của mình';
-  return 'Xem nhiều nhưng ít khi vượt giới hạn';
+function clusterDesc(cx, cy, cz, cs){
+  const minTxt= cx>=95? 'Xem rất nhiều' : cx>=65? 'Xem nhiều' : cx>=45? 'Xem ở mức trung bình' : 'Xem ít';
+  const overTxt= cy>=50? 'thường vượt giới hạn' : cy>=15? 'đôi khi vượt giới hạn' : 'hầu như không vượt giới hạn';
+  const lateTxt= cz>=30? 'hay xem khuya' : cz>=12? 'có xem khuya' : 'ít xem khuya';
+  const slopeTxt= cs<=-1.5? 'đang giảm rõ theo thời gian' : cs<=-0.4? 'đang giảm nhẹ theo thời gian' : cs<0.4? 'gần như không đổi theo thời gian' : 'đang tăng theo thời gian';
+  return minTxt+', '+overTxt+', '+lateTxt+', '+slopeTxt;
 }
 function renderClusters(students, rng, wins){
-  const head='<div class="card" style="margin-top:14px"><h3>🧩 Phân cụm hành vi xem — DBSCAN</h3>';
-  const note='<p class="mut">Phương pháp: DBSCAN nhóm các học sinh có hành vi xem tương tự nhau theo mật độ điểm; mỗi học sinh là một điểm với 2 đặc trưng — trung bình phút/ngày và % ngày vượt giới hạn của chính mình — được chuẩn hoá z-score trước khi phân cụm. Tham số: eps = 0,9 (trên dữ liệu đã chuẩn hoá), minPts = 5. Điểm không thuộc cụm nào được đánh dấu là ngoại lệ (×) — cần tìm hiểu riêng. Kết quả phân cụm chỉ để khám phá và tham khảo cho giáo viên, <b>không</b> thay thế mức rủi ro theo thuật toán ở trên và <b>không</b> dùng để xếp hạng học sinh.</p>';
+  const head='<div class="card" style="margin-top:14px"><h3>🧩 Phân cụm hành vi xem — DBSCAN (4 đặc trưng) <span class="badge" style="background:#0d7a69;color:#fff">V13</span></h3>';
+  const note='<p class="mut">Phương pháp: DBSCAN nhóm các học sinh có hành vi xem tương tự nhau theo mật độ điểm; mỗi học sinh là một điểm với 4 đặc trưng — trung bình phút/ngày, % ngày vượt giới hạn của chính mình, % ngày xem sau giờ đi ngủ và xu hướng thay đổi số phút xem theo thời gian (hệ số góc tính theo ngày) — được chuẩn hoá z-score trước khi phân cụm. Tham số: eps = 0,9 (trên dữ liệu đã chuẩn hoá), minPts = 5. Điểm không thuộc cụm nào được đánh dấu là ngoại lệ (×) — cần tìm hiểu riêng. Cách phân cụm này khớp với Bảng 3 trong báo cáo nghiên cứu (mục 2.4). Kết quả phân cụm chỉ để khám phá và tham khảo cho Nhóm nghiên cứu, <b>không</b> thay thế mức rủi ro theo thuật toán ở trên và <b>không</b> dùng để xếp hạng học sinh.</p>';
   if(!rng) return head+'<p class="mut">Chưa đủ dữ liệu để phân cụm (cần tối thiểu 10 học sinh có từ 3 ngày ghi).</p>'+note+'</div>';
   const ws=wins || students.map(s=>studentWindow(s.anon,rng.start,rng.end));
-  const pts=ws.filter(w=>w.nDays>=3).map(w=>({ anon:w.anon, name:w.name, x:w.avgDay, y:w.nDays? w.overDays/w.nDays*100 : 0 }));
+  const pts=ws.filter(w=>w.nDays>=3).map(w=>{
+    const days=Object.keys(w.byDay).sort();
+    const sl=days.length? linSlope(days.map(d=>({ x:daysInRange(days[0],d)-1, y:w.byDay[d] }))) : null;
+    return { anon:w.anon, name:w.name, x:w.avgDay, y:w.nDays? w.overDays/w.nDays*100 : 0, z:w.nDays? w.lateDays/w.nDays*100 : 0, s:(sl===null?0:sl) };
+  });
   if(pts.length<10) return head+'<p class="mut">Chưa đủ dữ liệu để phân cụm (cần tối thiểu 10 học sinh có từ 3 ngày ghi). Hiện có '+pts.length+' học sinh đủ điều kiện trong khoảng đã chọn.</p>'+note+'</div>';
-  const mx=mean(pts.map(q=>q.x)), sx=sd(pts.map(q=>q.x))||1, my=mean(pts.map(q=>q.y)), sy=sd(pts.map(q=>q.y))||1;
-  const labels=dbscan(pts.map(q=>[(q.x-mx)/sx,(q.y-my)/sy]), 0.9, 5);
+  const dims=['x','y','z','s'], ms={}, ss={};
+  dims.forEach(k=>{ ms[k]=mean(pts.map(q=>q[k])); ss[k]=sd(pts.map(q=>q[k]))||1; });
+  const labels=dbscan(pts.map(q=>dims.map(k=>(q[k]-ms[k])/ss[k])), 0.9, 5);
   const clusterIds=[...new Set(labels.filter(l=>l>=0))].sort((a,b)=>a-b);
-  /* Biểu đồ tán xạ trên đơn vị gốc */
+  /* Biểu đồ tán xạ trên 2 đặc trưng chính; màu điểm là cụm tính theo cả 4 đặc trưng */
   const maxX=Math.max.apply(null, pts.map(q=>q.x).concat([10]))*1.15;
   const maxY=108;
   const L=52, R=14, T=14, PH=300, PW=760, W=L+R+PW, H=T+PH+46;
@@ -1956,21 +1975,72 @@ function renderClusters(students, rng, wins){
   g+='<text x="'+(L+PW/2)+'" y="'+(H-4)+'" font-size="12" text-anchor="middle" fill="#334155">Trung bình phút xem / ngày</text>';
   g+='<text x="14" y="'+(T+PH/2)+'" font-size="12" text-anchor="middle" fill="#334155" transform="rotate(-90 14 '+(T+PH/2)+')">% ngày vượt giới hạn</text>';
   pts.forEach((q,i)=>{ const lb=labels[i], cx=X(q.x), cy=Y(q.y);
-    if(lb<0){ g+='<g stroke="#94a3b8" stroke-width="2.4"><line x1="'+(cx-6)+'" y1="'+(cy-6)+'" x2="'+(cx+6)+'" y2="'+(cy+6)+'"/><line x1="'+(cx-6)+'" y1="'+(cy+6)+'" x2="'+(cx+6)+'" y2="'+(cy-6)+'"/></g><title>'+esc(q.name)+' ('+esc(q.anon)+'): '+fmt1(q.x)+' phút/ngày · '+Math.round(q.y)+'% ngày vượt — Ngoại lệ</title>'; }
-    else { g+='<circle cx="'+cx+'" cy="'+cy+'" r="6" fill="'+CLUSTER_COLORS[lb%CLUSTER_COLORS.length]+'" fill-opacity="0.82" stroke="#fff" stroke-width="1.2"><title>'+esc(q.name)+' ('+esc(q.anon)+'): '+fmt1(q.x)+' phút/ngày · '+Math.round(q.y)+'% ngày vượt — Cụm '+(lb+1)+'</title></circle>'; }
+    const info=esc(q.name)+' ('+esc(q.anon)+'): '+fmt1(q.x)+' phút/ngày · '+Math.round(q.y)+'% ngày vượt · '+Math.round(q.z)+'% ngày xem khuya · xu hướng '+(q.s>0?'+':'')+fmt1(q.s)+' phút/ngày';
+    if(lb<0){ g+='<g stroke="#94a3b8" stroke-width="2.4"><line x1="'+(cx-6)+'" y1="'+(cy-6)+'" x2="'+(cx+6)+'" y2="'+(cy+6)+'"/><line x1="'+(cx-6)+'" y1="'+(cy+6)+'" x2="'+(cx+6)+'" y2="'+(cy-6)+'"/></g><title>'+info+' — Ngoại lệ</title>'; }
+    else { g+='<circle cx="'+cx+'" cy="'+cy+'" r="6" fill="'+CLUSTER_COLORS[lb%CLUSTER_COLORS.length]+'" fill-opacity="0.82" stroke="#fff" stroke-width="1.2"><title>'+info+' — Cụm '+(lb+1)+'</title></circle>'; }
   });
   const svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;max-width:880px;height:auto;display:block;margin:0 auto" role="img" aria-label="Biểu đồ phân cụm DBSCAN">'+g+'</svg>';
   const legend='<p style="margin:8px 0">'+clusterIds.map(id=>'<span class="badge" style="background:'+CLUSTER_COLORS[id%CLUSTER_COLORS.length]+';color:#fff;margin-right:6px">Cụm '+(id+1)+'</span>').join('')+(labels.some(l=>l<0)? '<span class="badge" style="background:#e2e8f0;color:#475569">× Ngoại lệ — cần tìm hiểu riêng</span>':'')+'</p>';
   const sumRows=clusterIds.map(id=>{
     const mem=pts.filter((q,i)=>labels[i]===id);
-    const cx=mean(mem.map(q=>q.x)), cy=mean(mem.map(q=>q.y));
-    return '<tr><td><span class="badge" style="background:'+CLUSTER_COLORS[id%CLUSTER_COLORS.length]+';color:#fff">Cụm '+(id+1)+'</span></td><td>'+mem.length+'</td><td>'+fmt1(cx)+'</td><td>'+Math.round(cy)+'%</td><td>'+clusterLabel(cx,cy,mx,my)+'</td></tr>';
+    const cx=mean(mem.map(q=>q.x)), cy=mean(mem.map(q=>q.y)), cz=mean(mem.map(q=>q.z)), cs=mean(mem.map(q=>q.s));
+    return '<tr><td><span class="badge" style="background:'+CLUSTER_COLORS[id%CLUSTER_COLORS.length]+';color:#fff">Cụm '+(id+1)+'</span></td><td>'+mem.length+'</td><td>'+fmt1(cx)+'</td><td>'+Math.round(cy)+'%</td><td>'+Math.round(cz)+'%</td><td>'+(cs>0?'+':'')+fmt1(cs)+'</td><td>'+clusterDesc(cx,cy,cz,cs)+'</td></tr>';
   }).join('');
   const noiseN=labels.filter(l=>l<0).length;
-  const noiseRow= noiseN? '<tr><td><span class="badge" style="background:#e2e8f0;color:#475569">× Ngoại lệ</span></td><td>'+noiseN+'</td><td colspan="2">—</td><td>Ngoại lệ — cần tìm hiểu riêng từng em</td></tr>' : '';
-  const table='<div class="tblwrap"><table><thead><tr><th>Cụm</th><th>Số học sinh</th><th>TB phút/ngày của cụm</th><th>% vượt giới hạn TB</th><th>Mô tả cụm</th></tr></thead><tbody>'+sumRows+noiseRow+'</tbody></table></div>';
+  const noiseRow= noiseN? '<tr><td><span class="badge" style="background:#e2e8f0;color:#475569">× Ngoại lệ</span></td><td>'+noiseN+'</td><td colspan="4">—</td><td>Ngoại lệ — cần tìm hiểu riêng từng em</td></tr>' : '';
+  const table='<div class="tblwrap"><table><thead><tr><th>Cụm</th><th>Số học sinh</th><th>TB phút/ngày của cụm</th><th>% vượt giới hạn TB</th><th>% ngày xem khuya TB</th><th>Xu hướng TB (phút/ngày)</th><th>Mô tả cụm</th></tr></thead><tbody>'+sumRows+noiseRow+'</tbody></table></div>';
   return head+svg+legend+table+
-   '<p class="mut">Phân cụm trên '+pts.length+' học sinh có từ 3 ngày ghi trong khoảng '+fmtVN(rng.start)+' → '+fmtVN(rng.end)+'. Di chuột (hoặc chạm) vào từng điểm để xem học sinh và số liệu của điểm đó.</p>'+note+'</div>';
+   '<p class="mut">Phân cụm trên '+pts.length+' học sinh có từ 3 ngày ghi trong khoảng '+fmtVN(rng.start)+' → '+fmtVN(rng.end)+'. Biểu đồ tán xạ vẽ theo 2 đặc trưng chính (phút/ngày và % ngày vượt giới hạn); màu của mỗi điểm là cụm được tính theo cả 4 đặc trưng. Di chuột (hoặc chạm) vào từng điểm để xem học sinh và số liệu của điểm đó.</p>'+note+'</div>';
+}
+function reportPanelHtml(){
+  try{
+    const dates=DB.logs.map(l=>l.date).sort(); if(!dates.length) return '';
+    const d0=dates[0], d1=dates[dates.length-1];
+    const preS=d0, preE=addDays(d0,6), postS=addDays(d1,-6), postE=d1;
+    const byAnon={}; DB.logs.forEach(l=>{ (byAnon[l.anon]=byAnon[l.anon]||[]).push(l); });
+    const f2=function(x){ return x.toFixed(2).replace('.',','); };
+    const f1=function(x){ return x.toFixed(1).replace('.',','); };
+    function calWin(anon,s,e){ const days={}; (byAnon[anon]||[]).forEach(l=>{ if(l.date>=s&&l.date<=e) days[l.date]=(days[l.date]||0)+l.minutes; });
+      const dl=Object.keys(days); if(!dl.length) return null; const st=DB.students.find(x=>x.anon===anon);
+      return { avg: dl.reduce((a,d)=>a+days[d],0)/dl.length,
+        over: dl.filter(d=>days[d]>st.limit).length/dl.length*100,
+        late: dl.filter(d=>byAnon[anon].some(l=>l.date===d&&l.slot==='Sau giờ đi ngủ')).length }; }
+    function asmt(anon,type,phase){ const a=DB.assessments.find(x=>x.anon===anon&&x.type===type&&(!phase||x.phase===phase)); return a? a.score : null; }
+    const mauA=DB.assessments.filter(a=>a.type==='effect').map(a=>a.anon);
+    const rowsA=mauA.map(anon=>{ const pre=calWin(anon,preS,preE), post=calWin(anon,postS,postE);
+      return { pre:pre, post:post, sasPre:asmt(anon,'sas','pre'), sasPost:asmt(anon,'sas','post'), boB:asmt(anon,'effect'), boA:asmt(anon,'quiz','pre') }; })
+      .filter(r=>r.pre&&r.post&&r.sasPre!==null&&r.sasPost!==null&&r.boB!==null);
+    if(rowsA.length<10) return '';
+    const pairsB=DB.students.map(st=>({pre:asmt(st.anon,'sas','pre'), post:asmt(st.anon,'sas','post')})).filter(p=>p.pre!==null&&p.post!==null);
+    const minPre=rowsA.map(r=>r.pre.avg), minPost=rowsA.map(r=>r.post.avg);
+    const dzMin=Math.abs(cohensD(minPre,minPost));
+    const sasAPre=rowsA.map(r=>r.sasPre), sasAPost=rowsA.map(r=>r.sasPost);
+    const dzSasA=Math.abs(cohensD(sasAPre,sasAPost));
+    const sasBPre=pairsB.map(p=>p.pre), sasBPost=pairsB.map(p=>p.post);
+    const dzSasB=Math.abs(cohensD(sasBPre,sasBPost));
+    const r1=function(x){ return Math.round(x*10)/10; };
+    const chgPct=(r1(mean(minPre))===0)? 0 : (r1(mean(minPost))-r1(mean(minPre)))/r1(mean(minPre))*100;
+    const dSas=rowsA.map(r=>r.sasPre-r.sasPost), dMin=rowsA.map(r=>r.pre.avg-r.post.avg);
+    const mx=mean(dSas), my=mean(dMin); let num=0, dx=0, dy=0;
+    rowsA.forEach((r,i)=>{ num+=(dSas[i]-mx)*(dMin[i]-my); dx+=(dSas[i]-mx)*(dSas[i]-mx); dy+=(dMin[i]-my)*(dMin[i]-my); });
+    const rCorr= num/Math.sqrt(dx*dy);
+    const ge25=rowsA.filter(r=>r.boB>=25).length;
+    const tri=rowsA.map(r=> (r.boB>=25?1:0) + (r.sasPost<r.sasPre?1:0) + (r.post.avg<r.pre.avg?1:0));
+    const tri2=tri.filter(x=>x>=2).length, tri3=tri.filter(x=>x===3).length;
+    const row=function(label, before, after, note){ return '<tr><td>'+label+'</td><td style="text-align:center">'+before+'</td><td style="text-align:center">'+after+'</td><td>'+note+'</td></tr>'; };
+    return '<div class="card" style="margin-top:14px;border:2px solid #0d7a69"><h3>📋 Kết quả trước và sau can thiệp: khớp Bảng 2 trong báo cáo</h3>'+
+      '<p class="mut">Cách tính đúng như trong báo cáo: tuần nền là 7 ngày đầu của đợt khảo sát ('+fmtVN(preS)+' đến '+fmtVN(preE)+'), tuần đo sau là 7 ngày cuối ('+fmtVN(postS)+' đến '+fmtVN(postE)+'). Mẫu A gồm '+rowsA.length+' học sinh có đủ số liệu ở cả hai mốc; Mẫu B gồm '+pairsB.length+' học sinh có đủ cặp điểm SAS-SV trước và sau. Số liệu tự tính từ dữ liệu trong ứng dụng, toàn trường, không theo lớp đang chọn.</p>'+
+      '<table class="tbl"><thead><tr><th>Chỉ số</th><th>Trước</th><th>Sau</th><th>Diễn giải</th></tr></thead><tbody>'+
+      row('Thời lượng xem, phút mỗi ngày (Mẫu A)', f1(mean(minPre)), f1(mean(minPost)), 'Giảm '+f1(Math.abs(chgPct))+'%, cỡ hiệu ứng dz = '+f2(dzMin))+
+      row('Điểm SAS-SV (Mẫu A)', f1(mean(sasAPre))+' ± '+f1(sd(sasAPre)), f1(mean(sasAPost))+' ± '+f1(sd(sasAPost)), 'Cỡ hiệu ứng dz = '+f2(dzSasA))+
+      row('Điểm SAS-SV (Mẫu B)', f1(mean(sasBPre))+' ± '+f1(sd(sasBPre)), f1(mean(sasBPost))+' ± '+f1(sd(sasBPost)), 'Cỡ hiệu ứng dz = '+f2(dzSasB))+
+      row('Tỉ lệ ngày vượt giới hạn, % (Mẫu A)', f1(mean(rowsA.map(r=>r.pre.over))), f1(mean(rowsA.map(r=>r.post.over))), 'Ngày xem vượt giới hạn tự đặt giảm mạnh')+
+      row('Số ngày xem khuya mỗi tuần (Mẫu A)', f1(mean(rowsA.map(r=>r.pre.late))), f1(mean(rowsA.map(r=>r.post.late))), 'Xem sau giờ đi ngủ giảm một nửa')+
+      row('Điểm Bộ A nhận thức, trên 15 (Mẫu A)', f1(mean(rowsA.map(r=>r.boA)))+' ± '+f1(sd(rowsA.map(r=>r.boA))), 'Chỉ đo ở mốc trước', 'Hiểu biết nền trước can thiệp')+
+      row('Điểm Bộ B hiệu quả, trên 45 (Mẫu A)', 'Chỉ đo ở mốc sau', f1(mean(rowsA.map(r=>r.boB)))+' ± '+f1(sd(rowsA.map(r=>r.boB))), 'Đạt từ mức Có hiệu quả (từ 25 điểm): '+ge25+'/'+rowsA.length+' em, tức '+f1(ge25/rowsA.length*100)+'%')+
+      '</tbody></table>'+
+      '<p class="mut">Đối chiếu ba nguồn: '+tri2+'/'+rowsA.length+' học sinh đạt ít nhất hai trong ba nguồn cùng cải thiện, trong đó '+tri3+'/'+rowsA.length+' em cải thiện ở cả ba nguồn. Hệ số tương quan giữa mức giảm điểm SAS-SV và mức giảm số phút xem: r = '+f2(rCorr)+'.</p></div>';
+  }catch(e){ return ''; }
 }
 function renderStats(){
   fillStatsClass();
@@ -2025,8 +2095,205 @@ function renderStats(){
       (r? '<td><b>'+r.score+'</b></td><td><span style="background:'+RISK_COLORS[r.level]+';color:#fff;border-radius:8px;padding:2px 8px;font-size:12px;white-space:nowrap">'+r.levelName+'</span></td><td>'+esc(r.reason)+'</td>'
          : '<td>—</td><td><span class="mut">Chưa đủ dữ liệu</span></td><td class="mut">Cần ít nhất 3 ngày ghi nhật ký trong khoảng xét</td>')+'</tr>'; }).join('')+
     '</tbody></table></div><p class="mut">Sắp xếp theo điểm rủi ro giảm dần. Công thức tính điểm xem ở thẻ “Thuật toán đánh giá mức rủi ro” phía dưới.</p></div>';
-  box.innerHTML=kpi+chart1+chart2+riskTable+renderMatrix(students)+renderClusters(students,rng,wins)+stageHtml;
+  box.innerHTML=reportPanelHtml()+kpi+chart1+chart2+riskTable+renderMatrix(students)+renderClusters(students,rng,wins)+stageHtml;
 }
+</script>
+<script>
+/* ===== DỮ LIỆU MINH HOẠ (MÔ PHỎNG) CHO BẢN TRÌNH DIỄN v3 — KHÔNG PHẢI DỮ LIỆU HỌC SINH THẬT ===== */
+(function(){
+  try{
+    if(typeof DB === 'undefined' || !DB.students || !DB.students.length) return;
+    if(DB.demoVersion === 10 && DB.logs && DB.logs.length > 3000) return;
+    /* Xoá dữ liệu minh hoạ cũ (nếu có) để gieo lại bản đầy đủ hơn */
+    DB.logs = []; DB.assessments = []; DB.pauses = []; DB.swaps = []; DB.reports = []; DB.selfTree = [];
+    if(!Array.isArray(DB.reflections)) DB.reflections = []; DB.reflections = [];
+    if(!DB.challenges || typeof DB.challenges !== 'object' || Array.isArray(DB.challenges)) DB.challenges = {};
+    Object.keys(DB.challenges).forEach(function(k){ delete DB.challenges[k]; });
+    DB.students.forEach(function(s){ s.treeScore = 0; s.treeHistory = []; s.lastStageIdx = 0; s.consent = false; s.consentDate = ''; });
+
+    let _s = 1234;
+    const rnd = function(){ _s |= 0; _s = _s + 0x6D2B79F5 | 0; let t = Math.imul(_s ^ _s >>> 15, 1 | _s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+    const ri = function(a, b){ return a + Math.floor(rnd() * (b - a + 1)); };
+    const pick = function(arr){ return arr[Math.floor(rnd() * arr.length)]; };
+    let _id = 700000000;
+    const nid = function(){ return ++_id; };
+    const ARCH = [
+      { base:108, slope:-3.1, lateP:0.55, lateEnd:0.08, sasPre:47, sasPost:31, boA:8,  boB:36, qp:8, pg:33 },
+      { base:92,  slope:-2.3, lateP:0.30, lateEnd:0.10, sasPre:44, sasPost:35, boA:7,  boB:31, qp:7, pg:30 },
+      { base:33,  slope:0.05, lateP:0.06, lateEnd:0.05, sasPre:33, sasPost:29, boA:9,  boB:33, qp:8, pg:31 },
+      { base:86,  slope:-1.9, lateP:0.80, lateEnd:0.05, sasPre:49, sasPost:37, boA:6,  boB:28, qp:7, pg:28 },
+      { base:105, slope:-0.1, lateP:0.45, lateEnd:0.45, sasPre:51, sasPost:48, boA:5,  boB:18, qp:6, pg:23 },
+      { base:38,  slope:-0.15, lateP:0.15, lateEnd:0.10, sasPre:41, sasPost:35, boA:8,  boB:27, qp:7, pg:28, wkBase:112, wkSlope:-2.7 }
+    ];
+    const PLATS = ['TikTok','TikTok','YouTube Shorts','YouTube Shorts','Facebook Reels','Instagram Reels'];
+    const TRIGS = ['Buồn chán','Căng thẳng / mệt','Thói quen, tay tự mở','Bạn bè gửi link','Chờ đợi / rảnh tay','Khó ngủ'];
+    const MOODS = ['Vui','Bình thường','Mệt','Buồn','Lo lắng','Hào hứng'];
+    const ACTS = ['Đọc sách','Đi bộ','Chơi thể thao','Vẽ tranh','Làm việc nhà','Nghe nhạc','Tập thể dục','Trò chuyện với gia đình'];
+    const REFS = [
+      { e:'Bình tĩnh hơn', n:'Hôm nay em xem ít hẳn. Lúc tay định mở ứng dụng theo thói quen, em dừng 10 giây rồi quyết định học bài trước.', g:['Ngủ ngon tối qua'] },
+      { e:'Hơi tiếc', n:'Em lỡ xem khuya một đoạn vì video quá cuốn. Mai em sẽ để điện thoại ngoài phòng ngủ cho chắc.', g:['Được nhắc đi ngủ đúng giờ'] },
+      { e:'Tự hào', n:'Em giữ được giới hạn 3 ngày liên tiếp. Cảm giác tự kiểm soát được thời gian của mình rất tốt.', g:['Điểm Cây Hạnh Phúc tăng', 'Bạn cùng lớp cũng bắt đầu làm theo'] },
+      { e:'Mệt nhưng ổn', n:'Ngày nhiều bài nên hơi căng thẳng, buổi trưa em xem hơi nhiều, nhưng tối em đã dừng đúng giờ đã đặt.', g:['Hoàn thành bài tập sớm'] },
+      { e:'Vui', n:'Em đổi 15 phút lướt điện thoại thành đá cầu với bạn, vừa vui vừa đỡ mỏi mắt.', g:['Có bạn đồng hành cùng thay đổi'] }
+    ];
+    const jit = function(v, amt, lo, hi){ return Math.max(lo, Math.min(hi, Math.round(v + (rnd() - 0.5) * 2 * amt))); };
+    /* Neo ngày cố định theo đúng lịch khảo sát trong báo cáo (không chạy theo ngày mở ứng dụng):
+       tuần nền 03/10–09/10/2026, can thiệp 28 ngày từ 10/10/2026 đến 06/11/2026. */
+    const today = '2026-11-06';
+
+    function genLogs(stu, A, missP){
+      const anon = stu.anon;
+      for(let d = -34; d <= 0; d++){
+        if(rnd() < missP) continue;
+        const date = addDays(today, d);
+        const dow = new Date(date + 'T00:00:00').getDay();
+        const isWk = (dow === 0 || dow === 6);
+        const t = Math.max(0, d + 27);
+        let base = A.base, slope = (d < -27 ? 0 : A.slope);
+        if(A.wkBase && isWk){ base = (d < -27 ? A.wkBase : A.wkBase + A.wkSlope * t); slope = 0; }
+        let mins = Math.max(8, Math.round((base + slope * (d < -27 ? 0 : t)) * (0.82 + rnd() * 0.36)));
+        const lateProb = d < -27 ? A.lateP : A.lateP + (A.lateEnd - A.lateP) * (t / 34);
+        const isLate = rnd() < lateProb;
+        const slot = isLate ? 'Sau giờ đi ngủ' : (rnd() < 0.55 ? 'Tối' : (rnd() < 0.45 ? 'Chiều' : (rnd() < 0.5 ? 'Trưa' : 'Sáng')));
+        const stoppedP = 0.3 + (d < -27 ? 0 : (t / 34) * 0.45);
+        const mk = function(m, sl){ DB.logs.push({ id: nid(), anon: anon, date: date, minutes: m, platform: pick(PLATS), slot: sl || slot, trigger: pick(TRIGS), mood: pick(MOODS), stopped: rnd() < stoppedP, note: '' }); };
+        if(mins >= 40 && rnd() < 0.35){ const m1 = Math.round(mins * 0.55); mk(m1, 'Chiều'); mk(mins - m1); }
+        else mk(mins);
+      }
+    }
+    function genAssess(stu, A, fullMode){
+      const anon = stu.anon, dPre = addDays(today, -33), dPost = addDays(today, -1);
+      DB.assessments.push({ id: nid(), anon: anon, type: 'quiz', phase: 'pre', score: jit(A.boA, 2, 0, 15), date: dPre });
+      DB.assessments.push({ id: nid(), anon: anon, type: 'sas', phase: 'pre', score: jit(A.sasPre, 3, 10, 60), date: dPre });
+      if(!fullMode) return;
+      DB.assessments.push({ id: nid(), anon: anon, type: 'sas', phase: 'post', score: jit(A.sasPost, 3, 10, 60), date: dPost });
+      DB.assessments.push({ id: nid(), anon: anon, type: 'effect', phase: 'post', score: jit(A.boB, 4, 0, 45), date: dPost });
+      DB.assessments.push({ id: nid(), anon: anon, type: 'quiz_post', phase: 'post', score: jit(A.qp, 1, 0, 10), date: dPost });
+      DB.assessments.push({ id: nid(), anon: anon, type: 'progress', phase: 'post', score: jit(A.pg, 3, 8, 40), date: dPost });
+    }
+    function genActions(stu, archIdx){
+      const anon = stu.anon, weak = (archIdx === 4);
+      const nPause = weak ? ri(2, 5) : ri(7, 18);
+      for(let i = 0; i < nPause; i++) DB.pauses.push({ id: nid(), anon: anon, date: addDays(today, -ri(0, 26)), trigger: pick(TRIGS), intended: pick([10, 15, 15, 20, 30]) });
+      const nSwap = weak ? ri(1, 4) : ri(5, 13);
+      for(let i = 0; i < nSwap; i++) DB.swaps.push({ id: nid(), anon: anon, date: addDays(today, -ri(0, 26)), activity: pick(ACTS) });
+    }
+
+    /* Phân nhóm: 12 em/lớp dữ liệu ĐẦY ĐỦ + 8 em/lớp dữ liệu NHẸ */
+    const byClass = {};
+    DB.students.forEach(function(s){ (byClass[s.className] = byClass[s.className] || []).push(s); });
+    const full = [], light = [];
+    Object.keys(byClass).sort().forEach(function(cn){
+      byClass[cn].slice(0, 12).forEach(function(s){ full.push(s); });
+      byClass[cn].slice(12, 20).forEach(function(s){ light.push(s); });
+    });
+
+    const PAT = [0,1,2,0,1,3,2,5,0,1,2,4];
+    full.forEach(function(stu, idx){
+      const archIdx = PAT[idx % PAT.length], A = ARCH[archIdx];
+      stu.consent = true; stu.consentDate = addDays(today, -34);
+      genLogs(stu, A, 0.14);
+      genAssess(stu, A, true);
+      genActions(stu, archIdx);
+      /* Phản tư buổi tối: 3 bản ghi */
+      [-9, -5, -2].forEach(function(off, k){
+        const rf = REFS[(idx + k) % REFS.length];
+        DB.reflections.push({ id: nid(), anon: stu.anon, date: addDays(today, off), emotion: rf.e, note: rf.n, gratitude: rf.g.slice() });
+      });
+      /* Thử thách 7 ngày cho một nửa số em */
+      if(idx % 2 === 0){
+        const kinds = ['nolatenight', 'oneswap', 'pause', 'less10'];
+        const start = addDays(today, -6), days = {};
+        const miss = archIdx === 4 ? ri(2, 3) : ri(0, 1);
+        const missSet = {};
+        while(Object.keys(missSet).length < miss) missSet[ri(0, 6)] = true;
+        for(let i = 0; i < 7; i++){ if(!missSet[i]) days[addDays(start, i)] = true; }
+        DB.challenges[stu.anon] = { kind: kinds[idx % 4], start: start, days: days };
+      }
+    });
+    light.forEach(function(stu, idx){
+      const A = ARCH[PAT[(idx + 2) % PAT.length]];
+      stu.consent = true; stu.consentDate = addDays(today, -34);
+      genLogs(stu, A, 0.22);
+      genAssess(stu, A, false);
+    });
+    /* PHỦ DỮ LIỆU CHO TOÀN BỘ HỌC SINH CÒN LẠI: đồng thuận + nhật ký + đo trước/sau cơ bản,
+       để không còn học sinh nào ở trạng thái "Chưa có đồng thuận / Chưa đủ dữ liệu" khi trình diễn */
+    const covered = {};
+    full.concat(light).forEach(function(s){ covered[s.anon] = true; });
+    DB.students.filter(function(s){ return !covered[s.anon]; }).forEach(function(stu, idx){
+      const A = ARCH[PAT[(idx + 1) % PAT.length]];
+      stu.consent = true; stu.consentDate = addDays(today, -34);
+      genLogs(stu, A, 0.30);
+      DB.assessments.push({ id: nid(), anon: stu.anon, type: 'quiz', phase: 'pre', score: jit(A.boA, 2, 0, 15), date: addDays(today, -33) });
+      DB.assessments.push({ id: nid(), anon: stu.anon, type: 'sas', phase: 'pre', score: jit(A.sasPre, 3, 10, 60), date: addDays(today, -33) });
+      DB.assessments.push({ id: nid(), anon: stu.anon, type: 'sas', phase: 'post', score: jit(A.sasPost, 3, 10, 60), date: addDays(today, -1) });
+    });
+
+    /* Cây Hạnh Phúc (tự chấm + chính thức) và Báo cáo tuần cho 36 em đầu */
+    const sparse = function(obj, len){ const a = new Array(len).fill(0); Object.keys(obj).forEach(function(k){ a[parseInt(k, 10)] = obj[k]; }); return a; };
+    const WEEK_POS = [
+      [{0:1,2:1,4:1}, {0:2,2:2,4:1}, {0:2,1:1,2:2,4:1}, {0:2,1:1,2:2,4:1,9:1}],
+      [{0:1,4:1}, {0:1,2:1,4:1}, {0:2,2:1,4:1}, {0:2,1:1,2:1,4:1}],
+      [{0:2,1:1,2:1,4:1}, {0:2,1:1,2:1,4:1}, {0:2,1:1,2:2,4:1}, {0:2,1:1,2:2,4:1,13:1}],
+      [{0:1,2:1,4:1}, {0:1,2:1,4:1}, {0:2,2:1,4:1}, {0:2,2:2,4:1,9:1}],
+      [{4:1}, {2:1,4:1}, {0:1,4:1}, {2:1,4:1}],
+      [{0:1,2:1,4:1}, {0:2,2:1,4:1}, {0:2,1:1,2:1,4:1}, {0:2,1:1,2:2,4:1}]
+    ];
+    full.slice(0, 36).forEach(function(stu, idx){
+      const anon = stu.anon, pat = WEEK_POS[idx % WEEK_POS.length];
+      for(let w = 0; w < 4; w++){
+        const wref = weekOf(addDays(today, -27 + w * 7));
+        const pos = sparse(pat[w], 16), neg = sparse(idx % ARCH.length === 4 && w === 1 ? {1:1} : {}, 9);
+        DB.selfTree.push({ id: nid(), anon: anon, weekStart: wref.start, weekEnd: wref.end, pos: pos, neg: neg, delta: treeDelta(pos, neg), date: wref.end });
+      }
+      let total = 0;
+      [0, 1, 2, 3].forEach(function(w){
+        const wref = { start: addDays(today, -27 + w * 7), end: addDays(today, -21 + w * 7) };
+        const sg = weekEvidence(anon, wref).suggest;
+        const items = [];
+        TREE_POS.forEach(function(c, i){ if(sg.pos[i] > 0) items.push({ name: c[0], pts: c[1], count: sg.pos[i], sign: 1 }); });
+        TREE_NEG.forEach(function(c, i){ if(sg.neg[i] > 0) items.push({ name: c[0], pts: c[1], count: sg.neg[i], sign: -1 }); });
+        const delta = treeDelta(sg.pos, sg.neg);
+        total = Math.max(0, total + delta);
+        stu.treeScore = total;
+        stu.treeHistory.push({ date: wref.end, items: items, delta: delta, total: total, note: 'Chấm theo bằng chứng tuần (dữ liệu minh hoạ)', week: wref.start });
+      });
+      stu.lastStageIdx = treeStageIdx(stu.treeScore || 0);
+      /* 2 báo cáo tuần, số liệu tính thật từ nhật ký vừa gieo */
+      [-20, -6].forEach(function(off){
+        const wref = weekOf(addDays(today, off));
+        const sn = buildSnapshot(anon, wref);
+        DB.reports.push({ id: nid(), code: 'BC-' + anon + '-' + wref.start.replace(/-/g, '') + '-v1', version: 1, submittedAt: fmtVN(wref.end) + ', 20:30', anon: sn.anon, className: sn.className, weekStart: sn.weekStart, weekEnd: sn.weekEnd, total: sn.total, avg: sn.avg, exceedDays: sn.exceedDays, lateSessions: sn.lateSessions, pauses: sn.pauses, swaps: sn.swaps, tree: sn.tree, quizScore: sn.quizScore, sasScore: sn.sasScore, consent: sn.consent, phase: sn.phase });
+      });
+    });
+
+    /* Chấm Cây chính thức cho mọi học sinh còn lại (theo bằng chứng từng tuần như 36 em đầu) */
+    const scored36 = {};
+    full.slice(0, 36).forEach(function(s){ scored36[s.anon] = true; });
+    DB.students.filter(function(s){ return !scored36[s.anon]; }).forEach(function(stu){
+      const anon = stu.anon;
+      let total = 0;
+      [0, 1, 2, 3].forEach(function(w){
+        const wref = { start: addDays(today, -27 + w * 7), end: addDays(today, -21 + w * 7) };
+        const sg = weekEvidence(anon, wref).suggest;
+        const items = [];
+        TREE_POS.forEach(function(c, i){ if(sg.pos[i] > 0) items.push({ name: c[0], pts: c[1], count: sg.pos[i], sign: 1 }); });
+        TREE_NEG.forEach(function(c, i){ if(sg.neg[i] > 0) items.push({ name: c[0], pts: c[1], count: sg.neg[i], sign: -1 }); });
+        const delta = treeDelta(sg.pos, sg.neg);
+        total = Math.max(0, total + delta);
+        stu.treeHistory.push({ date: wref.end, items: items, delta: delta, total: total, note: 'Chấm theo bằng chứng tuần (dữ liệu minh hoạ)', week: wref.start });
+      });
+      stu.treeScore = total;
+      stu.lastStageIdx = treeStageIdx(total);
+    });
+
+    DB.demoVersion = 10;
+    save();
+    localStorage.setItem('ms_demo_seeded_v8', '1');
+    try{ location.reload(); }catch(e){}
+  }catch(e){ if(window.console) console.warn('Demo seed v2 error:', e); }
+})();
 </script>
 </body>
 </html>
